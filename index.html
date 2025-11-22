@@ -6,14 +6,12 @@
   <title>Water Health Index - Home</title>
   <style>
     :root {
-      --sidebar-width: 225px;
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
       --accent: #51daf7;
       --active: #48e8c2;
       --card-bg: #1d334b;
-      --shadow: 0 8px 38px #17487d36;
-      --tab-bg: #243848e3;
-      --mainblue: #39bbe9;
-      --tick-green: #55ebca;
+      --shadow: 0 8px 32px #17487d40;
     }
     html, body {
       margin: 0;
@@ -26,38 +24,34 @@
       color: #e3fbfa;
       font-family: "Times New Roman", Times, serif;
       min-height: 100vh;
+      box-sizing: border-box;
     }
     body {
-      display: flex;
-      min-height: 100vh;
-      box-sizing: border-box;
       position: relative;
-      width: 100vw;
     }
+    /* Sidebar */
     .sidebar {
-      width: var(--sidebar-width);
+      width: var(--sidebar-wide);
       background: rgba(16,38,54,0.98);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
       box-shadow: 3px 0 20px #143d5344;
       position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 1101;
-      min-height: 100vh;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
     }
     .sidebar-header {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 2.2rem 0 2.3rem 0;
+      margin: 2.1rem 0 2.3rem 0;
     }
-    .sidebar .logo-img {
+    .logo-img {
       font-size: 2.7rem;
-      animation: wave-motion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
       filter: drop-shadow(0 2px 19px #51daf7a0);
     }
-    .sidebar .logo-text {
+    .logo-text {
       color: var(--accent);
       font-size: 2.1rem;
       font-weight: bold;
@@ -65,9 +59,9 @@
       letter-spacing: .02em;
       line-height: 1.16;
     }
-    @keyframes wave-motion {
-      0% { transform: translateY(0);}
-      100%{ transform: translateY(-8px);}
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
     }
     .sidebar nav {
       display: flex;
@@ -75,7 +69,7 @@
       gap: 1.05rem;
       margin-bottom: auto;
     }
-    .sidebar nav .tab {
+    .nav-link {
       color: #e3fbfa;
       text-decoration: none;
       padding: 0.7rem 1.15rem;
@@ -84,338 +78,322 @@
       align-items: center;
       gap: 0.7rem;
       border-radius: 13px;
-      margin: 0 .35rem;
+      margin: 0 .4rem;
       transition: background .12s, color .12s;
       font-weight: 500;
       box-sizing: border-box;
     }
-    .sidebar nav .tab.active,
-    .sidebar nav .tab:hover {
+    .nav-link.active,
+    .nav-link:hover {
       background: var(--active);
       color: #154b68;
     }
     .sidebar-footer {
       color: #9ee8ff;
-      font-size: .97rem;
+      font-size: .95rem;
       font-style: italic;
-      padding: 1.2rem .8rem 1.1rem .8rem;
+      padding: 1.1rem .8rem 1rem .8rem;
       text-align: center;
     }
-    .main-layout {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      width: calc(100vw - var(--sidebar-width));
+    /* Main wrapper */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 4vw 4vw 3vw 4vw;
+      min-height: 100vh;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: flex-start;
-      position: relative;
+      align-items: stretch;
+      justify-content: space-between;
     }
-    /* Floating tabs (top right, pills) */
-    .floating-tabs {
-      position: absolute;
-      top: 3vw;
-      right: 4vw;
-      display: flex;
-      flex-direction: row;
-      gap: 1vw;
-      z-index: 2020;
-      max-width: 96vw;
+    /* Language pill top-right */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
     }
-    .pill-tab,
     .lang-current {
       background: #51daf7;
       color: #173048;
       font-weight: bold;
-      font-size: 1.13rem;
+      font-size: 1.1rem;
       border: none;
       border-radius: 20px;
-      padding: 0.7rem 1.75rem 0.7rem 1rem;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
       cursor: pointer;
       box-shadow: 0 2px 12px #2183a235;
-      outline: none;
-      transition: background 0.13s;
-      min-width: 110px;
-      max-width: 195px;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
     }
-    .pill-tab:hover,
-    .lang-current:hover { background: #43dbcd; color: #154b68;}
-    /* Language dropdown panel */
     .lang-dropdown {
       display: none;
       flex-direction: column;
       position: absolute;
-      left: 0; right: 0; top: 2.9rem;
+      top: 2.7rem;
+      right: 0;
       background: #184c6cfa;
       border-radius: 14px;
       box-shadow: 0 7px 26px #155070ad;
       padding: .4rem .55rem;
-      z-index: 2021;
       border: 1.4px solid #39bbe9;
       overflow-y: auto;
       max-height: 50vh;
-      width: 100%;
+      min-width: 170px;
+      box-sizing: border-box;
     }
-    .lang-dropdown.open { display: flex;}
+    .lang-dropdown.open { display: flex; }
     .lang-opt {
       background: transparent;
       color: #55ebca;
       border-radius: 11px;
-      border: 1.3px solid #39bbe9;
-      font-size: 1.08rem;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
       font-family: inherit;
-      margin-bottom: .27rem;
+      margin-bottom: .22rem;
       cursor: pointer;
-      padding: .44rem .8rem;
-      transition: background 0.13s, color 0.13s, border-color 0.14s;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
       font-weight: 600;
     }
-    .lang-opt:hover, .lang-opt.selected {
+    .lang-opt:hover,
+    .lang-opt.selected {
       background: #51daf7;
       color: #143d53;
       border-color: #48e8c2;
     }
-    /* TABBED CARD BOX */
-    .main-card-tabs {
+    /* Welcome box (upper-left of content area) */
+    .welcome-box {
+      max-width: 520px;
       background: var(--card-bg);
-      margin: 7vw auto 0 auto;
-      border-radius: 28px;
-      box-shadow: 0 6px 39px #17487d44;
+      border-radius: 26px;
+      box-shadow: var(--shadow);
       border: 1.2px solid #107dac;
-      padding: 0 0 1.9rem 0;
-      max-width: 680px;
-      width: 97vw;
-      position: relative;
-      backdrop-filter: blur(2px);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      padding: 2rem 2.4rem 2.1rem 2.2rem;
+      box-sizing: border-box;
+      align-self: flex-start;
+      margin-top: 4vw;
+      margin-left: 1vw;
     }
-    .tab-toggle-row {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: flex-start;
-      align-items: center;
-      margin: 1.6rem 0 .1rem 2.4rem;
-      width: 100%;
-    }
-    .main-tab-btn {
-      padding: .49rem 1.31rem;
-      font-size: 1.01rem;
-      background: #234674;
-      color: #c3edf4;
-      border: none;
-      border-radius: 15px 15px 0 0;
-      outline: none;
+    .welcome-title {
+      font-size: 2.1rem;
+      color: #55ebca;
       font-weight: bold;
-      cursor: pointer;
-      transition: background .13s, color .15s;
-      border-bottom: 3px solid transparent;
+      letter-spacing: .03em;
+      margin: 0 0 .6rem 0;
+      text-shadow: 0 2px 16px #51daf784;
     }
-    .main-tab-btn.active,
-    .main-tab-btn:hover {
+    .welcome-quote {
+      font-size: 1.12rem;
+      font-style: italic;
+      color: #90e0cf;
+      font-weight: bold;
+      margin: 0 0 1rem 0;
+    }
+    .welcome-text {
+      font-size: 1.03rem;
+      color: #d9fbff;
+      line-height: 1.6;
+      margin: 0 0 1.5rem 0;
+    }
+    .welcome-buttons {
+      display: flex;
+      gap: .9rem;
+      flex-wrap: wrap;
+    }
+    .welcome-btn {
+      font-weight: bold;
+      font-size: 1.02rem;
+      padding: .7rem 1.4rem;
+      border-radius: 999px;
+      border: 1.4px solid #51daf7;
       background: #48e8c2;
-      color: #17487d;
-      border-bottom: 3px solid #51daf7;
+      color: #173048;
+      text-decoration: none;
+      box-shadow: 0 2px 15px #48e8c231;
+      transition: background .15s, color .15s;
     }
-    .tab-panel {
-      width: 96%;
-      margin: 1.4rem auto 0 auto;
-      display: none;
+    .welcome-btn.alt {
+      background: transparent;
+      color: #b7fff6;
+      border-color: #9ee8ff;
     }
-    .tab-panel.active { display: block;}
-    /* CHECKLIST demo */
-    .checklist-item {
-      display: flex;
-      align-items: flex-start;
-      gap: .85rem;
-      margin-bottom: 1.1rem;
-      font-size: 1.11rem;
-    }
-    .checklist-tick {
-      flex: 0 0 auto;
-      width: 29px; height: 29px;
-      border-radius: 50%;
-      background: #50eebe;
-      color: #122a2b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-top: 0.15rem;
+    .welcome-btn:hover { background: #17487d; color: #b7fff6; }
+    .welcome-btn.alt:hover { background: #223e5b; color: #48e8c2; }
+    /* Credits box (bottom-right of content area) */
+    .credits-main {
+      align-self: flex-end;
+      margin-bottom: 3.2vw;
+      margin-top: 3vw;
+      margin-right: 1vw;
     }
     .credits-box {
       background: #173144;
+      border-radius: 16px;
       border: 1.4px solid #2aa2cd;
-      border-radius: 13px;
-      margin-top: 1.35rem;
+      padding: .9rem 1.2rem .7rem 1.2rem;
+      width: 260px;
+      box-sizing: border-box;
       color: #e2fff3;
-      font-size: 1.07rem;
-      padding: .92rem 1.1rem .75rem 1.21rem;
-      min-width: 180px;
-      max-width: 280px;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px #0b182540;
     }
-    .credits-box b {
+    .credits-title {
       color: #55ebca;
-      font-size: 1.15rem;
+      font-size: 1.18rem;
+      font-weight: bold;
+      margin-bottom: .4rem;
     }
     .credits-box ul {
-      margin: .53rem 0 0 1.1rem;
+      margin: 0 0 .3rem 1.1rem;
       padding: 0;
     }
-    .credits-box li {
-      margin-bottom: .19rem;
+    .credits-box li { margin-bottom: .18rem; }
+    .credits-year {
+      color: #49d3ec;
+      font-size: .95rem;
     }
-    /* On mobile, sidebar icons-only, tabs stack right */
-    @media (max-width: 810px) {
-      .sidebar { width:55px; min-width:55px;}
-      .sidebar-header {margin: 1rem 0;}
-      .sidebar .logo-text {font-size: 1.1rem;}
-      .logo-img {font-size:1.8rem;}
-      .sidebar nav .tab { font-size: 0; padding: .89rem .5rem;}
-      .sidebar nav .tab .label {display:none;}
-      .main-layout { margin-left: 55px; width: calc(100vw - 55px);}
+    /* Responsive fixes */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: var(--sidebar-narrow);
+      }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.1rem; }
+      .sidebar nav .nav-link {
+        font-size: 0;
+        padding: .9rem .3rem;
+        justify-content: center;
+      }
+      .sidebar nav .nav-link .label { display:none; }
+      .main-wrap {
+        margin-left: var(--sidebar-narrow);
+        padding: 4vw 2.2vw 3vw 2.2vw;
+      }
+      .welcome-box {
+        margin-top: 18vw;
+        margin-left: .3rem;
+        width: calc(100% - .6rem);
+      }
+      .credits-main {
+        align-self: center;
+        margin-right: 0;
+        margin-top: 1.5rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .credits-box {
+        width: calc(100% - 1.2rem);
+      }
     }
-    @media (max-width: 700px) {
-      .main-layout {margin-left:0;width:100vw;}
-      .main-card-tabs { margin-top: 14vw;}
-      .floating-tabs {flex-direction:column; gap:2vw; right:2vw; top:4vw;}
-      .pill-tab, .lang-current {width: 95vw;max-width:96vw;}
-      .tab-toggle-row { margin-left: 1vw;}
+    @media (max-width: 520px) {
+      .lang-wrap { right: .7rem; top: .7rem; }
+      .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
+      .welcome-title { font-size: 1.35rem; }
+      .welcome-box { margin-top: 22vw; }
     }
-    @media (max-width: 480px) {
-      .main-card-tabs {padding:0 0 1.2rem 0;}
-      .credits-box {padding:.6rem .5rem .5rem .7rem;}
-    }
-
   </style>
 </head>
 <body>
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <span class="logo-img" aria-hidden="true">🌊</span>
       <span class="logo-text">Water<br>Index</span>
     </div>
     <nav>
-      <a href="index.html" class="tab active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
-      <a href="measure.html" class="tab"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
-      <a href="map.html" class="tab"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
-      <a href="care.html" class="tab"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
-      <a href="farmers.html" class="tab"><span aria-hidden="true">🌾</span><span class="label">Farmers Assistant</span></a>
-      <a href="chart.html" class="tab"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
-      <a href="learn.html" class="tab"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
-      <a href="buykit.html" class="tab"><span aria-hidden="true">🛒</span><span class="label">Buy Kit</span></a>
-      <a href="about.html" class="tab"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
+      <a href="index.html" class="nav-link active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
+      <a href="measure.html" class="nav-link"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
+      <a href="map.html" class="nav-link"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
+      <a href="care.html" class="nav-link"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
+      <a href="farmers.html" class="nav-link"><span aria-hidden="true">🌾</span><span class="label">Farmers Assistant</span></a>
+      <a href="chart.html" class="nav-link"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
+      <a href="learn.html" class="nav-link"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
+      <a href="buykit.html" class="nav-link"><span aria-hidden="true">🛒</span><span class="label">Buy Kit</span></a>
+      <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
     </nav>
     <footer class="sidebar-footer">
       &copy; 2025 Water Health Index · School project
     </footer>
   </aside>
-  <div class="main-layout">
-    <!-- floating pills -->
-    <div class="floating-tabs">
-      <!-- new tab example, copy as needed -->
-      <button class="pill-tab">New Tab</button>
-      <div class="lang-dropdown-wrap" style="position:relative;">
-        <button class="lang-current" id="langCurrentBtn">
-          English <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>
-        </button>
-        <div class="lang-dropdown" id="langDropdown">
-          <button class="lang-opt">English</button>
-          <button class="lang-opt">Hindi</button>
-          <button class="lang-opt">Bengali</button>
-          <button class="lang-opt">Tamil</button>
-          <button class="lang-opt">Marathi</button>
-          <button class="lang-opt">Gujarati</button>
-          <button class="lang-opt">Punjabi</button>
-          <button class="lang-opt">Telugu</button>
-          <button class="lang-opt">Kannada</button>
-          <button class="lang-opt">Urdu</button>
-        </div>
-      </div>
-    </div>
-    <!-- main tabbed card -->
-    <div class="main-card-tabs">
-      <div class="tab-toggle-row">
-        <button class="main-tab-btn active" data-tab="welcome">Welcome</button>
-        <button class="main-tab-btn" data-tab="checklist">Checklist</button>
-        <button class="main-tab-btn" data-tab="credits">Credits</button>
-      </div>
-      <!-- Welcome Panel -->
-      <div class="tab-panel active" id="panel-welcome">
-        <div class="hero-title">Welcome to Water Health Index</div>
-        <div class="hero-quote">"Protecting water today, empowering communities tomorrow."</div>
-        <div class="hero-desc">
-          Use your device and simple tools to measure water quality.<br>
-          Save readings, view on the map, and follow up with care steps for families and farmers.
-        </div>
-        <div class="hero-buttons">
-          <a href="measure.html" class="hero-btn">Go to Measure</a>
-          <a href="care.html" class="hero-btn alt">See care tips</a>
-        </div>
-      </div>
-      <!-- Checklist Panel -->
-      <div class="tab-panel" id="panel-checklist">
-        <div class="checklist-item">
-          <span class="checklist-tick">✔</span>
-          Go to <a href="measure.html" target="_blank" style="color:#91d0fc">Measure</a> to enter your water test data.
-        </div>
-        <div class="checklist-item">
-          <span class="checklist-tick">✔</span>
-          Use your camera and location tools to speed up data entry.
-        </div>
-        <div class="checklist-item">
-          <span class="checklist-tick">✔</span>
-          Save readings and build your own water-health history over time.
-        </div>
-      </div>
-      <!-- Credits Panel -->
-      <div class="tab-panel" id="panel-credits">
-        <div class="credits-box">
-          <b>🌱 Credits</b>
-          <ul>
-            <li>Pranshu (Dev & UI)</li>
-            <li>Mentor: Ashish sir, Naween sir</li>
-            <li>Ollama & Llama-3</li>
-            <li>FastAPI, GitHub, WHO</li>
-          </ul>
-          <div style="margin-top:.5rem;color:#49d3ec;">2025</div>
-        </div>
-      </div>
+
+  <!-- Lang pill -->
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">&#x25BC;</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt">English</button>
+      <button class="lang-opt">Hindi</button>
+      <button class="lang-opt">Bengali</button>
+      <button class="lang-opt">Tamil</button>
+      <button class="lang-opt">Marathi</button>
+      <button class="lang-opt">Gujarati</button>
+      <button class="lang-opt">Punjabi</button>
+      <button class="lang-opt">Telugu</button>
+      <button class="lang-opt">Kannada</button>
+      <button class="lang-opt">Urdu</button>
     </div>
   </div>
+
+  <!-- Main layout -->
+  <div class="main-wrap">
+    <!-- Upper-left welcome box -->
+    <section class="welcome-box">
+      <h1 class="welcome-title">Welcome to Water Health Index</h1>
+      <p class="welcome-quote">"Protecting water today, empowering communities tomorrow."</p>
+      <p class="welcome-text">
+        Use your device and simple tools to measure water quality.<br>
+        Save readings, view on the map, and follow up with care steps for families and farmers.
+      </p>
+      <div class="welcome-buttons">
+        <a href="measure.html" class="welcome-btn">Go to Measure</a>
+        <a href="care.html" class="welcome-btn alt">See care tips</a>
+      </div>
+    </section>
+
+    <!-- Bottom-right credits box -->
+    <section class="credits-main">
+      <div class="credits-box">
+        <div class="credits-title">🌱 Credits</div>
+        <ul>
+          <li>Pranshu (Dev & UI)</li>
+          <li>Mentor: Ashish sir</li>
+          <li>Ollama & Llama-3</li>
+          <li>FastAPI, GitHub</li>
+        </ul>
+        <div class="credits-year">2025</div>
+      </div>
+    </section>
+  </div>
+
   <script>
-    // Language dropdown js
+    // Language dropdown behaviour
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
+
     langBtn.addEventListener('click', function(e){
       e.stopPropagation();
       langDropdown.classList.toggle('open');
     });
+
     document.addEventListener('click', function(e){
       if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
         langDropdown.classList.remove('open');
       }
     });
+
     document.querySelectorAll('.lang-opt').forEach(btn=>{
       btn.addEventListener('click',function(){
-        langBtn.innerHTML = this.textContent + ' <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>';
-        langDropdown.classList.remove('open');
         document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
         this.classList.add('selected');
-        // Trigger your translation logic here
-      });
-    });
-    // Tabbed card JS
-    document.querySelectorAll('.main-tab-btn').forEach(btn=>{
-      btn.addEventListener('click',function(){
-        document.querySelectorAll('.main-tab-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-        document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+        // hook: call your translation JS here
       });
     });
   </script>
