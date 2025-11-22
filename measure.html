@@ -19,7 +19,7 @@
       --card-bg: #1d334b;
       --shadow: 0 8px 32px #17487d40;
 
-      --measure-card: #213a4a;
+      --measure-card: #163247;
       --measure-card2: #253c4d;
       --measure-text: #e3fbfa;
       --measure-accent: #55ebca;
@@ -48,7 +48,7 @@
       position: relative;
     }
 
-    /* Sidebar (same as index.html) */
+    /* Sidebar (same as index) */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -145,7 +145,7 @@
       z-index: 1;
     }
 
-    /* Language pill (same as index) */
+    /* Language pill */
     .lang-wrap {
       position: fixed;
       top: 1.3rem;
@@ -204,19 +204,22 @@
       border-color: #48e8c2;
     }
 
-    /* Measure page layout */
+    /* Measure header */
     .measure-header {
       margin-top: 4vw;
       margin-left: 1vw;
       margin-bottom: 1.8rem;
+      padding: .8rem 1rem 1rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(9,39,60,0.9), rgba(17,64,97,0.85));
     }
     .measure-title {
       font-size: 2.1rem;
-      color: #55ebca;
+      color: #f5feff;
       font-weight: bold;
       letter-spacing: .03em;
       margin: 0 0 .4rem 0;
-      text-shadow: 0 2px 16px #51daf784;
+      text-shadow: 0 3px 14px #0b2236;
     }
     .measure-subtitle {
       margin: 0;
@@ -225,6 +228,7 @@
       max-width: 640px;
     }
 
+    /* Main layout */
     .measure-layout {
       display: flex;
       flex-wrap: wrap;
@@ -241,10 +245,10 @@
 
     .measure-card {
       background: var(--measure-card);
-      border-radius: 18px;
-      padding: 1.6rem 1.4rem 1.7rem;
+      border-radius: 26px;
+      padding: 2rem 2rem 1.9rem;
       box-shadow: var(--shadow);
-      border: 1.2px solid #107dac;
+      border: 1.6px solid #107dac;
     }
 
     label {
@@ -255,12 +259,12 @@
     }
     input, select {
       width: 100%;
-      border-radius: 8px;
-      border: none;
+      border-radius: 10px;
+      border: 1px solid #2aa2cd;
       margin: .45rem 0 1.05rem 0;
-      padding: .55rem .8rem;
+      padding: .6rem .85rem;
       font-size: 1rem;
-      background: #203a46;
+      background: #102636;
       color: #e9fff5;
     }
     .small-hint {
@@ -423,7 +427,7 @@
       text-align: right;
     }
 
-    /* TDS drinking-safety card */
+    /* TDS card */
     .tds-card {
       margin-top: 1.4rem;
       background: var(--measure-card2);
@@ -454,7 +458,7 @@
       color: #d9fbff;
     }
 
-    /* History table */
+    /* History */
     .history-title {
       margin: 0 0 .55rem 1vw;
       font-weight: bold;
@@ -476,7 +480,6 @@
       background: #203a4f;
     }
 
-    /* Footer (optional, simple) */
     .measure-footer {
       margin-top: 2rem;
       margin-left: 1vw;
@@ -485,7 +488,7 @@
       opacity: 0.9;
     }
 
-    /* Responsive tweaks */
+    /* Mobile tweaks */
     @media (max-width: 900px) {
       .sidebar {
         width: var(--sidebar-narrow) !important;
@@ -501,12 +504,13 @@
         justify-content: center;
       }
       .sidebar nav .nav-link .label { display: none; }
+
       .sidebar-handle {
         pointer-events: none;
       }
 
       .main-wrap {
-        margin-left: var(--sidebar-narrow);
+        margin-left: var(--sidebar-narrow) !important;
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
       .measure-header {
@@ -523,6 +527,7 @@
         margin-left: .3rem;
       }
     }
+
     @media (max-width: 520px) {
       .lang-wrap {
         right: .7rem;
@@ -623,7 +628,7 @@
     </header>
 
     <section class="measure-layout">
-      <!-- LEFT: inputs, camera, status -->
+      <!-- LEFT -->
       <div class="measure-left">
         <div class="measure-card">
           <label for="ph" data-i18n="measure_ph_label">pH (0.0 - 14.0)</label>
@@ -663,7 +668,7 @@
             </button>
           </div>
 
-          <!-- Camera pH card -->
+          <!-- Camera card -->
           <div class="cam-card">
             <div class="cam-title" id="camTitle" data-i18n="measure_cam_title">
               Camera pH Reader
@@ -686,7 +691,7 @@
             </div>
           </div>
 
-          <!-- Location pill -->
+          <!-- Location -->
           <div class="loc-card" id="locCard">
             <div class="loc-pin">📍</div>
             <div>
@@ -712,7 +717,7 @@
             </button>
           </div>
 
-          <!-- Result / status card -->
+          <!-- Status -->
           <div class="status-card" id="statusCard">
             <div class="status-circle" id="statusScore">--</div>
             <div class="status-details">
@@ -732,7 +737,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: map + TDS drinking safety -->
+      <!-- RIGHT -->
       <div class="measure-right">
         <div class="measure-card">
           <div id="map"></div>
@@ -794,12 +799,12 @@
     </div>
   </div>
 
-  <!-- Scripts: Leaflet, translations, main logic -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="measure.translations.js"></script>
   <script src="measure.js"></script>
 
-  <!-- Shared language + sidebar behaviour for this page -->
+  <!-- Shared language + sidebar behaviour -->
   <script>
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
@@ -846,7 +851,7 @@
       });
     });
 
-    // Sidebar drag-to-resize (same as index, desktop only)
+    // Sidebar drag-to-resize (desktop only)
     (function () {
       const sidebar = document.getElementById('sidebar');
       const mainWrap = document.getElementById('mainWrap');
