@@ -104,58 +104,108 @@
       padding: 1.2rem .8rem 1rem .8rem;
       margin-top: auto;
     }
-    /* Language dropdown */
-    .lang-dropdown-wrap {
-      position: absolute;
-      top: 2rem;
-      right: 3vw;
-      z-index: 2005;
-      font-family: inherit;
-    }
-    .lang-current {
-      background: #51daf7;
-      color: #173048;
-      font-weight: bold;
-      font-size: 1.13rem;
-      border: none;
-      border-radius: 14px;
-      padding: .53rem 1.5rem .53rem .96rem;
-      cursor: pointer;
-      box-shadow: 0 3px 14px #2183a250;
-      display: flex;
-      align-items: center;
-      outline: none;
-    }
-    .lang-dropdown {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 2.45rem;
-      left: 0;
-      width: 170px;
-      background: #133b58de;
-      border-radius: 13px;
-      box-shadow: 0 6px 22px #155070ad;
-      padding: .34rem .62rem;
-      margin-top: 4px;
-    }
-    .lang-dropdown.open {
-      display: flex;
-    }
-    .lang-opt {
-      background: transparent;
-      color: #55ebca;
-      border-radius: 11px;
-      border: 1.2px solid #39bbe9;
-      font-size: 1.07rem;
-      font-family: inherit;
-      margin-bottom: .4rem;
-      cursor: pointer;
-      padding: .36rem .78rem;
-      text-align: left;
-      transition: background 0.15s, color 0.15s;
-      font-weight: 600;
-    }
+    /* Language dropdown wrapper - always stays within screen */
+.lang-dropdown-wrap {
+  position: absolute;
+  top: 2rem;
+  right: 1vw;
+  width: 180px;
+  max-width: 98vw;
+  z-index: 2005;
+  font-family: inherit;
+}
+
+/* Current language selection pill/button */
+.lang-current {
+  background: #51daf7;
+  color: #173048;
+  font-weight: bold;
+  font-size: 1.13rem;
+  border: none;
+  border-radius: 16px;
+  padding: .55rem 1.62rem .55rem 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px #2183a235;
+  display: flex;
+  align-items: center;
+  outline: none;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Dropdown options panel - never overflows screen */
+.lang-dropdown {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 2.7rem;
+  right: 0;
+  width: 180px;
+  max-width: 98vw;
+  background: #184c6cfa;
+  border-radius: 13px;
+  box-shadow: 0 6px 24px #155070ad;
+  padding: .36rem .54rem;
+  margin-top: 4px;
+  overflow-y: auto;
+  max-height: 64vh;
+  border: 1.8px solid #51daf7;
+  backdrop-filter: blur(3px);
+}
+.lang-dropdown.open {
+  display: flex;
+}
+
+.lang-opt {
+  background: transparent;
+  color: #55ebca;
+  border-radius: 11px;
+  border: 1.3px solid #39bbe9;
+  font-size: 1.09rem;
+  font-family: inherit;
+  margin-bottom: .33rem;
+  cursor: pointer;
+  padding: .39rem .82rem;
+  text-align: left;
+  transition: background 0.15s, color 0.15s, border-color 0.14s;
+  font-weight: 600;
+  width: 100%;
+}
+.lang-opt:last-child {
+  margin-bottom: 0;
+}
+.lang-opt:hover, .lang-opt.selected {
+  background: #51daf7;
+  color: #143d53;
+  font-weight: bold;
+  border-color: #48e8c2;
+}
+
+/* Responsive adjustments for mobile/small screens */
+@media (max-width: 500px) {
+  .lang-dropdown-wrap {
+    width: 92vw;
+    right: 4vw;
+    min-width: 0;
+  }
+  .lang-dropdown {
+    width: 92vw;
+    right: 0;
+    left: 0;
+    min-width: 0;
+    max-width: none;
+    padding: .41rem .18rem;
+    font-size: 1.08rem;
+    max-height: 47vh;
+  }
+  .lang-current {
+    font-size: 1.04rem;
+    padding: .48rem 1.2rem .48rem .8rem;
+  }
+  .lang-opt {
+    font-size: 1.01rem;
+    padding: .34rem .56rem;
+  }
     .lang-opt:hover, .lang-opt.selected {
       background: #51daf7;
       color: #143d53;
