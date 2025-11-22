@@ -1,0 +1,561 @@
+// measure.js
+// Logic for Water Health Index "Measure" page:
+// - Camera pH reader
+// - Index calculation from pH, temperature, turbidity
+// - TDS-based drinking safety
+// - Geolocation + Leaflet map
+// - LocalStorage history + map markers
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ------- DOM references -------
+  const phInput       = document.getElementById('ph');
+  const tempInput     = document.getElementById('temp');
+  const turbSelect    = document.getElementById('turbidity');
+  const tdsInput      = document.getElementById('tds');
+
+  const btnCamera     = document.getElementById('btnCamera');
+  const btnSwitch     = document.getElementById('btnSwitch');
+  const btnCloseCam   = document.getElementById('btnCloseCam');
+  const btnDetect     = document.getElementById('btnDetect');
+  const btnLocation   = document.getElementById('btnLocation');
+  const btnAnalyze    = document.getElementById('btnAnalyze');
+  const btnSave       = document.getElementById('btnSave');
+  const btnClear      = document.getElementById('btnClear');
+  const btnCheckTds   = document.getElementById('btnCheckTds');
+
+  const historyBody   = document.getElementById('historyBody');
+  const statusCard    = document.getElementById('statusCard');
+  const statusScore   = document.getElementById('statusScore');
+  const statusBadge   = document.getElementById('statusBadge');
+  const statusText    = document.getElementById('statusText');
+  const sPh           = document.getElementById('sPh');
+  const sTemp         = document.getElementById('sTemp');
+  const sTurb         = document.getElementById('sTurb');
+  const camInfo       = document.getElementById('camInfo');
+  const locationMain  = document.getElementById('locationMain');
+
+  const tdsFlagText   = document.getElementById('tdsFlagText');
+  const tdsNoteText   = document.getElementById('tdsNoteText');
+
+  // ------- State -------
+  const STORAGE_KEY = 'whReadings';
+
+  let currentLat   = null;
+  let currentLng   = null;
+  let currentPlace = '';
+
+  // ------- Leaflet map setup -------
+  // Center over India / South Asia as a default view
+  const map = L.map('map', {
+    zoomControl: true,
+    scrollWheelZoom: false
+  }).setView([23, 80], 4.5);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 13,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Layer group to hold saved-reading markers
+  const markersLayer = L.layerGroup().addTo(map);
+
+  function markerColor(index) {
+    if (index >= 75) return 'green';
+    if (index >= 45) return 'yellow';
+    return 'red';
+  }
+
+  function addReadingMarker(rec) {
+    if (typeof rec.lat !== 'number' || typeof rec.lng !== 'number') return;
+    const color = markerColor(rec.index || 0);
+    const popupHtml = `
+      <strong>${rec.place || 'Saved location'}</strong><br/>
+      pH: ${rec.ph}, Temp: ${rec.temp}°C, Turb: ${rec.turb}<br/>
+      TDS: ${rec.tds ?? '—'} mg/L, Index: ${rec.index} (${rec.drinkableFlag || '–'})
+    `;
+    L.circleMarker([rec.lat, rec.lng], {
+      radius: 6,
+      color,
+      fillColor: color,
+      fillOpacity: 0.9
+    }).addTo(markersLayer).bindPopup(popupHtml);
+  }
+
+  // ------- Reverse geocoding (Nominatim) -------
+  function formatLocation(address) {
+    if (!address) return 'Unknown location';
+    const detail  = address.road || address.neighbourhood || address.suburb || address.town || address.village || '';
+    const city    = address.city || address.town || address.village || address.suburb || '';
+    const state   = address.state || address.region || '';
+    const country = address.country || '';
+    const postcode = address.postcode || '';
+
+    const pieces = [];
+    if (detail && detail !== city) pieces.push(detail);
+    if (city) pieces.push(city);
+    if (state) pieces.push(state);
+    if (country) pieces.push(country);
+    if (postcode) pieces.push(postcode);
+    return pieces.join(', ');
+  }
+
+  async function reverseGeocode(lat, lng) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+      const res = await fetch(url, {
+        headers: { 'Accept-Language': 'en' }  // simple English label
+      });
+      const data = await res.json();
+      return formatLocation(data.address);
+    } catch (e) {
+      console.error('Reverse geocode failed', e);
+      return 'Unknown location';
+    }
+  }
+
+  // ------- Geolocation button -------
+  btnLocation.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation not supported by this browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const label = await reverseGeocode(lat, lng);
+
+      currentLat = lat;
+      currentLng = lng;
+      currentPlace = label;
+      locationMain.textContent = label;
+
+      // Center map and add a marker for this measurement spot
+      map.setView([lat, lng], 16);
+      addReadingMarker({
+        ph: phInput.value || '–',
+        temp: tempInput.value || '–',
+        turb: turbSelect.value || '–',
+        tds: tdsInput.value ? Number(tdsInput.value) : null,
+        index: 0,
+        drinkableFlag: '',
+        lat,
+        lng,
+        place: label
+      });
+    }, () => {
+      alert('Could not get location.');
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 30000
+    });
+  });
+
+  // ------- Camera pH reader -------
+  const video  = document.getElementById('cameraView');
+  const canvas = document.getElementById('phCanvas');
+  const ctx    = canvas.getContext ? canvas.getContext('2d') : null;
+  let stream   = null;
+  let facing   = 'environment'; // back camera on phones where supported
+
+  async function openCamera() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Camera API not supported in this browser.');
+        return;
+      }
+      if (stream) return; // already open
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facing }
+      });
+      video.srcObject = stream;
+      video.style.display = 'block';
+      canvas.style.display = 'none';
+      await video.play();
+    } catch (e) {
+      console.error(e);
+      alert('Camera not available or permission denied.');
+    }
+  }
+
+  function closeCamera() {
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    video.style.display = 'none';
+    canvas.style.display = 'none';
+  }
+
+  btnCamera.addEventListener('click', openCamera);
+  btnCloseCam.addEventListener('click', closeCamera);
+  btnSwitch.addEventListener('click', () => {
+    facing = (facing === 'environment') ? 'user' : 'environment';
+    closeCamera();
+    openCamera();
+  });
+
+  // Reference colors for pH strips (approximate)
+  const phReference = [
+    { pH: 1,  rgb: [235,  90, 120] },
+    { pH: 2,  rgb: [240, 120, 105] },
+    { pH: 3,  rgb: [245, 160,  80] },
+    { pH: 4,  rgb: [240, 200,  90] },
+    { pH: 5,  rgb: [223, 205,  92] },
+    { pH: 6,  rgb: [192, 192,  89] },
+    { pH: 7,  rgb: [146, 182, 101] },
+    { pH: 8,  rgb: [120, 189, 164] },
+    { pH: 9,  rgb: [127, 188, 193] },
+    { pH: 10, rgb: [117, 166, 233] },
+    { pH: 11, rgb: [ 94, 132, 224] },
+    { pH: 12, rgb: [ 85, 118, 192] },
+    { pH: 13, rgb: [ 80, 110, 170] },
+    { pH: 14, rgb: [ 65,  80, 150] }
+  ];
+
+  function rgbDistance(a, b) {
+    return Math.sqrt(
+      (a[0] - b[0]) ** 2 +
+      (a[1] - b[1]) ** 2 +
+      (a[2] - b[2]) ** 2
+    );
+  }
+
+  function rgbToPh(r, g, b) {
+    let bestIdx = 0;
+    let nextBestIdx = 0;
+    let minDist = Infinity;
+    let nextMinDist = Infinity;
+
+    for (let i = 0; i < phReference.length; i++) {
+      const dist = rgbDistance([r, g, b], phReference[i].rgb);
+      if (dist < minDist) {
+        nextBestIdx = bestIdx;
+        nextMinDist = minDist;
+        bestIdx = i;
+        minDist = dist;
+      } else if (dist < nextMinDist) {
+        nextBestIdx = i;
+        nextMinDist = dist;
+      }
+    }
+
+    const bestPh = phReference[bestIdx].pH;
+    const nextPh = phReference[nextBestIdx].pH;
+
+    if (Math.abs(bestPh - nextPh) === 1) {
+      return ((bestPh * nextMinDist) + (nextPh * minDist)) / (minDist + nextMinDist);
+    }
+    return bestPh;
+  }
+
+  function captureColor() {
+    if (!ctx) {
+      alert('Canvas not available.');
+      return;
+    }
+    if (!video.videoWidth) {
+      alert('Open the camera and wait, then try again.');
+      return;
+    }
+
+    const w = video.videoWidth;
+    const h = video.videoHeight;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(video, 0, 0, w, h);
+
+    const box = 20;
+    const sx = Math.max(0, Math.floor(w / 2 - box / 2));
+    const sy = Math.max(0, Math.floor(h / 2 - box / 2));
+    const img = ctx.getImageData(sx, sy, box, box);
+    const data = img.data;
+
+    let r = 0, g = 0, b = 0;
+    const px = data.length / 4;
+    for (let i = 0; i < data.length; i += 4) {
+      r += data[i];
+      g += data[i + 1];
+      b += data[i + 2];
+    }
+    r /= px;
+    g /= px;
+    b /= px;
+
+    const ph = rgbToPh(r, g, b);
+    phInput.value = ph.toFixed(2);
+    camInfo.textContent =
+      `Captured color (avg): R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)} → pH ≈ ${ph.toFixed(2)}`;
+  }
+
+  btnDetect.addEventListener('click', captureColor);
+
+  // ------- Index scoring -------
+  function scorePh(ph) {
+    if (isNaN(ph)) return 0;
+    const d = Math.abs(ph - 7);
+    if (d >= 3) return 0;
+    const s = 1 - d / 3;
+    return Math.round(100 * s * s);
+  }
+
+  function scoreTemp(temp) {
+    if (isNaN(temp)) return 0;
+    const d = Math.abs(temp - 25);
+    if (d >= 25) return 0;
+    const s = 1 - d / 25;
+    return Math.round(100 * s * s);
+  }
+
+  function scoreTurb(turb) {
+    if (turb === 'Low') return 95;
+    if (turb === 'Medium') return 65;
+    if (turb === 'High') return 30;
+    return 0;
+  }
+
+  function calcIndex(ph, temp, turb) {
+    const sp = scorePh(ph);
+    const st = scoreTemp(temp);
+    const su = scoreTurb(turb);
+    return Math.round(0.4 * sp + 0.3 * st + 0.3 * su);
+  }
+
+  const thresholds = [100,97,94,91,88,85,82,79,76,73,70,67,64,61,58,55,52,49,46,43,40,37,34,31,28,25,22,19,15,0];
+  const messages = [
+    'Perfect lab-grade water.',
+    'Ultra-clean, ideal for sensitive crops and drinking.',
+    'Pristine mountain-spring quality.',
+    'Excellent — minimal stress.',
+    'Very good quality, safe for drinking.',
+    'Good quality, only minor treatment needed.',
+    'Slightly imbalanced but generally safe.',
+    'Fair quality — simple filtration recommended.',
+    'Usable, but avoid for babies or sensitive users.',
+    'Noticeable issues; treat before drinking.',
+    'Moderate quality, not ideal for daily drinking.',
+    'Stressed water; boil and filter strongly.',
+    'Borderline safe — use only with treatment.',
+    'Poor quality; not recommended for direct use.',
+    'Very poor; use only for cleaning, not drinking.',
+    'High pollution risk; avoid for animals too.',
+    'Severely stressed ecosystem water.',
+    'Strong contamination suspected.',
+    'Dangerous for human consumption.',
+    'Extremely poor; emergency use only.',
+    'Unsuitable for irrigation without strong treatment.',
+    'Toxic risk; may harm crops and fish.',
+    'Very high contamination, keep away.',
+    'Industrial-level pollution likely.',
+    'Critical — do not use for any living beings.',
+    'Hazardous chemical signature.',
+    'Near-toxic concentrate; isolate source.',
+    'Emergency contamination zone.',
+    'Deadly quality — immediate action required.',
+    'Unusable water — treat as hazardous waste.'
+  ];
+
+  function classifyIndex(score) {
+    if (score >= 90) return 'EXCELLENT';
+    if (score >= 75) return 'GOOD';
+    if (score >= 60) return 'FAIR';
+    if (score >= 45) return 'POOR';
+    return 'VERY POOR';
+  }
+
+  function analyze() {
+    const ph   = parseFloat(phInput.value);
+    const temp = parseFloat(tempInput.value);
+    const turb = turbSelect.value;
+
+    if (isNaN(ph) || isNaN(temp) || !turb) {
+      alert('Please enter pH, temperature, and select turbidity.');
+      return null;
+    }
+
+    const idx = calcIndex(ph, temp, turb);
+    const badge = classifyIndex(idx);
+
+    statusScore.textContent = idx;
+    statusBadge.textContent = badge;
+
+    if (badge === 'EXCELLENT') statusBadge.style.background = '#1c6b3f';
+    else if (badge === 'GOOD') statusBadge.style.background = '#2c9b5a';
+    else if (badge === 'FAIR') statusBadge.style.background = '#d0a000';
+    else if (badge === 'POOR') statusBadge.style.background = '#c45a2f';
+    else statusBadge.style.background = '#b02030';
+
+    let msg = messages[messages.length - 1];
+    for (let i = 0; i < thresholds.length; i++) {
+      if (idx >= thresholds[i]) {
+        msg = messages[i];
+        break;
+      }
+    }
+    statusText.textContent = msg;
+    sPh.textContent   = ph.toFixed(2);
+    sTemp.textContent = temp.toFixed(1) + '°C';
+    sTurb.textContent = turb;
+    statusCard.style.display = 'flex';
+
+    return { ph, temp, turb, index: idx };
+  }
+
+  btnAnalyze.addEventListener('click', analyze);
+
+  // ------- TDS + drinking safety -------
+  function classifyDrinkability(ph, tds) {
+    const safePh = ph >= 6.5 && ph <= 8.5; // typical safe band
+
+    if (isNaN(tds)) {
+      return {
+        flag: 'UNKNOWN',
+        note: 'Add TDS to check drinking safety.'
+      };
+    }
+
+    if (tds > 1000 || !safePh) {
+      return {
+        flag: 'NOT_DRINKABLE',
+        note: 'Even if the index looks good, pH or TDS are outside safe drinking limits.'
+      };
+    } else if (tds > 600) {
+      return {
+        flag: 'CAUTION',
+        note: 'High TDS — use only if no better source and treat water before drinking.'
+      };
+    } else if (tds < 50) {
+      return {
+        flag: 'LOW_MINERALS',
+        note: 'Very low TDS — safe but may lack minerals; best range is about 150–300 mg/L.'
+      };
+    } else {
+      return {
+        flag: 'DRINKABLE',
+        note: 'pH and TDS are in a range usually considered drinkable.'
+      };
+    }
+  }
+
+  function updateTdsUI(result) {
+    if (!result) return;
+    tdsFlagText.textContent = result.flag.replace('_', ' ');
+    tdsNoteText.textContent = result.note;
+
+    if (result.flag === 'DRINKABLE') {
+      tdsFlagText.style.color = '#55ebca';
+    } else if (result.flag === 'CAUTION' || result.flag === 'LOW_MINERALS') {
+      tdsFlagText.style.color = '#ffd26a';
+    } else if (result.flag === 'NOT_DRINKABLE') {
+      tdsFlagText.style.color = '#ff7a7a';
+    } else {
+      tdsFlagText.style.color = '#e3fbfa';
+    }
+  }
+
+  btnCheckTds.addEventListener('click', () => {
+    const ph  = parseFloat(phInput.value);
+    const tds = parseFloat(tdsInput.value);
+    if (isNaN(ph)) {
+      alert('Enter or measure pH first.');
+      return;
+    }
+    const result = classifyDrinkability(ph, tds);
+    updateTdsUI(result);
+  });
+
+  // ------- History in localStorage -------
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return [];
+      return arr;
+    } catch (e) {
+      console.error('Failed to parse history', e);
+      return [];
+    }
+  }
+
+  function saveHistory(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.error('Failed to save history', e);
+    }
+  }
+
+  function renderHistory() {
+    const list = loadHistory();
+    historyBody.innerHTML = '';
+
+    markersLayer.clearLayers();
+
+    if (!list.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 7;
+      td.style.color = '#7ba9b0';
+      td.textContent = 'No readings saved.';
+      tr.appendChild(td);
+      historyBody.appendChild(tr);
+      return;
+    }
+
+    // show newest first
+    list.slice().reverse().forEach(rec => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rec.when}</td>
+        <td>${rec.ph}</td>
+        <td>${rec.temp}</td>
+        <td>${rec.turb}</td>
+        <td>${rec.tds ?? '—'}</td>
+        <td>${rec.index}</td>
+        <td>${rec.drinkableFlag || '–'}</td>
+      `;
+      historyBody.appendChild(tr);
+      addReadingMarker(rec);
+    });
+  }
+
+  function saveReading() {
+    const analysis = analyze();
+    if (!analysis) return;
+
+    const tds = tdsInput.value ? parseFloat(tdsInput.value) : NaN;
+    const drink = classifyDrinkability(analysis.ph, tds);
+
+    const list = loadHistory();
+    const rec = {
+      when: new Date().toLocaleString(),
+      ph: analysis.ph.toFixed(2),
+      temp: analysis.temp.toFixed(1),
+      turb: analysis.turb,
+      tds: isNaN(tds) ? null : Number(tds.toFixed(0)),
+      index: analysis.index,
+      drinkableFlag: drink.flag,
+      drinkableNote: drink.note,
+      lat: currentLat,
+      lng: currentLng,
+      place: currentPlace
+    };
+    list.push(rec);
+    saveHistory(list);
+    renderHistory();
+  }
+
+  btnSave.addEventListener('click', saveReading);
+
+  btnClear.addEventListener('click', () => {
+    if (confirm('Clear all saved readings?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+    }
+  });
+
+  // Initial render
+  renderHistory();
+});
