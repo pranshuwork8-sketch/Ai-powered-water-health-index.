@@ -42,7 +42,7 @@
       left: 0; top: 0; bottom: 0;
       display: flex;
       flex-direction: column;
-      z-index: 1000;
+      z-index: 2000;                 /* ensure always above content */
       box-sizing: border-box;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -111,6 +111,7 @@
       height: 100%;
       cursor: ew-resize;
       background: transparent;
+      pointer-events: auto;          /* desktop only; disabled in media query below */
     }
     .sidebar-handle:hover {
       background: rgba(81,218,247,0.45);
@@ -126,6 +127,8 @@
       flex-direction: column;
       align-items: stretch;
       justify-content: space-between;
+      position: relative;
+      z-index: 1;                     /* keep under sidebar */
     }
 
     /* Language pill top-right */
@@ -302,7 +305,9 @@
         justify-content: center;
       }
       .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle { display:none; }
+      .sidebar-handle {
+        pointer-events: none;  /* IMPORTANT: let taps hit nav links on mobile */
+      }
 
       .main-wrap {
         margin-left: var(--sidebar-narrow);
@@ -333,7 +338,6 @@
     }
   </style>
 
-  <!-- translations file for index page -->
   <script src="index.translations.js"></script>
 </head>
 <body>
@@ -452,6 +456,7 @@
     </section>
   </div>
 
+  <script src="index.translations.js"></script>
   <script>
     // Language dropdown behaviour + i18n hook
     const langBtn = document.getElementById('langCurrentBtn');
@@ -486,7 +491,6 @@
         this.classList.add('selected');
 
         const langCode = this.dataset.lang || 'en';
-        // Update pill text in English name (button label)
         langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
         langDropdown.classList.remove('open');
 
@@ -533,7 +537,6 @@
         document.body.style.userSelect = '';
       });
 
-      // If window resized to mobile size while dragging, reset layout
       window.addEventListener('resize', () => {
         if (window.innerWidth <= 900) {
           sidebar.style.width = '';
