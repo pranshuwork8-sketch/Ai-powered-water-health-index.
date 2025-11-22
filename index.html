@@ -44,6 +44,8 @@
       flex-direction: column;
       z-index: 1000;
       box-sizing: border-box;
+      overflow-y: auto;          /* NEW: scrollable sidebar */
+      overscroll-behavior: contain;
     }
     .sidebar-header {
       display: flex;
@@ -345,7 +347,7 @@
       <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
     </nav>
     <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · Regional project
+      &copy; 2025 Water Health Index · School project
     </footer>
     <div class="sidebar-handle" id="sidebarHandle"></div>
   </aside>
@@ -391,7 +393,7 @@
         <div class="credits-title">🌱 Credits</div>
         <ul>
           <li>Pranshu (Dev & UI)</li>
-          <li>Mentor: Ashish sir, Naween sir</li>
+          <li>Mentor: Ashish sir</li>
           <li>Ollama & Llama-3</li>
           <li>FastAPI, GitHub</li>
         </ul>
