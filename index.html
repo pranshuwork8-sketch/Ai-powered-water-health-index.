@@ -4,13 +4,11 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Water Health Index - Home</title>
-  <!-- Put your external CSS here if needed -->
   <style>
     :root {
       --sidebar-width: 215px;
       --accent: #51daf7;
       --active: #48e8c2;
-      --gradient-bg: linear-gradient(135deg, #51daf7 0%, #17487d 80%);
       --card-bg: #1d334b;
       --shadow: 0 8px 38px #17487d36;
       --logo-glow: 0 0 14px #51daf7, 0 0 24px #17487d;
@@ -19,7 +17,12 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      background: var(--gradient-bg);
+      background-image:
+        linear-gradient(120deg, rgba(81,218,247,0.67), rgba(23,72,125,0.76) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
       color: #e3fbfa;
       font-family: "Times New Roman", Times, serif;
       min-height: 100vh;
@@ -30,11 +33,12 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      transition: background 0.2s;
     }
     /* Sidebar styles */
     .sidebar {
       width: var(--sidebar-width);
-      background: rgba(16,38,54,.98);
+      background: rgba(16,38,54,.99);
       box-shadow: 3px 0 24px #12335365;
       display: flex;
       flex-direction: column;
@@ -43,6 +47,7 @@
       position: fixed;
       left: 0; top: 0; bottom: 0;
       z-index: 1002;
+      min-height: 100vh;
     }
     .sidebar .logo {
       text-align: center;
@@ -55,11 +60,17 @@
       align-items: center;
       justify-content: center;
       gap: .72rem;
-      animation: waveGlow 2.5s infinite alternate cubic-bezier(.62,.2,.87,.7);
     }
-    @keyframes waveGlow {
-      0% { text-shadow: var(--logo-glow); transform: translateY(0);}
-      100%{ text-shadow: 0 0 30px #48e8c2, 0 0 7px #fff4, 0 0 18px #51daf7; transform: translateY(-6px);}
+    .sidebar .waveemoji {
+      font-size: 2.5rem;
+      display: inline-block;
+      will-change: transform;
+      animation: wave-motion 2.1s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 4px 16px #51daf7b7);
+    }
+    @keyframes wave-motion {
+      0% { transform: translateY(0) rotate(-6deg);}
+      100%{ transform: translateY(-12px) rotate(10deg);}
     }
     .sidebar nav {
       display: flex;
@@ -97,7 +108,7 @@
     .lang-dropdown-wrap {
       position: absolute;
       top: 2rem;
-      right: 3.3vw;
+      right: 3vw;
       z-index: 2005;
       font-family: inherit;
     }
@@ -143,15 +154,17 @@
       padding: .36rem .78rem;
       text-align: left;
       transition: background 0.15s, color 0.15s;
+      font-weight: 600;
     }
-    .lang-opt:hover {
+    .lang-opt:hover, .lang-opt.selected {
       background: #51daf7;
       color: #143d53;
       font-weight: bold;
+      border-color: #48e8c2;
     }
     .main-content {
       margin-left: var(--sidebar-width);
-      padding: 2vw 4vw 1.6vw 4vw;
+      padding: 2vw 2vw 1.6vw 3vw;
       max-width: 850px; width: 100vw; min-width: 0;
       position: relative;
       z-index: 2;
@@ -167,7 +180,7 @@
       position: relative;
     }
     .hero-title {
-      font-size: 2.55rem;
+      font-size: 2.42rem;
       color: var(--active);
       letter-spacing: .03em;
       font-weight: bold;
@@ -175,17 +188,17 @@
       margin-bottom: .68rem;
     }
     .hero-quote {
-      font-size: 1.15rem;
+      font-size: 1.14rem;
       font-style: italic;
       color: #90e0cf;
       font-weight: bold;
-      margin-bottom: .95rem;
+      margin-bottom: .93rem;
     }
     .hero-desc {
       font-size: 1.06rem;
       color: #d9fbff;
-      margin-bottom: 1.7rem;
-      line-height: 1.68;
+      margin-bottom: 1.5rem;
+      line-height: 1.63;
     }
     .hero-buttons {
       margin-top: .81rem;
@@ -202,7 +215,7 @@
       color: #173048;
       text-decoration: none;
       box-shadow: 0 2px 18px #48e8c231;
-      transition: background .18s, color .18s;
+      transition: background .14s, color .14s;
     }
     .hero-btn.alt {
       background: transparent;
@@ -212,24 +225,26 @@
     .hero-btn:hover { background: #17487d; color: #b7fff6; border-color: #b7fff6;}
     .hero-btn.alt:hover { background: #223e5b; color: #48e8c2;}
     @media (max-width: 870px) {
-      .sidebar { position: absolute; left: 0; height: 100vh;}
-      .main-content { margin-left: 0; padding: 1.4rem .7vw; }
-      .lang-dropdown-wrap { top: 13px; right: 17px;}
-    }
-    @media (max-width: 640px) {
-      .sidebar { width: 56px; min-width: 56px; }
-      .sidebar .logo { font-size: 1.25rem;}
+      .sidebar { position: absolute; width:56px; left: 0; height: 100vh;}
+      .sidebar .logo { font-size: 1.3rem;}
       .sidebar nav .tab .label { display: none;}
-      .sidebar nav .tab { font-size: 0; padding: .93rem .55rem;}
-      .main-content { padding: 1rem 1vw; }
-      .hero-card { padding: .93rem .35rem 1.35rem .61rem;}
+      .sidebar nav .tab { font-size: 0; padding: .93rem .45rem;}
+      .main-content { margin-left: 0; padding: 1.5rem 1vw; }
+      .lang-dropdown-wrap { top: 13px; right: 15px;}
+      .hero-card { padding: .93rem .47rem 1.15rem .75rem;}
+    }
+    @media (max-width: 480px) {
+      .main-content { padding: .7rem .2vw; }
+      .lang-dropdown-wrap { right: 2vw;}
+      .hero-title { font-size: 1.25rem; }
+      .hero-card { padding: .6rem .15rem 1rem .28rem;}
     }
   </style>
 </head>
 <body>
   <!-- Sidebar navigation -->
   <aside class="sidebar">
-    <div class="logo"><img src="assets/logo.png" style="height:2.1rem;width:2.1rem;margin-right:.52rem;filter:drop-shadow(0 1px 12px #51daf7);" alt="Logo">Water Index</div>
+    <div class="logo"><span class="waveemoji" aria-hidden="true">🌊</span>Water Index</div>
     <nav>
       <a href="index.html" class="tab active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
       <a href="measure.html" class="tab"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
@@ -251,15 +266,16 @@
       English <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>
     </button>
     <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt">हिन्दी</button>
-      <button class="lang-opt">বাংলা</button>
-      <button class="lang-opt">தமிழ்</button>
-      <button class="lang-opt">मराठी</button>
-      <button class="lang-opt">ગુજરાતી</button>
-      <button class="lang-opt">ਪੰਜਾਬੀ</button>
-      <button class="lang-opt">తెలుగు</button>
-      <button class="lang-opt">ಕನ್ನಡ</button>
-      <button class="lang-opt">اردو</button>
+      <button class="lang-opt">English</button>
+      <button class="lang-opt">Hindi</button>
+      <button class="lang-opt">Bengali</button>
+      <button class="lang-opt">Tamil</button>
+      <button class="lang-opt">Marathi</button>
+      <button class="lang-opt">Gujarati</button>
+      <button class="lang-opt">Punjabi</button>
+      <button class="lang-opt">Telugu</button>
+      <button class="lang-opt">Kannada</button>
+      <button class="lang-opt">Urdu</button>
     </div>
   </div>
   <!-- Main homepage content -->
@@ -281,6 +297,8 @@
     // Language dropdown js
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
+    let selectedLang = 'English';
+    langBtn.innerHTML = selectedLang + ' <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>';
     langBtn.addEventListener('click', function(e){
       e.stopPropagation();
       langDropdown.classList.toggle('open');
@@ -292,8 +310,11 @@
     });
     document.querySelectorAll('.lang-opt').forEach(btn=>{
       btn.addEventListener('click',function(){
-        langBtn.innerHTML = this.textContent + ' <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>';
+        selectedLang = this.textContent;
+        langBtn.innerHTML = selectedLang + ' <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>';
         langDropdown.classList.remove('open');
+        document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
+        this.classList.add('selected');
         // Connect: On select, run translation JS logic
       });
     });
