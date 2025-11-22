@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - Home</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+    :root {
+      --sidebar-bg: rgba(32, 70, 105, 0.95);
+      --sidebar-glass: blur(12px);
+      --card-bg: #263b4d;
+      --main-accent: #39bbe9;
+      --tab-active: #55ebca;
+      --tab-hover: #168eaf;
+      --content-bg: linear-gradient(to bottom right, #215871, #143d53);
+      --shadow: 0 4px 20px rgba(65,180,202,0.14);
+      --sidebar-width: 235px;
+    }
+    body {
+      margin: 0; padding: 0;
+      font-family: "Times New Roman", Times, serif;
+      background: var(--content-bg);
+      color: #e3fbfa;
+      height: 100vh;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      backdrop-filter: var(--sidebar-glass);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding-top: 1.5rem;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 100;
+      transition: width 0.2s;
+    }
+    .sidebar .logo {
+      font-size: 2.1rem;
+      font-weight: bold;
+      color: var(--main-accent);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 2.2rem;
+      justify-content: center;
+    }
+    .sidebar nav {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .sidebar .tab {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.76rem 1.1rem;
+      margin: 0 1.2rem;
+      font-size: 1.08rem;
+      text-decoration: none;
+      color: #e3fbfa;
+      border-radius: 12px;
+      transition: background 0.15s, color 0.15s;
+      font-weight: 500;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+    }
+    .sidebar .tab:hover,
+    .sidebar .tab.active {
+      background: var(--tab-active);
+      color: #154b68;
+      font-weight: bold;
+    }
+    .sidebar-footer {
+      padding: 1.6rem 1.1rem;
+      text-align: center;
+      font-size: 0.98rem;
+      color: #9ee8ff;
+      opacity: 0.9;
+      border-top: 1px solid #2778a2;
+      margin-top: auto;
+    }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding: 2.6rem 4vw 2vw 4vw;
+      min-width: 0;
+      width: 100%;
+      max-width: 950px;
+    }
+    .hero-card {
+      background: var(--card-bg);
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      padding: 2.1rem 2rem 2.4rem 2rem;
+      margin-bottom: 2.2rem;
+      border: 1.3px solid #1d4258;
+    }
+    .hero-title {
+      font-size: 2.45rem;
+      color: var(--tab-active);
+      text-shadow: 0 2px 12px #24aac9be;
+      margin-bottom: 0.57rem;
+    }
+    .hero-quote {
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #90e0cf;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .hero-desc {
+      font-size: 1.02rem;
+      color: #d9fbff;
+      margin-bottom: 1.6rem;
+      line-height: 1.65;
+    }
+    .hero-buttons {
+      margin-top: 0.7rem;
+      display: flex;
+      gap: 0.8rem;
+    }
+    .hero-btn {
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.01rem;
+      padding: 0.69rem 1.34rem;
+      border-radius: 999px;
+      border: 1.2px solid #168eaf;
+      background: #168eaf;
+      color: #ffffff;
+      transition: background 0.16s;
+      box-shadow: 0 2px 18px #168eaf31;
+    }
+    .hero-btn.alt {
+      background: transparent;
+      color: #8defff;
+      border: 1.4px solid #8defff;
+    }
+    .hero-btn:hover { background: #124466; color: #c3fcf8; }
+    .hero-btn.alt:hover { background: #15445f; color: #00ced1; }
+    @media (max-width: 800px) {
+      .sidebar { width: 60px; min-width: 60px; }
+      .sidebar .tab { font-size: 0; padding: 0.92rem 0.7rem; justify-content: center; }
+      .sidebar .tab .label { display: none; }
+      .sidebar .logo { font-size: 1.55rem; }
+      .main-content { margin-left: 66px; padding: 1.5rem 2vw 1vw 2vw; }
+    }
+    @media (max-width: 580px) {
+      .sidebar { position: absolute; height: 100vh; }
+      .main-content { margin-left: 0; padding: 1.1rem 1vw; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      <span aria-hidden="true">🌊</span>
+      <span class="label">Water Index</span>
+    </div>
+    <nav>
+      <a href="index.html" class="tab active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
+      <a href="measure.html" class="tab"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
+      <a href="map.html" class="tab"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
+      <a href="care.html" class="tab"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
+      <a href="farmers.html" class="tab"><span aria-hidden="true">🌾</span><span class="label">Farmers Assistant</span></a>
+      <a href="chart.html" class="tab"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
+      <a href="learn.html" class="tab"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
+      <a href="buykit.html" class="tab"><span aria-hidden="true">🛒</span><span class="label">Buy Kit</span></a>
+      <a href="about.html" class="tab"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
+    </nav>
+    <footer class="sidebar-footer">
+      &copy; 2025 Water Health Index · School project
+    </footer>
+  </aside>
+  <div class="main-content">
+    <div class="hero-card">
+      <div class="hero-title">Welcome to Water Health Index</div>
+      <div class="hero-quote">
+          "Protecting water today, empowering communities tomorrow."
+      </div>
+      <div class="hero-desc">
+        Use your device and simple tools to measure water quality.<br>
+        Save readings, view on the map, and follow up with care steps for families and farmers.
+      </div>
+      <div class="hero-buttons">
+        <a href="measure.html" class="hero-btn">Go to Measure</a>
+        <a href="care.html" class="hero-btn alt">See care tips</a>
+      </div>
+    </div>
+    <!-- Add more cards, tips, or sections as needed below -->
+  </div>
+</body>
+</html>
