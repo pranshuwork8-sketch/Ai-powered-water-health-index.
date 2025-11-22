@@ -6,8 +6,10 @@
   <title>Water Health Index - Home</title>
   <style>
     :root {
-      --sidebar-wide: 225px;
-      --sidebar-narrow: 64px;
+      --sidebar-wide: 225px;        /* default desktop width */
+      --sidebar-narrow: 64px;       /* mobile width */
+      --sidebar-min: 210px;         /* min drag width */
+      --sidebar-max: 380px;         /* max drag width */
       --accent: #51daf7;
       --active: #48e8c2;
       --card-bg: #1d334b;
@@ -32,6 +34,8 @@
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
       background: rgba(16,38,54,0.98);
       box-shadow: 3px 0 20px #143d5344;
       position: fixed;
@@ -39,6 +43,7 @@
       display: flex;
       flex-direction: column;
       z-index: 1000;
+      box-sizing: border-box;
     }
     .sidebar-header {
       display: flex;
@@ -95,6 +100,20 @@
       padding: 1.1rem .8rem 1rem .8rem;
       text-align: center;
     }
+    /* draggable handle on right edge */
+    .sidebar-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
     /* Main wrapper */
     .main-wrap {
       margin-left: var(--sidebar-wide);
@@ -106,6 +125,7 @@
       align-items: stretch;
       justify-content: space-between;
     }
+
     /* Language pill top-right */
     .lang-wrap {
       position: fixed;
@@ -164,6 +184,7 @@
       color: #143d53;
       border-color: #48e8c2;
     }
+
     /* Welcome box (upper-left of content area) */
     .welcome-box {
       max-width: 520px;
@@ -222,29 +243,31 @@
     }
     .welcome-btn:hover { background: #17487d; color: #b7fff6; }
     .welcome-btn.alt:hover { background: #223e5b; color: #48e8c2; }
-    /* Credits box (bottom-right of content area) */
+
+    /* Credits box (bottom-right of content area, slightly larger) */
     .credits-main {
       align-self: flex-end;
       margin-bottom: 3.2vw;
       margin-top: 3vw;
-      margin-right: 1vw;
+      margin-right: 1.3vw;
     }
     .credits-box {
       background: #173144;
-      border-radius: 16px;
-      border: 1.4px solid #2aa2cd;
-      padding: .9rem 1.2rem .7rem 1.2rem;
-      width: 260px;
+      border-radius: 18px;
+      border: 1.6px solid #2aa2cd;
+      padding: 1.1rem 1.6rem .9rem 1.6rem;
+      width: 320px;
+      max-width: 90vw;
       box-sizing: border-box;
       color: #e2fff3;
-      font-size: 1rem;
-      box-shadow: 0 4px 20px #0b182540;
+      font-size: 1.02rem;
+      box-shadow: 0 4px 24px #0b18254a;
     }
     .credits-title {
       color: #55ebca;
-      font-size: 1.18rem;
+      font-size: 1.2rem;
       font-weight: bold;
-      margin-bottom: .4rem;
+      margin-bottom: .48rem;
     }
     .credits-box ul {
       margin: 0 0 .3rem 1.1rem;
@@ -255,10 +278,13 @@
       color: #49d3ec;
       font-size: .95rem;
     }
+
     /* Responsive fixes */
     @media (max-width: 900px) {
       .sidebar {
-        width: var(--sidebar-narrow);
+        width: var(--sidebar-narrow) !important;
+        min-width: var(--sidebar-narrow);
+        max-width: var(--sidebar-narrow);
       }
       .sidebar-header { margin: 1rem 0; }
       .logo-img { font-size: 2.1rem; }
@@ -269,6 +295,8 @@
         justify-content: center;
       }
       .sidebar nav .nav-link .label { display:none; }
+      .sidebar-handle { display:none; }
+
       .main-wrap {
         margin-left: var(--sidebar-narrow);
         padding: 4vw 2.2vw 3vw 2.2vw;
@@ -287,7 +315,7 @@
         justify-content: center;
       }
       .credits-box {
-        width: calc(100% - 1.2rem);
+        width: calc(100% - 1.4rem);
       }
     }
     @media (max-width: 520px) {
@@ -300,7 +328,7 @@
 </head>
 <body>
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <span class="logo-img" aria-hidden="true">🌊</span>
       <span class="logo-text">Water<br>Index</span>
@@ -317,8 +345,9 @@
       <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
     </nav>
     <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · School project
+      &copy; 2025 Water Health Index · Regional project
     </footer>
+    <div class="sidebar-handle" id="sidebarHandle"></div>
   </aside>
 
   <!-- Lang pill -->
@@ -341,7 +370,7 @@
   </div>
 
   <!-- Main layout -->
-  <div class="main-wrap">
+  <div class="main-wrap" id="mainWrap">
     <!-- Upper-left welcome box -->
     <section class="welcome-box">
       <h1 class="welcome-title">Welcome to Water Health Index</h1>
@@ -362,7 +391,7 @@
         <div class="credits-title">🌱 Credits</div>
         <ul>
           <li>Pranshu (Dev & UI)</li>
-          <li>Mentor: Ashish sir</li>
+          <li>Mentor: Ashish sir, Naween sir</li>
           <li>Ollama & Llama-3</li>
           <li>FastAPI, GitHub</li>
         </ul>
@@ -396,6 +425,54 @@
         // hook: call your translation JS here
       });
     });
+
+    // Sidebar drag-to-resize (desktop only)
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.getElementById('mainWrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return; // disable on mobile
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      // If window resized to mobile size while dragging, reset layout
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
   </script>
 </body>
 </html>
