@@ -1,10 +1,5 @@
 // measure.js
-// Logic for Water Health Index "Measure" page:
-// - Camera pH reader
-// - Index calculation from pH, temperature, turbidity
-// - TDS-based drinking safety
-// - Geolocation + Leaflet map
-// - LocalStorage history + map markers
+// Logic for Water Health Index "Measure" page.
 
 document.addEventListener('DOMContentLoaded', () => {
   // ------- DOM references -------
@@ -45,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPlace = '';
 
   // ------- Leaflet map setup -------
-  // Center over India / South Asia as a default view
   const map = L.map('map', {
     zoomControl: true,
     scrollWheelZoom: false
@@ -56,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // Layer group to hold saved-reading markers
   const markersLayer = L.layerGroup().addTo(map);
 
   function markerColor(index) {
@@ -70,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const color = markerColor(rec.index || 0);
     const popupHtml = `
       <strong>${rec.place || 'Saved location'}</strong><br/>
-      pH: ${rec.ph}, Temp: ${rec.temp}°C, Turb: ${rec.turb}<br/>
+      pH: ${rec.ph}, Temp: ${rec.temp}°C, Turbidity: ${rec.turb}<br/>
       TDS: ${rec.tds ?? '—'} mg/L, Index: ${rec.index} (${rec.drinkableFlag || '–'})
     `;
     L.circleMarker([rec.lat, rec.lng], {
@@ -102,9 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function reverseGeocode(lat, lng) {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-      const res = await fetch(url, {
-        headers: { 'Accept-Language': 'en' }  // simple English label
-      });
+      const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
       return formatLocation(data.address);
     } catch (e) {
@@ -129,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
       currentPlace = label;
       locationMain.textContent = label;
 
-      // Center map and add a marker for this measurement spot
       map.setView([lat, lng], 16);
+
       addReadingMarker({
         ph: phInput.value || '–',
         temp: tempInput.value || '–',
@@ -154,9 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------- Camera pH reader -------
   const video  = document.getElementById('cameraView');
   const canvas = document.getElementById('phCanvas');
-  const ctx    = canvas.getContext ? canvas.getContext('2d') : null;
+  const ctx    = canvas.getContext && (canvas.getContext('2d', { willReadFrequently: true }) || canvas.getContext('2d'));
   let stream   = null;
-  let facing   = 'environment'; // back camera on phones where supported
+  let facing   = 'environment';
 
   async function openCamera() {
     try {
@@ -164,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Camera API not supported in this browser.');
         return;
       }
-      if (stream) return; // already open
+      if (stream) return;
 
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: facing }
@@ -196,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     openCamera();
   });
 
-  // Reference colors for pH strips (approximate)
   const phReference = [
     { pH: 1,  rgb: [235,  90, 120] },
     { pH: 2,  rgb: [240, 120, 105] },
@@ -361,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (score >= 75) return 'GOOD';
     if (score >= 60) return 'FAIR';
     if (score >= 45) return 'POOR';
-    return 'VERY POOR';
+    return 'VERY_POOR';
   }
 
   function analyze() {
@@ -393,7 +383,22 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       }
     }
-    statusText.textContent = msg;
+
+    // Short summary line + detailed message
+    let summary = '';
+    if (badge === 'EXCELLENT') {
+      summary = 'Excellent water quality – good for drinking, cooking and crops.';
+    } else if (badge === 'GOOD') {
+      summary = 'Good water – usually safe for drinking with simple precautions.';
+    } else if (badge === 'FAIR') {
+      summary = 'Fair water – use for drinking only with treatment; fine for most crops.';
+    } else if (badge === 'POOR') {
+      summary = 'Poor quality – avoid for drinking; use carefully for irrigation.';
+    } else {
+      summary = 'Very poor – treat as contaminated; avoid for people and animals.';
+    }
+
+    statusText.textContent = summary + ' ' + msg;
     sPh.textContent   = ph.toFixed(2);
     sTemp.textContent = temp.toFixed(1) + '°C';
     sTurb.textContent = turb;
@@ -404,49 +409,90 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnAnalyze.addEventListener('click', analyze);
 
-  // ------- TDS + drinking safety -------
+  // ------- TDS + drinking safety (detailed bands) -------
   function classifyDrinkability(ph, tds) {
-    const safePh = ph >= 6.5 && ph <= 8.5; // typical safe band
+    const safePh = ph >= 6.5 && ph <= 8.5;
 
     if (isNaN(tds)) {
       return {
         flag: 'UNKNOWN',
-        note: 'Add TDS to check drinking safety.'
+        label: 'Add TDS',
+        note: 'Enter TDS to get a drinking-safety result based on pH and dissolved solids.'
       };
     }
 
-    if (tds > 1000 || !safePh) {
+    if (!safePh) {
       return {
-        flag: 'NOT_DRINKABLE',
-        note: 'Even if the index looks good, pH or TDS are outside safe drinking limits.'
+        flag: 'PH_OUT_OF_RANGE',
+        label: 'pH outside safe band',
+        note: 'The TDS looks okay, but pH is outside the usual 6.5–8.5 range for safe drinking.'
       };
-    } else if (tds > 600) {
+    }
+
+    if (tds < 50) {
       return {
-        flag: 'CAUTION',
-        note: 'High TDS — use only if no better source and treat water before drinking.'
+        flag: 'VERY_LOW_TDS',
+        label: 'Very low minerals',
+        note: 'Water is safe but has very low minerals; long-term use may lack essential salts.'
       };
-    } else if (tds < 50) {
+    } else if (tds < 150) {
       return {
-        flag: 'LOW_MINERALS',
-        note: 'Very low TDS — safe but may lack minerals; best range is about 150–300 mg/L.'
+        flag: 'SOFT_WATER',
+        label: 'Soft water',
+        note: 'Soft, low-mineral water – generally safe for drinking and household use.'
+      };
+    } else if (tds < 300) {
+      return {
+        flag: 'IDEAL_RANGE',
+        label: 'Ideal range',
+        note: 'This is a commonly preferred TDS range (~150–300 mg/L) for good-tasting drinking water.'
+      };
+    } else if (tds < 600) {
+      return {
+        flag: 'ACCEPTABLE',
+        label: 'Acceptable',
+        note: 'Acceptable for drinking for most people, though taste may feel slightly mineral-rich.'
+      };
+    } else if (tds < 900) {
+      return {
+        flag: 'HARD_WATER',
+        label: 'Hard water',
+        note: 'High TDS – usually safe, but may cause scaling and is not ideal for some health conditions.'
+      };
+    } else if (tds < 1200) {
+      return {
+        flag: 'VERY_HARD_WATER',
+        label: 'Very hard water',
+        note: 'Very high TDS – avoid for long-term drinking; better suited to cleaning or some crops.'
       };
     } else {
       return {
-        flag: 'DRINKABLE',
-        note: 'pH and TDS are in a range usually considered drinkable.'
+        flag: 'NOT_DRINKABLE',
+        label: 'Not recommended for drinking',
+        note: 'Extremely high TDS – even if the index looks good, this water should not be used for drinking.'
       };
     }
   }
 
   function updateTdsUI(result) {
     if (!result) return;
-    tdsFlagText.textContent = result.flag.replace('_', ' ');
+
+    tdsFlagText.textContent = result.label;
     tdsNoteText.textContent = result.note;
 
-    if (result.flag === 'DRINKABLE') {
+    if (result.flag === 'IDEAL_RANGE' || result.flag === 'SOFT_WATER') {
       tdsFlagText.style.color = '#55ebca';
-    } else if (result.flag === 'CAUTION' || result.flag === 'LOW_MINERALS') {
+    } else if (
+      result.flag === 'ACCEPTABLE' ||
+      result.flag === 'HARD_WATER' ||
+      result.flag === 'VERY_LOW_TDS'
+    ) {
       tdsFlagText.style.color = '#ffd26a';
+    } else if (
+      result.flag === 'VERY_HARD_WATER' ||
+      result.flag === 'PH_OUT_OF_RANGE'
+    ) {
+      tdsFlagText.style.color = '#ffb36a';
     } else if (result.flag === 'NOT_DRINKABLE') {
       tdsFlagText.style.color = '#ff7a7a';
     } else {
@@ -490,7 +536,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderHistory() {
     const list = loadHistory();
     historyBody.innerHTML = '';
-
     markersLayer.clearLayers();
 
     if (!list.length) {
@@ -504,7 +549,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // show newest first
     list.slice().reverse().forEach(rec => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
