@@ -256,6 +256,8 @@
       font-weight: bold;
       color: var(--measure-accent2);
       font-size: 1.02rem;
+      margin-top: 0.45rem;
+      margin-bottom: 0.1rem;
     }
     input, select {
       width: 100%;
@@ -263,10 +265,24 @@
       border: 1px solid #2aa2cd;
       margin: .45rem 0 1.05rem 0;
       padding: .6rem .85rem;
-      font-size: 1rem;
+      font-size: 1.05rem;
       background: #102636;
       color: #e9fff5;
     }
+
+    /* Center numeric values and TDS nicely */
+    input[type="number"],
+    input#tds {
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Center closed turbidity text (browser support varies) */
+    #turbidity {
+      text-align-last: center;
+    }
+
     .small-hint {
       font-size: .84rem;
       color: #b8e9ff;
