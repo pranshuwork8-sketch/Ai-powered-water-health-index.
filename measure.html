@@ -251,28 +251,43 @@
       border: 1.6px solid #107dac;
     }
 
-    label {
+    /* Shared field width so left and right look symmetrical */
+    .measure-field {
+      max-width: 540px;
+      margin: 0 auto 1rem auto;   /* center & space out */
+    }
+    .measure-field label {
+      margin-top: 0.45rem;
+      margin-bottom: 0.1rem;
       display: block;
       font-weight: bold;
       color: var(--measure-accent2);
       font-size: 1.02rem;
-      margin-top: 0.45rem;
-      margin-bottom: 0.1rem;
     }
-    input, select {
+    .measure-field input,
+    .measure-field select {
       width: 100%;
       border-radius: 10px;
       border: 1px solid #2aa2cd;
-      margin: .45rem 0 1.05rem 0;
+      margin: .45rem 0 0.8rem 0;
       padding: .6rem .85rem;
       font-size: 1.05rem;
       background: #102636;
       color: #e9fff5;
     }
 
-    /* Center numeric values and TDS nicely */
-    input[type="number"],
-    input#tds {
+    label {
+      font-weight: bold;
+      color: var(--measure-accent2);
+    }
+
+    /* Numbers: pH & Temp like old page (left), TDS centered & bold */
+    input[type="number"] {
+      text-align: left;
+      font-weight: normal;
+      letter-spacing: 0;
+    }
+    #tds {
       text-align: center;
       font-weight: 600;
       letter-spacing: 0.02em;
@@ -286,7 +301,7 @@
     .small-hint {
       font-size: .84rem;
       color: #b8e9ff;
-      margin: -.4rem 0 0.7rem 0.1rem;
+      margin: -.2rem 0 0.7rem 0.1rem;
     }
 
     .buttons-row {
@@ -647,29 +662,35 @@
       <!-- LEFT -->
       <div class="measure-left">
         <div class="measure-card">
-          <label for="ph" data-i18n="measure_ph_label">pH (0.0 - 14.0)</label>
-          <input id="ph" type="number" min="0" max="14" step="0.01" placeholder="7.00" />
+          <div class="measure-field">
+            <label for="ph" data-i18n="measure_ph_label">pH (0.0 - 14.0)</label>
+            <input id="ph" type="number" min="0" max="14" step="0.01" placeholder="7.00" />
+          </div>
 
-          <label for="temp" data-i18n="measure_temp_label">Temperature (°C)</label>
-          <input id="temp" type="number" min="-10" max="70" step="0.1" placeholder="25" />
+          <div class="measure-field">
+            <label for="temp" data-i18n="measure_temp_label">Temperature (°C)</label>
+            <input id="temp" type="number" min="-10" max="70" step="0.1" placeholder="25" />
+          </div>
 
-          <label for="turbidity" data-i18n="measure_turb_label">Turbidity</label>
-          <select id="turbidity">
-            <option value="" disabled selected data-i18n="measure_turb_select">
-              Select turbidity
-            </option>
-            <option value="Low" data-i18n="measure_turb_low">
-              Low — water looks clear; bottom and small objects are easy to see.
-            </option>
-            <option value="Medium" data-i18n="measure_turb_medium">
-              Medium — water is slightly cloudy; shapes visible but details blurred.
-            </option>
-            <option value="High" data-i18n="measure_turb_high">
-              High — water is cloudy or muddy; hard to see more than a few cm deep.
-            </option>
-          </select>
-          <div class="small-hint" id="turbHint" data-i18n="measure_turb_hint">
-            Low = clear water, Medium = slightly cloudy, High = cloudy or muddy water.
+          <div class="measure-field">
+            <label for="turbidity" data-i18n="measure_turb_label">Turbidity</label>
+            <select id="turbidity">
+              <option value="" disabled selected data-i18n="measure_turb_select">
+                Select turbidity
+              </option>
+              <option value="Low" data-i18n="measure_turb_low">
+                Low — water looks clear; bottom and small objects are easy to see.
+              </option>
+              <option value="Medium" data-i18n="measure_turb_medium">
+                Medium — water is slightly cloudy; shapes visible but details blurred.
+              </option>
+              <option value="High" data-i18n="measure_turb_high">
+                High — water is cloudy or muddy; hard to see more than a few cm deep.
+              </option>
+            </select>
+            <div class="small-hint" id="turbHint" data-i18n="measure_turb_hint">
+              Low = clear water, Medium = slightly cloudy, High = cloudy or muddy water.
+            </div>
           </div>
 
           <div class="buttons-row">
@@ -768,18 +789,20 @@
             Use pH and TDS to check if this water is suitable for drinking.
           </p>
 
-          <label for="tds" data-i18n="tds_label">TDS (mg/L or ppm)</label>
-          <input id="tds" type="number" min="0" step="1" placeholder="250" />
+          <div class="measure-field">
+            <label for="tds" data-i18n="tds_label">TDS (mg/L or ppm)</label>
+            <input id="tds" type="number" min="0" step="1" placeholder="250" />
 
-          <button type="button" id="btnCheckTds" class="btn-main" data-i18n="tds_check_btn">
-            Check drinking safety
-          </button>
+            <button type="button" id="btnCheckTds" class="btn-main" data-i18n="tds_check_btn">
+              Check drinking safety
+            </button>
 
-          <div class="tds-result">
-            <div class="tds-flag" id="tdsFlagText" data-i18n="tds_flag_wait">
-              Enter TDS and tap “Check drinking safety”.
+            <div class="tds-result">
+              <div class="tds-flag" id="tdsFlagText" data-i18n="tds_flag_wait">
+                Enter TDS and tap “Check drinking safety”.
+              </div>
+              <div class="tds-note" id="tdsNoteText"></div>
             </div>
-            <div class="tds-note" id="tdsNoteText"></div>
           </div>
         </div>
       </div>
