@@ -6,12 +6,11 @@
   <title>Water Health Index - Home</title>
   <style>
     :root {
-      --sidebar-width: 215px;
+      --sidebar-width: 220px;
       --accent: #51daf7;
       --active: #48e8c2;
       --card-bg: #1d334b;
       --shadow: 0 8px 38px #17487d36;
-      --logo-glow: 0 0 14px #51daf7, 0 0 24px #17487d;
     }
     html, body {
       height: 100%;
@@ -26,14 +25,11 @@
       color: #e3fbfa;
       font-family: "Times New Roman", Times, serif;
       min-height: 100vh;
+      box-sizing: border-box;
     }
     body {
       display: flex;
-      flex-direction: row;
       min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      transition: background 0.2s;
     }
     /* Sidebar styles */
     .sidebar {
@@ -60,17 +56,11 @@
       align-items: center;
       justify-content: center;
       gap: .72rem;
-    }
-    .sidebar .waveemoji {
-      font-size: 2.5rem;
-      display: inline-block;
-      will-change: transform;
       animation: wave-motion 2.1s infinite alternate cubic-bezier(.55,.06,.87,.6);
-      filter: drop-shadow(0 4px 16px #51daf7b7);
     }
     @keyframes wave-motion {
-      0% { transform: translateY(0) rotate(-6deg);}
-      100%{ transform: translateY(-12px) rotate(10deg);}
+      0% { transform: translateY(0);}
+      100%{ transform: translateY(-8px);}
     }
     .sidebar nav {
       display: flex;
@@ -104,141 +94,109 @@
       padding: 1.2rem .8rem 1rem .8rem;
       margin-top: auto;
     }
-    /* Language dropdown wrapper - always stays within screen */
-.lang-dropdown-wrap {
-  position: absolute;
-  top: 2rem;
-  right: 1vw;
-  width: 180px;
-  max-width: 98vw;
-  z-index: 2005;
-  font-family: inherit;
-}
-
-/* Current language selection pill/button */
-.lang-current {
-  background: #51daf7;
-  color: #173048;
-  font-weight: bold;
-  font-size: 1.13rem;
-  border: none;
-  border-radius: 16px;
-  padding: .55rem 1.62rem .55rem 1.05rem;
-  cursor: pointer;
-  box-shadow: 0 2px 10px #2183a235;
-  display: flex;
-  align-items: center;
-  outline: none;
-  justify-content: space-between;
-  width: 100%;
-}
-
-/* Dropdown options panel - never overflows screen */
-.lang-dropdown {
-  display: none;
-  flex-direction: column;
-  position: absolute;
-  top: 2.7rem;
-  right: 0;
-  width: 180px;
-  max-width: 98vw;
-  background: #184c6cfa;
-  border-radius: 13px;
-  box-shadow: 0 6px 24px #155070ad;
-  padding: .36rem .54rem;
-  margin-top: 4px;
-  overflow-y: auto;
-  max-height: 64vh;
-  border: 1.8px solid #51daf7;
-  backdrop-filter: blur(3px);
-}
-.lang-dropdown.open {
-  display: flex;
-}
-
-.lang-opt {
-  background: transparent;
-  color: #55ebca;
-  border-radius: 11px;
-  border: 1.3px solid #39bbe9;
-  font-size: 1.09rem;
-  font-family: inherit;
-  margin-bottom: .33rem;
-  cursor: pointer;
-  padding: .39rem .82rem;
-  text-align: left;
-  transition: background 0.15s, color 0.15s, border-color 0.14s;
-  font-weight: 600;
-  width: 100%;
-}
-.lang-opt:last-child {
-  margin-bottom: 0;
-}
-.lang-opt:hover, .lang-opt.selected {
-  background: #51daf7;
-  color: #143d53;
-  font-weight: bold;
-  border-color: #48e8c2;
-}
-
-/* Responsive adjustments for mobile/small screens */
-@media (max-width: 500px) {
-  .lang-dropdown-wrap {
-    width: 92vw;
-    right: 4vw;
-    min-width: 0;
-  }
-  .lang-dropdown {
-    width: 92vw;
-    right: 0;
-    left: 0;
-    min-width: 0;
-    max-width: none;
-    padding: .41rem .18rem;
-    font-size: 1.08rem;
-    max-height: 47vh;
-  }
-  .lang-current {
-    font-size: 1.04rem;
-    padding: .48rem 1.2rem .48rem .8rem;
-  }
-  .lang-opt {
-    font-size: 1.01rem;
-    padding: .34rem .56rem;
-  }
+    /* Main layout */
+    .main-layout {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      width: calc(100vw - var(--sidebar-width));
+      box-sizing: border-box;
+    }
+    /* Language dropdown floating top right */
+    .lang-dropdown-wrap {
+      position: absolute;
+      top: 3vw;
+      right: 3vw;
+      width: 180px;
+      max-width: 98vw;
+      z-index: 2005;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.13rem;
+      border: none;
+      border-radius: 16px;
+      padding: .55rem 1.62rem .55rem 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 2px 10px #2183a235;
+      display: flex;
+      align-items: center;
+      outline: none;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 2.7rem;
+      width: 180px;
+      max-width: 98vw;
+      background: #184c6cfa;
+      border-radius: 13px;
+      box-shadow: 0 6px 24px #155070ad;
+      padding: .36rem .54rem;
+      overflow-y: auto;
+      max-height: 66vh;
+      border: 1.8px solid #51daf7;
+      backdrop-filter: blur(3px);
+    }
+    .lang-dropdown.open {
+      display: flex;
+    }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.3px solid #39bbe9;
+      font-size: 1.09rem;
+      font-family: inherit;
+      margin-bottom: .33rem;
+      cursor: pointer;
+      padding: .39rem .82rem;
+      text-align: left;
+      transition: background 0.15s, color 0.15s, border-color 0.14s;
+      font-weight: 600;
+      width: 100%;
+    }
+    .lang-opt:last-child {margin-bottom:0;}
     .lang-opt:hover, .lang-opt.selected {
       background: #51daf7;
       color: #143d53;
       font-weight: bold;
       border-color: #48e8c2;
     }
-    .main-content {
-  margin-left: var(--sidebar-width);
-  min-height: 93vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 3.3vw;
-  padding-bottom: 2vw;
-  width: calc(100vw - var(--sidebar-width));
-  position: relative;
-  z-index: 2;
+    /* The hero card, always centered */
+    .hero-card {
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      border-radius: 29px;
+      padding: 2.1rem 2.2rem 2.2rem 2.2rem;
+      min-width: 340px;
+      max-width: 610px;
+      width: 100%;
+      border: 1.3px solid #107dac;
+      backdrop-filter: blur(2px);
+      position: relative;
+      margin: 0 auto;
+      box-sizing: border-box;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
-  .hero-card {
-  background: var(--card-bg);
-  box-shadow: var(--shadow);
-  border-radius: 29px;
-  padding: 2.5rem 2.2rem 2.1rem 2.2rem;
-  min-width: 380px;
-  max-width: 620px;
-  width: 100%;
-  border: 1.3px solid #107dac;
-  backdrop-filter: blur(2px);
-  position: relative;
-  }
-
     .hero-title {
-      font-size: 2.42rem;
+      font-size: 2.25rem;
       color: var(--active);
       letter-spacing: .03em;
       font-weight: bold;
@@ -246,26 +204,28 @@
       margin-bottom: .68rem;
     }
     .hero-quote {
-      font-size: 1.14rem;
+      font-size: 1.07rem;
       font-style: italic;
       color: #90e0cf;
       font-weight: bold;
       margin-bottom: .93rem;
     }
     .hero-desc {
-      font-size: 1.06rem;
+      font-size: 1.04rem;
       color: #d9fbff;
       margin-bottom: 1.5rem;
-      line-height: 1.63;
+      line-height: 1.6;
+      width: 100%;
     }
     .hero-buttons {
-      margin-top: .81rem;
+      margin-top: .61rem;
       display: flex;
       gap: .75rem;
+      width: 100%;
     }
     .hero-btn {
       font-weight: bold;
-      font-size: 1.03rem;
+      font-size: 1.01rem;
       padding: .7rem 1.33rem;
       border-radius: 990px;
       border: 1.5px solid #51daf7;
@@ -282,29 +242,20 @@
     }
     .hero-btn:hover { background: #17487d; color: #b7fff6; border-color: #b7fff6;}
     .hero-btn.alt:hover { background: #223e5b; color: #48e8c2;}
-    @media (max-width: 870px) {
-      .sidebar { position: absolute; width:56px; left: 0; height: 100vh;}
+    @media (max-width: 900px) {
+      .sidebar { position: absolute; width:55px; left: 0; height: 100vh;}
       .sidebar .logo { font-size: 1.3rem;}
       .sidebar nav .tab .label { display: none;}
       .sidebar nav .tab { font-size: 0; padding: .93rem .45rem;}
-      .main-content { margin-left: 0; padding: 1.5rem 1vw; }
-      .lang-dropdown-wrap { top: 13px; right: 15px;}
-      .hero-card { padding: .93rem .47rem 1.15rem .75rem;}
+      .main-layout { margin-left: 55px; width: calc(100vw - 55px);}
     }
-   @media (max-width: 700px) {
-  .main-content {
-    margin-left: 0;
-    width: 100vw;
-    padding-top: 2vw;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  .hero-card {
-    min-width: 0;
-    max-width: 97vw;
-    padding: 1.1rem 0.7rem 1.3rem 0.7rem;
-  }
+    @media (max-width: 600px) {
+      .main-layout { margin-left: 0; width: 100vw; min-height: 98vh; }
+      .lang-dropdown-wrap { right: 1vw; top: 2vw; width:95vw;}
+      .lang-dropdown {width:95vw;}
+      .hero-card { min-width: 0; max-width: 99vw; padding: 1.11rem 0.7rem 1.3rem 0.7rem;}
+      .hero-title {font-size: 1.18rem;}
+    }
   </style>
 </head>
 <body>
@@ -326,26 +277,26 @@
       &copy; 2025 Water Health Index · School project
     </footer>
   </aside>
-  <!-- Language dropdown selector (floating) -->
-  <div class="lang-dropdown-wrap">
-    <button class="lang-current" id="langCurrentBtn">
-      English <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt">English</button>
-      <button class="lang-opt">Hindi</button>
-      <button class="lang-opt">Bengali</button>
-      <button class="lang-opt">Tamil</button>
-      <button class="lang-opt">Marathi</button>
-      <button class="lang-opt">Gujarati</button>
-      <button class="lang-opt">Punjabi</button>
-      <button class="lang-opt">Telugu</button>
-      <button class="lang-opt">Kannada</button>
-      <button class="lang-opt">Urdu</button>
+  <!-- Main layout: This ensures proper centering and floating top-right dropdown -->
+  <div class="main-layout">
+    <div class="lang-dropdown-wrap">
+      <button class="lang-current" id="langCurrentBtn">
+        English <span style="margin-left:.7rem;font-size:1rem;">&#x25BC;</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-opt">English</button>
+        <button class="lang-opt">Hindi</button>
+        <button class="lang-opt">Bengali</button>
+        <button class="lang-opt">Tamil</button>
+        <button class="lang-opt">Marathi</button>
+        <button class="lang-opt">Gujarati</button>
+        <button class="lang-opt">Punjabi</button>
+        <button class="lang-opt">Telugu</button>
+        <button class="lang-opt">Kannada</button>
+        <button class="lang-opt">Urdu</button>
+      </div>
     </div>
-  </div>
-  <!-- Main homepage content -->
-  <div class="main-content">
+    <!-- Main homepage content always centered -->
     <div class="hero-card">
       <div class="hero-title">Welcome to Water Health Index</div>
       <div class="hero-quote">"Protecting water today, empowering communities tomorrow."</div>
