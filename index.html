@@ -7,72 +7,84 @@
   <link rel="stylesheet" href="assets/style.css"/>
   <style>
     :root {
-      --sidebar-bg: rgba(32, 70, 105, 0.95);
-      --sidebar-glass: blur(12px);
+      --sidebar-bg: rgba(32, 70, 105, 0.96);
       --card-bg: #263b4d;
       --main-accent: #39bbe9;
       --tab-active: #55ebca;
       --tab-hover: #168eaf;
       --content-bg: linear-gradient(to bottom right, #215871, #143d53);
       --shadow: 0 4px 20px rgba(65,180,202,0.14);
-      --sidebar-width: 235px;
+      --sidebar-width: 220px;
+      --trans-sidebar-width: 200px;
     }
     body {
-      margin: 0; padding: 0;
       font-family: "Times New Roman", Times, serif;
       background: var(--content-bg);
       color: #e3fbfa;
-      height: 100vh;
-      display: flex;
       min-height: 100vh;
+      margin: 0;
+      display: flex;
     }
-    .sidebar {
-      width: var(--sidebar-width);
-      min-width: var(--sidebar-width);
-      background: var(--sidebar-bg);
-      backdrop-filter: var(--sidebar-glass);
+    .sidebar-toggle, .trans-toggle {
+      display: none;
+      position: fixed;
+      background: #184757;
+      color: #39bbe9;
+      font-size: 2rem;
+      border: none;
+      z-index: 2001;
+      border-radius: 8px;
+      box-shadow: 0 1px 11px #0005;
+      cursor: pointer;
+      transition: background 0.13s;
+    }
+    .sidebar-toggle { top: 13px; left: 14px; padding: .2rem .77rem;}
+    .trans-toggle { top: 13px; right: 14px; padding: .2rem .67rem;}
+    .sidebar,
+    .trans-sidebar {
+      transition: transform 0.24s;
       box-shadow: var(--shadow);
+      background: var(--sidebar-bg);
+      position: fixed;
+      top: 0; bottom: 0;
+      z-index: 1100;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      padding-top: 1.5rem;
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      z-index: 100;
-      transition: width 0.2s;
+      overflow: auto;
+    }
+    .sidebar {
+      left: 0;
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      padding-top: 1.6rem;
+      transform: translateX(0);
     }
     .sidebar .logo {
       font-size: 2.1rem;
       font-weight: bold;
       color: var(--main-accent);
       display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-bottom: 2.3rem;
+      align-items: center;
+    }
+    .sidebar nav .tab {
+      display: flex;
       align-items: center;
       gap: 0.8rem;
-      margin-bottom: 2.2rem;
-      justify-content: center;
-    }
-    .sidebar nav {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .sidebar .tab {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.76rem 1.1rem;
-      margin: 0 1.2rem;
-      font-size: 1.08rem;
-      text-decoration: none;
+      padding: 0.82rem 1.05rem;
+      margin: 0 1rem;
+      font-size: 1.1rem;
       color: #e3fbfa;
       border-radius: 12px;
-      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
       font-weight: 500;
       border: none;
       background: none;
+      transition: background 0.14s, color 0.14s;
       cursor: pointer;
-      outline: none;
     }
     .sidebar .tab:hover,
     .sidebar .tab.active {
@@ -81,9 +93,9 @@
       font-weight: bold;
     }
     .sidebar-footer {
-      padding: 1.6rem 1.1rem;
+      padding: 1.5rem 1rem .6rem 1rem;
       text-align: center;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       color: #9ee8ff;
       opacity: 0.9;
       border-top: 1px solid #2778a2;
@@ -91,48 +103,93 @@
     }
     .main-content {
       margin-left: var(--sidebar-width);
-      padding: 2.6rem 4vw 2vw 4vw;
-      min-width: 0;
+      padding: 2.7rem 4vw 2vw 4vw;
       width: 100%;
       max-width: 950px;
+      min-width: 0;
+      margin-right: var(--trans-sidebar-width);
+      transition: margin 0.22s;
     }
+    /* --- Translation Sidebar Styles --- */
+    .trans-sidebar {
+      right: 0;
+      width: var(--trans-sidebar-width);
+      min-width: var(--trans-sidebar-width);
+      padding: 2.2rem 1.16rem 1.4rem 1.1rem;
+      border-left: 2.5px solid #34adc6a3;
+      box-shadow: -3px 5px 30px #102c3c62;
+      transform: translateX(0);
+    }
+    .trans-header {
+      font-size: 1.19rem;
+      color: var(--main-accent);
+      font-weight: bold;
+      margin-bottom: .53rem;
+    }
+    .lang-list {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      margin-top: 1.1rem;
+    }
+    .lang-list .lang-btn {
+      background: #234b63;
+      color: #b1fff7;
+      border-radius: 12px;
+      border: 1.2px solid #5adbd8;
+      font-size: 1.03rem;
+      font-family: inherit;
+      font-weight: 600;
+      padding: .39rem .75rem;
+      cursor: pointer;
+      transition: background 0.13s, color 0.13s;
+      margin-right: 0;
+      text-align: left;
+    }
+    .lang-list .lang-btn:hover,
+    .lang-list .lang-btn.active {
+      background: #55ebca;
+      color: #154b68;
+      border-color: #39bbe9;
+    }
+    /* Card styling */
     .hero-card {
       background: var(--card-bg);
-      border-radius: 25px;
-      box-shadow: var(--shadow);
-      padding: 2.1rem 2rem 2.4rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 4px 19px #0005;
+      padding: 2.1rem 2.1rem 2.2rem 2.1rem;
       margin-bottom: 2.2rem;
       border: 1.3px solid #1d4258;
     }
     .hero-title {
-      font-size: 2.45rem;
+      font-size: 2.4rem;
       color: var(--tab-active);
       text-shadow: 0 2px 12px #24aac9be;
-      margin-bottom: 0.57rem;
+      margin-bottom: 0.5rem;
     }
     .hero-quote {
       font-style: italic;
-      font-size: 1.15rem;
+      font-size: 1.13rem;
       color: #90e0cf;
-      margin-bottom: 1rem;
+      margin-bottom: 0.9rem;
       font-weight: 700;
     }
     .hero-desc {
       font-size: 1.02rem;
       color: #d9fbff;
-      margin-bottom: 1.6rem;
+      margin-bottom: 1.5rem;
       line-height: 1.65;
     }
     .hero-buttons {
       margin-top: 0.7rem;
       display: flex;
-      gap: 0.8rem;
+      gap: 0.74rem;
     }
     .hero-btn {
       text-decoration: none;
       font-weight: bold;
-      font-size: 1.01rem;
-      padding: 0.69rem 1.34rem;
+      font-size: 1rem;
+      padding: 0.65rem 1.25rem;
       border-radius: 999px;
       border: 1.2px solid #168eaf;
       background: #168eaf;
@@ -147,46 +204,71 @@
     }
     .hero-btn:hover { background: #124466; color: #c3fcf8; }
     .hero-btn.alt:hover { background: #15445f; color: #00ced1; }
-    @media (max-width: 800px) {
-      .sidebar { width: 60px; min-width: 60px; }
-      .sidebar .tab { font-size: 0; padding: 0.92rem 0.7rem; justify-content: center; }
-      .sidebar .tab .label { display: none; }
-      .sidebar .logo { font-size: 1.55rem; }
-      .main-content { margin-left: 66px; padding: 1.5rem 2vw 1vw 2vw; }
+    /* --- Mobile styles --- */
+    @media (max-width: 850px) {
+      .main-content { padding: 1.5rem 1vw 1vw 1vw; margin-left: 0; margin-right: 0;}
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .trans-sidebar { transform: translateX(100%); }
+      .trans-sidebar.open { transform: translateX(0); }
+      .sidebar-toggle, .trans-toggle { display: block; }
+      .sidebar { width: var(--sidebar-width); min-width: 0; }
+      .trans-sidebar { width: var(--trans-sidebar-width); min-width: 0; }
+      body { flex-direction: column; }
     }
-    @media (max-width: 580px) {
-      .sidebar { position: absolute; height: 100vh; }
-      .main-content { margin-left: 0; padding: 1.1rem 1vw; }
+    @media (max-width: 540px) {
+      .hero-title { font-size: 1.54rem; }
+      .hero-card { padding: .9rem .26rem 1.55rem .55rem;}
+      .lang-list .lang-btn { font-size: 0.97rem;}
+      .sidebar-toggle, .trans-toggle { font-size: 1.62rem; top: 6px;}
     }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="logo">
-      <span aria-hidden="true">🌊</span>
-      <span class="label">Water Index</span>
-    </div>
+  <!-- Hamburger menu for sidebar -->
+  <button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+  <!-- Hamburger for translation sidebar -->
+  <button class="trans-toggle" id="transToggle">&#127760;</button>
+  
+  <aside class="sidebar" id="sidebarMenu">
+    <div class="logo"><span aria-hidden="true">🌊</span>Water Index</div>
     <nav>
-      <a href="index.html" class="tab active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
-      <a href="measure.html" class="tab"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
-      <a href="map.html" class="tab"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
-      <a href="care.html" class="tab"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
-      <a href="farmers.html" class="tab"><span aria-hidden="true">🌾</span><span class="label">Farmers Assistant</span></a>
-      <a href="chart.html" class="tab"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
-      <a href="learn.html" class="tab"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
-      <a href="buykit.html" class="tab"><span aria-hidden="true">🛒</span><span class="label">Buy Kit</span></a>
-      <a href="about.html" class="tab"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
+      <a href="index.html" class="tab active"><span aria-hidden="true">🏠</span>Home</a>
+      <a href="measure.html" class="tab"><span aria-hidden="true">🧪</span>Measure</a>
+      <a href="map.html" class="tab"><span aria-hidden="true">🗺️</span>Map</a>
+      <a href="care.html" class="tab"><span aria-hidden="true">💧</span>Care</a>
+      <a href="farmers.html" class="tab"><span aria-hidden="true">🌾</span>Farmers Assistant</a>
+      <a href="chart.html" class="tab"><span aria-hidden="true">📊</span>Chart</a>
+      <a href="learn.html" class="tab"><span aria-hidden="true">📚</span>Learn</a>
+      <a href="buykit.html" class="tab"><span aria-hidden="true">🛒</span>Buy Kit</a>
+      <a href="about.html" class="tab"><span aria-hidden="true">ℹ️</span>About</a>
     </nav>
     <footer class="sidebar-footer">
       &copy; 2025 Water Health Index · School project
     </footer>
   </aside>
+  
+  <!-- Translation slide-out sidebar -->
+  <aside class="trans-sidebar" id="transSidebar">
+    <div class="trans-header">Choose Language</div>
+    <div class="lang-list">
+      <button class="lang-btn active">English</button>
+      <button class="lang-btn">हिन्दी</button>
+      <button class="lang-btn">বাংলা</button>
+      <button class="lang-btn">தமிழ்</button>
+      <button class="lang-btn">मराठी</button>
+      <button class="lang-btn">ગુજરાતી</button>
+      <button class="lang-btn">ਪੰਜਾਬੀ</button>
+      <button class="lang-btn">తెలుగు</button>
+      <button class="lang-btn">ಕನ್ನಡ</button>
+      <button class="lang-btn">اردو</button>
+    </div>
+  </aside>
+  
   <div class="main-content">
     <div class="hero-card">
       <div class="hero-title">Welcome to Water Health Index</div>
-      <div class="hero-quote">
-          "Protecting water today, empowering communities tomorrow."
-      </div>
+      <div class="hero-quote">"Protecting water today, empowering communities tomorrow."</div>
       <div class="hero-desc">
         Use your device and simple tools to measure water quality.<br>
         Save readings, view on the map, and follow up with care steps for families and farmers.
@@ -196,7 +278,29 @@
         <a href="care.html" class="hero-btn alt">See care tips</a>
       </div>
     </div>
-    <!-- Add more cards, tips, or sections as needed below -->
   </div>
+  
+<script>
+const sidebar = document.getElementById('sidebarMenu');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const transSidebar = document.getElementById('transSidebar');
+const transToggle = document.getElementById('transToggle');
+
+// Sidebar open/close (mobile)
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+// Translation sidebar open/close (mobile)
+transToggle.addEventListener('click', () => {
+  transSidebar.classList.toggle('open');
+});
+// Close sidebar when clicking outside (mobile)
+document.addEventListener('click', (e) => {
+  if(window.innerWidth < 850){
+    if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) sidebar.classList.remove('open');
+    if (!transSidebar.contains(e.target) && !transToggle.contains(e.target)) transSidebar.classList.remove('open');
+  }
+});
+</script>
 </body>
 </html>
