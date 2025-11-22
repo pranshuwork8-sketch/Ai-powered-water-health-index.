@@ -1,5 +1,11 @@
 // measure.js
-// Logic for Water Health Index "Measure" page.
+// Logic for the Water Health Index "Measure" page.
+// Features:
+//  - Camera pH reader (RGB -> pH using reference table)
+//  - Index calculation from pH, temperature, turbidity
+//  - Detailed TDS-based drinking safety
+//  - Geolocation + Nominatim reverse geocoding + Leaflet map markers
+//  - LocalStorage history that other pages can reuse
 
 document.addEventListener('DOMContentLoaded', () => {
   // ------- DOM references -------
@@ -39,16 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentLng   = null;
   let currentPlace = '';
 
-  // ------- Leaflet map setup -------
+  // =========================================================
+  //  Leaflet map
+  // =========================================================
   const map = L.map('map', {
     zoomControl: true,
     scrollWheelZoom: false
-  }).setView([23, 80], 4.5);
+  }).setView([23, 80], 4.5);                           // India-centered default [web:117]
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 13,
     attribution: '© OpenStreetMap'
-  }).addTo(map);
+  }).addTo(map);                                      // standard Leaflet tiles [web:117]
 
   const markersLayer = L.layerGroup().addTo(map);
 
@@ -71,10 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
       color,
       fillColor: color,
       fillOpacity: 0.9
-    }).addTo(markersLayer).bindPopup(popupHtml);
+    }).addTo(markersLayer).bindPopup(popupHtml);      // typical Leaflet marker pattern [web:117][web:123]
   }
 
-  // ------- Reverse geocoding (Nominatim) -------
+  // =========================================================
+  //  Reverse geocoding with Nominatim
+  // =========================================================
   function formatLocation(address) {
     if (!address) return 'Unknown location';
     const detail  = address.road || address.neighbourhood || address.suburb || address.town || address.village || '';
@@ -94,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function reverseGeocode(lat, lng) {
     try {
+      // Public Nominatim endpoint for reverse geocoding [web:75][web:76][web:124]
       const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
       const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
@@ -104,12 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ------- Geolocation button -------
   btnLocation.addEventListener('click', () => {
     if (!navigator.geolocation) {
       alert('Geolocation not supported by this browser.');
       return;
     }
+
     navigator.geolocation.getCurrentPosition(async pos => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
@@ -121,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
       locationMain.textContent = label;
 
       map.setView([lat, lng], 16);
-
       addReadingMarker({
         ph: phInput.value || '–',
         temp: tempInput.value || '–',
@@ -142,12 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ------- Camera pH reader -------
+  // =========================================================
+  //  Camera pH reader (getUserMedia + canvas)
+  // =========================================================
   const video  = document.getElementById('cameraView');
   const canvas = document.getElementById('phCanvas');
-  const ctx    = canvas.getContext && (canvas.getContext('2d', { willReadFrequently: true }) || canvas.getContext('2d'));
+  const ctx    = canvas.getContext && (canvas.getContext('2d', { willReadFrequently: true }) || canvas.getContext('2d')); // performance hint [web:86]
   let stream   = null;
-  let facing   = 'environment';
+  let facing   = 'environment';                       // back camera on phones where available [web:80][web:89][web:92][web:94]
 
   async function openCamera() {
     try {
@@ -155,11 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Camera API not supported in this browser.');
         return;
       }
-      if (stream) return;
+      if (stream) return; // already open
 
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: facing }
-      });
+      });                                                   // standard WebRTC getUserMedia usage [web:86][web:94]
+
       video.srcObject = stream;
       video.style.display = 'block';
       canvas.style.display = 'none';
@@ -182,11 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
   btnCamera.addEventListener('click', openCamera);
   btnCloseCam.addEventListener('click', closeCamera);
   btnSwitch.addEventListener('click', () => {
-    facing = (facing === 'environment') ? 'user' : 'environment';
+    facing = (facing === 'environment') ? 'user' : 'environment';  // flip camera [web:80][web:89][web:122]
     closeCamera();
     openCamera();
   });
 
+  // Approximate RGB reference table for pH colour strips
   const phReference = [
     { pH: 1,  rgb: [235,  90, 120] },
     { pH: 2,  rgb: [240, 120, 105] },
@@ -254,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const h = video.videoHeight;
     canvas.width = w;
     canvas.height = h;
-    ctx.drawImage(video, 0, 0, w, h);
+    ctx.drawImage(video, 0, 0, w, h);                       // common canvas usage for video frames [web:114]
 
     const box = 20;
     const sx = Math.max(0, Math.floor(w / 2 - box / 2));
@@ -274,14 +288,16 @@ document.addEventListener('DOMContentLoaded', () => {
     b /= px;
 
     const ph = rgbToPh(r, g, b);
-    phInput.value = ph.toFixed(2);
+    phInput.value = ph.toFixed(2);                          // this keeps 7.00 style like the old page
     camInfo.textContent =
       `Captured color (avg): R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)} → pH ≈ ${ph.toFixed(2)}`;
   }
 
   btnDetect.addEventListener('click', captureColor);
 
-  // ------- Index scoring -------
+  // =========================================================
+  //  Index scoring (pH + temp + turbidity)
+  // =========================================================
   function scorePh(ph) {
     if (isNaN(ph)) return 0;
     const d = Math.abs(ph - 7);
@@ -364,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return null;
     }
 
-    const idx = calcIndex(ph, temp, turb);
+    const idx   = calcIndex(ph, temp, turb);
     const badge = classifyIndex(idx);
 
     statusScore.textContent = idx;
@@ -384,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Short summary line + detailed message
+    // Short summary based on badge, plus detailed message.
     let summary = '';
     if (badge === 'EXCELLENT') {
       summary = 'Excellent water quality – good for drinking, cooking and crops.';
@@ -409,7 +425,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnAnalyze.addEventListener('click', analyze);
 
-  // ------- TDS + drinking safety (detailed bands) -------
+  // =========================================================
+  //  TDS + drinking safety
+  // =========================================================
   function classifyDrinkability(ph, tds) {
     const safePh = ph >= 6.5 && ph <= 8.5;
 
@@ -511,10 +529,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTdsUI(result);
   });
 
-  // ------- History in localStorage -------
+  // =========================================================
+  //  History in localStorage (for Map / Chart / Farmers pages)
+  // =========================================================
   function loadHistory() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY);           // standard localStorage usage [web:81][web:84][web:87][web:93]
       if (!raw) return [];
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return [];
