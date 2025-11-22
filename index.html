@@ -44,7 +44,7 @@
       flex-direction: column;
       z-index: 1000;
       box-sizing: border-box;
-      overflow-y: auto;          /* NEW: scrollable sidebar */
+      overflow-y: auto;
       overscroll-behavior: contain;
     }
     .sidebar-header {
@@ -266,10 +266,15 @@
       box-shadow: 0 4px 24px #0b18254a;
     }
     .credits-title {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: .48rem;
+    }
+    .credits-title span[data-i18n] {
       color: #55ebca;
       font-size: 1.2rem;
       font-weight: bold;
-      margin-bottom: .48rem;
     }
     .credits-box ul {
       margin: 0 0 .3rem 1.1rem;
@@ -327,6 +332,9 @@
       .welcome-box { margin-top: 22vw; }
     }
   </style>
+
+  <!-- translations file for index page -->
+  <script src="index.translations.js"></script>
 </head>
 <body>
   <!-- Sidebar -->
@@ -336,15 +344,42 @@
       <span class="logo-text">Water<br>Index</span>
     </div>
     <nav>
-      <a href="index.html" class="nav-link active"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
-      <a href="measure.html" class="nav-link"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
-      <a href="map.html" class="nav-link"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
-      <a href="care.html" class="nav-link"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
-      <a href="farmers.html" class="nav-link"><span aria-hidden="true">🌾</span><span class="label">Farmers Assistant</span></a>
-      <a href="chart.html" class="nav-link"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
-      <a href="learn.html" class="nav-link"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
-      <a href="buykit.html" class="nav-link"><span aria-hidden="true">🛒</span><span class="label">Buy Kit</span></a>
-      <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
+      <a href="index.html" class="nav-link active">
+        <span aria-hidden="true">🏠</span>
+        <span class="label" data-i18n="nav_home">Home</span>
+      </a>
+      <a href="measure.html" class="nav-link">
+        <span aria-hidden="true">🧪</span>
+        <span class="label" data-i18n="nav_measure">Measure</span>
+      </a>
+      <a href="map.html" class="nav-link">
+        <span aria-hidden="true">🗺️</span>
+        <span class="label" data-i18n="nav_map">Map</span>
+      </a>
+      <a href="care.html" class="nav-link">
+        <span aria-hidden="true">💧</span>
+        <span class="label" data-i18n="nav_care">Care</span>
+      </a>
+      <a href="farmers.html" class="nav-link">
+        <span aria-hidden="true">🌾</span>
+        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+      </a>
+      <a href="chart.html" class="nav-link">
+        <span aria-hidden="true">📊</span>
+        <span class="label" data-i18n="nav_chart">Chart</span>
+      </a>
+      <a href="learn.html" class="nav-link">
+        <span aria-hidden="true">📚</span>
+        <span class="label" data-i18n="nav_learn">Learn</span>
+      </a>
+      <a href="buykit.html" class="nav-link">
+        <span aria-hidden="true">🛒</span>
+        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+      </a>
+      <a href="about.html" class="nav-link">
+        <span aria-hidden="true">ℹ️</span>
+        <span class="label" data-i18n="nav_about">About</span>
+      </a>
     </nav>
     <footer class="sidebar-footer">
       &copy; 2025 Water Health Index · School project
@@ -358,16 +393,16 @@
       English <span style="font-size:1rem;">&#x25BC;</span>
     </button>
     <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt">English</button>
-      <button class="lang-opt">Hindi</button>
-      <button class="lang-opt">Bengali</button>
-      <button class="lang-opt">Tamil</button>
-      <button class="lang-opt">Marathi</button>
-      <button class="lang-opt">Gujarati</button>
-      <button class="lang-opt">Punjabi</button>
-      <button class="lang-opt">Telugu</button>
-      <button class="lang-opt">Kannada</button>
-      <button class="lang-opt">Urdu</button>
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+      <button class="lang-opt" data-lang="ta">Tamil</button>
+      <button class="lang-opt" data-lang="mr">Marathi</button>
+      <button class="lang-opt" data-lang="gu">Gujarati</button>
+      <button class="lang-opt" data-lang="pa">Punjabi</button>
+      <button class="lang-opt" data-lang="te">Telugu</button>
+      <button class="lang-opt" data-lang="kn">Kannada</button>
+      <button class="lang-opt" data-lang="ur">Urdu</button>
     </div>
   </div>
 
@@ -375,37 +410,64 @@
   <div class="main-wrap" id="mainWrap">
     <!-- Upper-left welcome box -->
     <section class="welcome-box">
-      <h1 class="welcome-title">Welcome to Water Health Index</h1>
-      <p class="welcome-quote">"Protecting water today, empowering communities tomorrow."</p>
+      <h1 class="welcome-title" data-i18n="welcome_title">
+        Welcome to Water Health Index
+      </h1>
+      <p class="welcome-quote" data-i18n="welcome_quote">
+        "Protecting water today, empowering communities tomorrow."
+      </p>
       <p class="welcome-text">
-        Use your device and simple tools to measure water quality.<br>
-        Save readings, view on the map, and follow up with care steps for families and farmers.
+        <span data-i18n="welcome_text_line1">
+          Use your device and simple tools to measure water quality.
+        </span><br/>
+        <span data-i18n="welcome_text_line2">
+          Save readings, view on the map, and follow up with care steps for families and farmers.
+        </span>
       </p>
       <div class="welcome-buttons">
-        <a href="measure.html" class="welcome-btn">Go to Measure</a>
-        <a href="care.html" class="welcome-btn alt">See care tips</a>
+        <a href="measure.html" class="welcome-btn" data-i18n="btn_go_measure">
+          Go to Measure
+        </a>
+        <a href="care.html" class="welcome-btn alt" data-i18n="btn_see_care">
+          See care tips
+        </a>
       </div>
     </section>
 
     <!-- Bottom-right credits box -->
     <section class="credits-main">
       <div class="credits-box">
-        <div class="credits-title">🌱 Credits</div>
+        <div class="credits-title">
+          <span aria-hidden="true">🌱</span>
+          <span data-i18n="credits_title">Credits</span>
+        </div>
         <ul>
-          <li>Pranshu (Dev & UI)</li>
-          <li>Mentor: Ashish sir</li>
-          <li>Ollama & Llama-3</li>
-          <li>FastAPI, GitHub</li>
+          <li data-i18n="credits_item_1">Pranshu (Dev & UI)</li>
+          <li data-i18n="credits_item_2">Mentor: Ashish sir</li>
+          <li data-i18n="credits_item_3">Ollama & Llama-3</li>
+          <li data-i18n="credits_item_4">FastAPI, GitHub</li>
         </ul>
-        <div class="credits-year">2025</div>
+        <div class="credits-year" data-i18n="credits_year">2025</div>
       </div>
     </section>
   </div>
 
   <script>
-    // Language dropdown behaviour
+    // Language dropdown behaviour + i18n hook
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+
+    function applyIndexLanguage(langCode) {
+      if (typeof getIndexStrings !== "function") return;
+      const t = getIndexStrings(langCode);
+      i18nNodes.forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+    }
 
     langBtn.addEventListener('click', function(e){
       e.stopPropagation();
@@ -422,9 +484,13 @@
       btn.addEventListener('click',function(){
         document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
         this.classList.add('selected');
+
+        const langCode = this.dataset.lang || 'en';
+        // Update pill text in English name (button label)
         langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
         langDropdown.classList.remove('open');
-        // hook: call your translation JS here
+
+        applyIndexLanguage(langCode);
       });
     });
 
@@ -475,6 +541,9 @@
         }
       });
     })();
+
+    // Apply default language on first load
+    applyIndexLanguage('en');
   </script>
 </body>
 </html>
