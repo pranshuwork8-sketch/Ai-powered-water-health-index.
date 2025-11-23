@@ -794,6 +794,7 @@
     const markerLayer = L.layerGroup().addTo(map);
     let markers = [];
     let selectedId = null;
+    let userLocationMarker = null;
 
     function createMarker(r) {
       if (typeof r.lat !== 'number' || typeof r.lng !== 'number') return null;
