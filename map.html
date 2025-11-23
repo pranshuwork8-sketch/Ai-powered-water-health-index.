@@ -844,14 +844,39 @@
     document.getElementById('bandFilter').addEventListener('change', rebuildMarkers);
     rebuildMarkers();
 
-    // Locate button
+    //locaions
+    
     document.getElementById('locateBtn').addEventListener('click', () => {
       if (!navigator.geolocation) return;
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        map.setView([latitude, longitude], 13);
-      });
-    });
+      
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const { latitude, longitude } = pos.coords;
+
+      // Center the map on user
+      map.setView([latitude, longitude], 13);
+
+      // If marker already exists, just move it
+      if (userLocationMarker) {
+        userLocationMarker.setLatLng([latitude, longitude]);
+      } else {
+        // Create a new pointer-style marker for current location
+        userLocationMarker = L.circleMarker([latitude, longitude], {
+          radius: 8,
+          color: '#00b3ff',
+          weight: 2,
+          fillColor: '#00e0ff',
+          fillOpacity: 0.9
+        })
+        .bindPopup("You are here")
+        .addTo(map);
+      }
+    },
+    err => {
+      console.warn("Geolocation error:", err);
+    }
+  );
+});
 
     // ---------- Details + recent ----------
     const recentList = document.getElementById('recentList');
