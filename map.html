@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+  <style>
+    :root {
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
+      --accent: #51daf7;
+      --active: #48e8c2;
+      --card-bg: #1d334b;
+      --shadow: 0 8px 32px #17487d40;
+
+      --good:#26c96a;
+      --med:#f1c644;
+      --poor:#e0526a;
+    }
+
+    html, body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body { position: relative; }
+
+    /* Sidebar (same pattern as index/measure) */
+    .sidebar {
+      width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
+      background: rgba(16,38,54,0.98);
+      box-shadow: 3px 0 20px #143d5344;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 2000;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2.1rem 0 2.3rem 0;
+    }
+    .logo-img {
+      font-size: 2.7rem;
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 2px 19px #51daf7a0);
+    }
+    .logo-text {
+      color: var(--accent);
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.16;
+    }
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin-bottom: auto;
+    }
+    .nav-link {
+      color: #e3fbfa;
+      text-decoration: none;
+      padding: 0.7rem 1.15rem;
+      font-size: 1.09rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border-radius: 13px;
+      margin: 0 .4rem;
+      transition: background .12s, color .12s;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--active);
+      color: #154b68;
+    }
+    .sidebar-footer {
+      color: #9ee8ff;
+      font-size: .95rem;
+      font-style: italic;
+      padding: 1.1rem .8rem 1rem .8rem;
+      text-align: center;
+    }
+    .sidebar-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+      pointer-events: auto;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
+    /* Main wrapper */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 4vw 4vw 3vw 4vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Language pill */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #2183a235;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 2.7rem;
+      right: 0;
+      background: #184c6cfa;
+      border-radius: 14px;
+      box-shadow: 0 7px 26px #155070ad;
+      padding: .4rem .55rem;
+      border: 1.4px solid #39bbe9;
+      overflow-y: auto;
+      max-height: 50vh;
+      min-width: 170px;
+      box-sizing: border-box;
+    }
+    .lang-dropdown.open { display: flex; }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: .22rem;
+      cursor: pointer;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+      font-weight: 600;
+    }
+    .lang-opt:hover,
+    .lang-opt.selected {
+      background: #51daf7;
+      color: #143d53;
+      border-color: #48e8c2;
+    }
+
+    /* Page header */
+    .map-header {
+      margin-top: 4vw;
+      margin-left: 1vw;
+      margin-bottom: 1.8rem;
+      padding: .8rem 1rem 1rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(9,39,60,0.9), rgba(17,64,97,0.85));
+    }
+    .map-title {
+      font-size: 2.1rem;
+      color: #f5feff;
+      font-weight: bold;
+      letter-spacing: .03em;
+      margin: 0 0 .4rem 0;
+      text-shadow: 0 3px 14px #0b2236;
+    }
+    .map-subtitle {
+      margin: 0;
+      font-size: 1.02rem;
+      color: #d9fbff;
+      max-width: 720px;
+    }
+
+    /* Layout: left map, right info */
+    .map-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.7rem;
+      margin-left: 1vw;
+      margin-right: 1.3vw;
+      margin-bottom: 2.2rem;
+    }
+    .map-left,
+    .map-right {
+      flex: 1 1 360px;
+      min-width: 0;
+    }
+
+    .map-card {
+      background: #1d334b;
+      border-radius: 26px;
+      padding: 1.4rem 1.3rem 1.4rem;
+      box-shadow: var(--shadow);
+      border: 1.5px solid #107dac;
+      box-sizing: border-box;
+    }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .7rem;
+      margin-bottom: .7rem;
+      justify-content: space-between;
+    }
+    .filters-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      align-items: center;
+    }
+    .filters label {
+      font-weight: bold;
+      color: #39bbe9;
+      font-size: .98rem;
+    }
+    .filters select {
+      padding: .4rem .8rem;
+      border-radius: 9px;
+      border: 1px solid #2aa2cd;
+      background: #102636;
+      color: #e9fff5;
+      font-size: .96rem;
+      font-family: inherit;
+    }
+    .ghost-btn {
+      border-radius: 999px;
+      border: 1px solid #3e6e88;
+      background: #162836;
+      color: #d8f3ff;
+      padding: .3rem .9rem;
+      font-size: .88rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .ghost-btn:hover {
+      background: #204056;
+    }
+
+    /* Map + legend */
+    #mapAll {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .map-wrapper {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .legend {
+      position: absolute;
+      right: 1.1rem;
+      bottom: 1.1rem;
+      background: #1b2e3add;
+      border-radius: 10px;
+      padding: .45rem .7rem;
+      font-size: .85rem;
+      color: #d5f4ff;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      margin: .08rem 0;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot.good { background: var(--good); }
+    .dot.med  { background: var(--med); }
+    .dot.poor { background: var(--poor); }
+    .dot.none { background: #78909c; }
+
+    /* Details + recent list */
+    .section-title {
+      font-weight: bold;
+      color: #39bbe9;
+      margin-bottom: .35rem;
+      font-size: 1rem;
+    }
+    .details-box {
+      background: #142839;
+      border-radius: 16px;
+      padding: .8rem .9rem .9rem;
+      margin-bottom: 1rem;
+      font-size: .92rem;
+      color: #e5fbff;
+    }
+    .details-main {
+      font-size: .94rem;
+      margin-bottom: .18rem;
+    }
+    .details-sub {
+      font-size: .86rem;
+      color: #c4edff;
+    }
+    .details-note {
+      margin-top: .35rem;
+      font-size: .84rem;
+      color: #b8e3ff;
+    }
+    .band-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .78rem;
+      color: #fff;
+      margin-left: .4rem;
+    }
+    .band-good { background: var(--good); }
+    .band-med  { background: var(--med); color:#333; }
+    .band-poor { background: var(--poor); }
+    .band-unknown { background:#607d8b; }
+
+    .details-actions {
+      margin-top: .6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+
+    .recent {
+      margin-top: .9rem;
+    }
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .5rem;
+    }
+    .recent-count {
+      font-size: .8rem;
+      color: #9ccae3;
+    }
+    .recent-list {
+      max-height: 240px;
+      overflow-y: auto;
+      margin-top: .25rem;
+      border-radius: 12px;
+      background: #132332;
+    }
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .46rem .6rem;
+      font-size: .86rem;
+      border-bottom: 1px solid #213c47;
+      cursor: pointer;
+    }
+    .recent-item:hover {
+      background: #234152;
+    }
+    .recent-item.active {
+      background: #28556a;
+    }
+    .recent-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .recent-main {
+      flex: 1;
+    }
+    .recent-when {
+      color: #d4f4ff;
+    }
+    .recent-index {
+      font-size: .8rem;
+      color: #a7d7f3;
+    }
+    .recent-empty {
+      padding: .5rem .6rem;
+      font-size: .86rem;
+      color: #9ec7dc;
+    }
+
+    /* Footer note */
+    .map-footer {
+      margin-top: 1.2rem;
+      margin-left: 1vw;
+      font-size: .88rem;
+      color: #9ee8ff;
+      opacity: .9;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: var(--sidebar-narrow) !important;
+        min-width: var(--sidebar-narrow);
+        max-width: var(--sidebar-narrow);
+      }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.1rem; }
+      .sidebar nav .nav-link {
+        font-size: 0;
+        padding: .9rem .3rem;
+        justify-content: center;
+      }
+      .sidebar nav .nav-link .label { display:none; }
+      .sidebar-handle { pointer-events: none; }
+
+      .main-wrap {
+        margin-left: var(--sidebar-narrow) !important;
+        padding: 4vw 2.2vw 3vw 2.2vw;
+      }
+      .map-header {
+        margin-top: 18vw;
+        margin-left: .3rem;
+      }
+      .map-layout {
+        margin-left: .3rem;
+        margin-right: .3rem;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .lang-wrap {
+        right: .7rem;
+        top: .7rem;
+      }
+      .lang-current {
+        font-size: 1rem;
+        padding: .5rem 1.3rem .5rem .8rem;
+      }
+      .map-title {
+        font-size: 1.45rem;
+      }
+      .map-header {
+        margin-top: 22vw;
+      }
+      #mapAll {
+        height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-img" aria-hidden="true">🌊</span>
+      <span class="logo-text">Water<br>Index</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link">
+        <span aria-hidden="true">🏠</span>
+        <span class="label" data-i18n="nav_home">Home</span>
+      </a>
+      <a href="measure.html" class="nav-link">
+        <span aria-hidden="true">🧪</span>
+        <span class="label" data-i18n="nav_measure">Measure</span>
+      </a>
+      <a href="map.html" class="nav-link active">
+        <span aria-hidden="true">🗺️</span>
+        <span class="label" data-i18n="nav_map">Map</span>
+      </a>
+      <a href="care.html" class="nav-link">
+        <span aria-hidden="true">💧</span>
+        <span class="label" data-i18n="nav_care">Care</span>
+      </a>
+      <a href="farmers.html" class="nav-link">
+        <span aria-hidden="true">🌾</span>
+        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+      </a>
+      <a href="chart.html" class="nav-link">
+        <span aria-hidden="true">📊</span>
+        <span class="label" data-i18n="nav_chart">Chart</span>
+      </a>
+      <a href="learn.html" class="nav-link">
+        <span aria-hidden="true">📚</span>
+        <span class="label" data-i18n="nav_learn">Learn</span>
+      </a>
+      <a href="buykit.html" class="nav-link">
+        <span aria-hidden="true">🛒</span>
+        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+      </a>
+      <a href="about.html" class="nav-link">
+        <span aria-hidden="true">ℹ️</span>
+        <span class="label" data-i18n="nav_about">About</span>
+      </a>
+    </nav>
+    <footer class="sidebar-footer">
+      &copy; 2025 Water Health Index · Regional project
+    </footer>
+    <div class="sidebar-handle" id="sidebarHandle"></div>
+  </aside>
+
+  <!-- Language pill -->
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">&#x25BC;</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+      <button class="lang-opt" data-lang="ta">Tamil</button>
+      <button class="lang-opt" data-lang="mr">Marathi</button>
+      <button class="lang-opt" data-lang="gu">Gujarati</button>
+      <button class="lang-opt" data-lang="pa">Punjabi</button>
+      <button class="lang-opt" data-lang="te">Telugu</button>
+      <button class="lang-opt" data-lang="kn">Kannada</button>
+      <button class="lang-opt" data-lang="ur">Urdu</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-wrap" id="mainWrap">
+
+    <header class="map-header">
+      <h1 class="map-title" data-i18n="map_title">Water quality map</h1>
+      <p class="map-subtitle" data-i18n="map_subtitle">
+        Explore your saved readings on an interactive map. Tap a point to see details and jump to care or farmer advice.
+      </p>
+    </header>
+
+    <section class="map-layout">
+      <!-- LEFT: Map -->
+      <div class="map-left">
+        <div class="map-card">
+          <div class="filters">
+            <div class="filters-left">
+              <label for="bandFilter" data-i18n="map_filter_label">Show band</label>
+              <select id="bandFilter">
+                <option value="all" data-i18n="map_filter_all">All readings</option>
+                <option value="good" data-i18n="map_filter_good">Good (≥ 70)</option>
+                <option value="med" data-i18n="map_filter_med">Moderate (40–69)</option>
+                <option value="poor" data-i18n="map_filter_poor">Poor (&lt; 40)</option>
+              </select>
+            </div>
+            <button class="ghost-btn" id="locateBtn" data-i18n="map_btn_locate">
+              My location
+            </button>
+          </div>
+
+          <div class="map-wrapper">
+            <div id="mapAll"></div>
+            <div class="legend">
+              <div class="legend-row">
+                <span class="dot good"></span>
+                <span data-i18n="map_legend_good">Good (index ≥ 70)</span>
+              </div>
+              <div class="legend-row">
+                <span class="dot med"></span>
+                <span data-i18n="map_legend_med">Moderate (40–69)</span>
+              </div>
+              <div class="legend-row">
+                <span class="dot poor"></span>
+                <span data-i18n="map_legend_poor">Poor (&lt; 40)</span>
+              </div>
+              <div class="legend-row">
+                <span class="dot none"></span>
+                <span data-i18n="map_legend_noloc">Saved without location</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Details + recent -->
+      <div class="map-right">
+        <div class="map-card">
+          <div class="section-title" data-i18n="map_details_title">Reading details</div>
+          <div class="details-box">
+            <div class="details-main" id="detailsMain" data-i18n="map_details_empty">
+              Tap a marker or pick a reading from the list to see its details here.
+            </div>
+            <div class="details-sub" id="detailsSub"></div>
+            <div class="details-note" id="detailsNote"></div>
+            <div class="details-actions">
+              <button class="ghost-btn" id="openCareBtn" data-i18n="map_btn_care">
+                Open care advice
+              </button>
+              <button class="ghost-btn" id="openFarmBtn" data-i18n="map_btn_farm">
+                Open farmer tips
+              </button>
+            </div>
+          </div>
+
+          <div class="recent">
+            <div class="recent-header">
+              <div class="section-title" data-i18n="map_recent_title">Recent readings</div>
+              <div class="recent-count" id="recentCount"></div>
+            </div>
+            <div class="recent-list" id="recentList">
+              <div class="recent-empty" data-i18n="map_recent_empty">
+                No readings saved yet. Use the Measure page to add some, then come back here.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="map-footer" data-i18n="map_footer_note">
+      Tip: Tap a saved reading to zoom the map, then go to Care or Farmers Assistant for next steps.
+    </p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="map.translations.js"></script>
+
+  <script>
+    // ---------- Language + i18n ----------
+    const langBtn = document.getElementById('langCurrentBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    function applyMapLanguage(langCode) {
+      if (typeof getMapStrings !== "function") return;
+      const t = getMapStrings(langCode);
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+      localStorage.setItem('whilang', langCode);
+    }
+
+    // Initialise language from storage
+    let currentLang = localStorage.getItem('whilang') || 'en';
+    const initialOpt = Array.from(document.querySelectorAll('.lang-opt'))
+      .find(btn => btn.dataset.lang === currentLang);
+    if (initialOpt) {
+      initialOpt.classList.add('selected');
+      langBtn.innerHTML = initialOpt.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+    }
+    applyMapLanguage(currentLang);
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    document.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        const langCode = this.dataset.lang || 'en';
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+        currentLang = langCode;
+        applyMapLanguage(langCode);
+        renderRecentList();
+        if (selectedId != null) showDetailsById(selectedId);
+      });
+    });
+
+    // ---------- Sidebar drag-to-resize (desktop only) ----------
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.getElementById('mainWrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return;
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // ---------- Data + map ----------
+    let readings = [];
+    try {
+      readings = JSON.parse(localStorage.getItem('whReadings') || "[]");
+      if (!Array.isArray(readings)) readings = [];
+    } catch (e) {
+      readings = [];
+    }
+    readings.forEach((r, i) => { if (r.id == null) r.id = i; });
+
+    function bandForIndex(idx) {
+      idx = Number(idx);
+      if (isNaN(idx)) return 'unknown';
+      if (idx >= 70) return 'good';
+      if (idx >= 40) return 'med';
+      return 'poor';
+    }
+    function markerColor(band) {
+      if (band === 'good') return '#26c96a';
+      if (band === 'med')  return '#f1c644';
+      if (band === 'poor') return '#e0526a';
+      return '#78909c';
+    }
+
+    const map = L.map('mapAll', {
+      zoomControl: true,
+      scrollWheelZoom: false
+    }).setView([23, 80], 4.5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 14,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const markerLayer = L.layerGroup().addTo(map);
+    let markers = [];
+    let selectedId = null;
+
+    function createMarker(r) {
+      if (typeof r.lat !== 'number' || typeof r.lng !== 'number') return null;
+      const band = bandForIndex(r.index);
+      const color = markerColor(band);
+      const m = L.circleMarker([r.lat, r.lng], {
+        radius: 7,
+        color: "#0a141a",
+        weight: 1.5,
+        fillColor: color,
+        fillOpacity: 0.9
+      });
+      const popupHtml = `
+        <div style="font-size:12px;">
+          <div><strong>Index ${r.index ?? "–"} (${band.toUpperCase()})</strong></div>
+          <div style="margin-top:2px;">pH ${r.ph ?? "–"} • Temp ${r.temp ?? "–"}°C</div>
+          <div style="margin-top:2px;">Turbidity: ${r.turb ?? "–"}</div>
+        </div>
+      `;
+      m.bindPopup(popupHtml);
+      m.on('click', () => {
+        selectedId = r.id;
+        showDetails(r);
+        highlightRecent(r.id);
+      });
+      return m;
+    }
+
+    function rebuildMarkers() {
+      markerLayer.clearLayers();
+      markers = [];
+      const filter = document.getElementById('bandFilter').value;
+      readings.forEach(r => {
+        const band = bandForIndex(r.index);
+        if (filter !== 'all' && band !== filter) return;
+        const m = createMarker(r);
+        if (m) {
+          m.addTo(markerLayer);
+          markers.push({ id: r.id, marker: m });
+        }
+      });
+      if (markers.length) {
+        const group = L.featureGroup(markers.map(m => m.marker));
+        map.fitBounds(group.getBounds().pad(0.15));
+      }
+    }
+
+    document.getElementById('bandFilter').addEventListener('change', rebuildMarkers);
+    rebuildMarkers();
+
+    // Locate button
+    document.getElementById('locateBtn').addEventListener('click', () => {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        map.setView([latitude, longitude], 13);
+      });
+    });
+
+    // ---------- Details + recent ----------
+    const recentList = document.getElementById('recentList');
+    const recentCount = document.getElementById('recentCount');
+
+    function updateRecentCount() {
+      const s = getMapStrings(currentLang);
+      const n = readings.length;
+      if (!n) {
+        recentCount.textContent = "";
+      } else {
+        recentCount.textContent = s.recent_count.replace('{n}', n);
+      }
+    }
+
+    function renderRecentList() {
+      const s = getMapStrings(currentLang);
+      recentList.innerHTML = "";
+      const list = readings.slice().reverse();
+      if (!list.length) {
+        const div = document.createElement('div');
+        div.className = "recent-empty";
+        div.textContent = s.map_recent_empty;
+        recentList.appendChild(div);
+        recentCount.textContent = "";
+        return;
+      }
+      list.forEach(r => {
+        const div = document.createElement('div');
+        div.className = "recent-item";
+        div.dataset.id = r.id;
+        const dot = document.createElement('div');
+        dot.className = "recent-dot";
+        dot.style.background = markerColor(bandForIndex(r.index));
+
+        const main = document.createElement('div');
+        main.className = "recent-main";
+        const when = document.createElement('div');
+        when.className = "recent-when";
+        when.textContent = r.when || "";
+        const idx = document.createElement('div');
+        idx.className = "recent-index";
+        idx.textContent = s.recent_line
+          .replace('{index}', r.index ?? "–")
+          .replace('{ph}', r.ph ?? "–");
+
+        main.appendChild(when);
+        main.appendChild(idx);
+        div.appendChild(dot);
+        div.appendChild(main);
+
+        div.addEventListener('click', () => {
+          selectedId = r.id;
+          showDetails(r);
+          highlightRecent(r.id);
+          if (typeof r.lat === 'number' && typeof r.lng === 'number') {
+            map.setView([r.lat, r.lng], 12);
+          }
+        });
+
+        recentList.appendChild(div);
+      });
+      updateRecentCount();
+    }
+
+    function highlightRecent(id) {
+      const items = recentList.querySelectorAll('.recent-item');
+      items.forEach(it => {
+        if (Number(it.dataset.id) === id) it.classList.add('active');
+        else it.classList.remove('active');
+      });
+    }
+
+    function showDetails(r) {
+      const s = getMapStrings(currentLang);
+      const main = document.getElementById('detailsMain');
+      const sub  = document.getElementById('detailsSub');
+      const note = document.getElementById('detailsNote');
+
+      const whenText = r.when || "–";
+      const placeText = r.place || "";
+
+      const line = s.details_line
+        .replace('{when}', whenText)
+        .replace('{place}', placeText);
+
+      main.innerHTML = "";
+      const lineNode = document.createTextNode(line + " ");
+      main.appendChild(lineNode);
+
+      const band = bandForIndex(r.index);
+      let bandKey = 'band_unknown';
+      if (band === 'good') bandKey = 'band_good';
+      else if (band === 'med') bandKey = 'band_med';
+      else if (band === 'poor') bandKey = 'band_poor';
+
+      const badge = document.createElement('span');
+      badge.className = 'band-badge band-' + band;
+      badge.textContent = s[bandKey];
+      main.appendChild(badge);
+
+      sub.textContent = s.details_sub
+        .replace('{index}', r.index ?? "–")
+        .replace('{ph}', r.ph ?? "–")
+        .replace('{temp}', r.temp ?? "–")
+        .replace('{turb}', r.turb ?? "–");
+
+      if (typeof r.lat !== 'number' || typeof r.lng !== 'number') {
+        note.textContent = s.details_noloc;
+      } else {
+        note.textContent = s.details_hasloc;
+      }
+    }
+
+    function showDetailsById(id) {
+      const r = readings.find(x => x.id === id);
+      if (r) showDetails(r);
+    }
+
+    // Care / farmers buttons go to pages with query so you can later auto-fill
+    document.getElementById('openCareBtn').addEventListener('click', () => {
+      if (selectedId == null) {
+        window.location.href = 'care.html';
+      } else {
+        window.location.href = 'care.html?reading=' + encodeURIComponent(selectedId);
+      }
+    });
+    document.getElementById('openFarmBtn').addEventListener('click', () => {
+      if (selectedId == null) {
+        window.location.href = 'farmers.html';
+      } else {
+        window.location.href = 'farmers.html?reading=' + encodeURIComponent(selectedId);
+      }
+    });
+
+    renderRecentList();
+  </script>
+</body>
+</html>
