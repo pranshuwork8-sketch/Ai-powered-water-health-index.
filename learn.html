@@ -30,7 +30,7 @@
     }
     body { position: relative; }
 
-    /* Sidebar (same as home) */
+    /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -204,7 +204,7 @@
 
     /* Learn sections container */
     .learn-container {
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
     }
 
@@ -235,7 +235,7 @@
       font-weight: bold;
     }
 
-    /* Accordion cards */
+    /* Main accordion cards */
     .accordion-card {
       background: var(--card-bg);
       border-radius: 16px;
@@ -310,6 +310,77 @@
       border-radius: 8px;
     }
 
+    /* SUB-ACCORDION (nested inside main accordion) */
+    .sub-accordion {
+      margin: 1rem 0;
+    }
+    .sub-accordion-card {
+      background: rgba(23,72,125,0.25);
+      border-radius: 12px;
+      border: 1px solid #2a7a9f;
+      margin-bottom: .8rem;
+      overflow: hidden;
+    }
+    .sub-accordion-header {
+      padding: .9rem 1.2rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      background: rgba(16,60,85,0.5);
+    }
+    .sub-accordion-title {
+      font-size: 1.08rem;
+      color: #7ee8ff;
+      font-weight: bold;
+      margin: 0;
+    }
+    .sub-accordion-arrow {
+      font-size: 1.1rem;
+      transition: transform .3s;
+      color: #48e8c2;
+    }
+    .sub-accordion-card.open .sub-accordion-arrow {
+      transform: rotate(180deg);
+    }
+    .sub-accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .sub-accordion-content-inner {
+      padding: 1rem 1.2rem;
+      color: #d9fbff;
+      font-size: .98rem;
+      line-height: 1.6;
+    }
+    .sub-accordion-content-inner p {
+      margin: 0 0 .7rem 0;
+    }
+    .sub-accordion-content-inner ul {
+      margin: .3rem 0 .5rem 1.3rem;
+      padding: 0;
+    }
+    .sub-accordion-content-inner li {
+      margin-bottom: .3rem;
+    }
+
+    .warning-box {
+      background: rgba(255,100,100,0.15);
+      border-left: 3px solid #ff6b6b;
+      padding: .8rem 1rem;
+      margin: .8rem 0;
+      border-radius: 8px;
+    }
+    .info-box {
+      background: rgba(72,232,194,0.12);
+      border-left: 3px solid #48e8c2;
+      padding: .8rem 1rem;
+      margin: .8rem 0;
+      border-radius: 8px;
+    }
+
     /* Responsive */
     @media (max-width: 900px) {
       .sidebar {
@@ -358,39 +429,39 @@
     <nav>
       <a href="index.html" class="nav-link">
         <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
+        <span class="label">Home</span>
       </a>
       <a href="measure.html" class="nav-link">
         <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
+        <span class="label">Measure</span>
       </a>
       <a href="map.html" class="nav-link">
         <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
+        <span class="label">Map</span>
       </a>
       <a href="care.html" class="nav-link">
         <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
+        <span class="label">Care</span>
       </a>
       <a href="farmers.html" class="nav-link">
         <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        <span class="label">Farmers Assistant</span>
       </a>
       <a href="chart.html" class="nav-link">
         <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
+        <span class="label">Chart</span>
       </a>
       <a href="learn.html" class="nav-link active">
         <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
+        <span class="label">Learn</span>
       </a>
       <a href="buykit.html" class="nav-link">
         <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        <span class="label">Buy Kit</span>
       </a>
       <a href="about.html" class="nav-link">
         <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
+        <span class="label">About</span>
       </a>
     </nav>
     <footer class="sidebar-footer">
@@ -405,7 +476,7 @@
       English <span style="font-size:1rem;">&#x25BC;</span>
     </button>
     <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt selected" data-lang="en">English</button>
       <button class="lang-opt" data-lang="hi">Hindi</button>
       <button class="lang-opt" data-lang="bn">Bengali</button>
       <button class="lang-opt" data-lang="ta">Tamil</button>
@@ -421,158 +492,1380 @@
   <!-- Main content -->
   <div class="main-wrap" id="mainWrap">
     <header class="page-header">
-      <h1 class="page-title" data-i18n="page_title">Learn About Water Quality</h1>
-      <p class="page-subtitle" data-i18n="page_subtitle">Understanding water parameters and safe standards</p>
+      <h1 class="page-title">Learn About Water Quality</h1>
+      <p class="page-subtitle">Understanding water parameters, safe standards, and health impacts</p>
     </header>
 
     <div class="learn-container">
       <!-- Introduction -->
       <div class="intro-card">
-        <p data-i18n="intro_text">
-          Clean water is essential for health. Learn about the key parameters we measure, what they mean, and how to keep your water safe for drinking and farming.
+        <p>
+          Clean water is essential for health and agriculture. This comprehensive guide will help you understand the key parameters we measure, what different values mean for your health, and how to interpret your water quality test results. Click on each section to explore detailed information.
         </p>
       </div>
 
       <!-- Section 1: Water Parameters -->
       <section class="category-section">
-        <h2 class="category-title" data-i18n="section1_title">Water Quality Parameters</h2>
+        <h2 class="category-title">Water Quality Parameters</h2>
 
-        <!-- pH Card -->
+        <!-- ========== pH LEVEL ========== -->
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🧪</span>
-              <h3 class="accordion-title" data-i18n="param_ph_title">pH Level</h3>
+              <h3 class="accordion-title">pH Level (Acidity/Alkalinity)</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="param_ph_desc">
-                pH measures how acidic or alkaline water is on a scale of 0 to 14. Pure water has a pH of 7 (neutral).
+              <p>
+                pH measures how acidic or alkaline (basic) water is on a scale of 0 to 14. The term pH stands for "power of hydrogen" and is determined by the concentration of hydrogen ions (H+) in the water. The scale is logarithmic, meaning each unit represents a 10-fold difference in acidity or alkalinity.
               </p>
+              
               <div class="highlight-box">
-                <strong data-i18n="param_ph_safe">Safe Range: 6.5 - 8.5</strong>
+                <strong>Safe Range for Drinking: 6.5 - 8.5</strong><br>
+                Pure water has a pH of 7.0 (neutral). Values below 7 are acidic, values above 7 are alkaline.
               </div>
-              <h4 data-i18n="param_ph_effects_title">Effects:</h4>
+
+              <h4>Why pH Matters:</h4>
               <ul>
-                <li data-i18n="param_ph_effect1">Low pH (acidic): Can corrode pipes, taste sour, cause stomach issues</li>
-                <li data-i18n="param_ph_effect2">High pH (alkaline): Bitter taste, skin irritation, scaling in pipes</li>
-                <li data-i18n="param_ph_effect3">Balanced pH: Safe for drinking and supports healthy crops</li>
+                <li><strong>Health Impact:</strong> Extreme pH can cause digestive issues, skin irritation, and mobilize toxic metals</li>
+                <li><strong>Disinfection:</strong> Chlorine works best between pH 6.5-7.5; outside this range, bacteria can survive</li>
+                <li><strong>Corrosion:</strong> Acidic water corrodes pipes, releasing lead, copper, and other metals into water</li>
+                <li><strong>Agriculture:</strong> Most crops require pH 5.5-7.5; improper pH affects nutrient absorption</li>
               </ul>
+
+              <!-- SUB-ACCORDIONS FOR DIFFERENT pH RANGES -->
+              <div class="sub-accordion">
+                
+                <!-- pH 0-2.5: Extremely Acidic -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 0 - 2.5: Extremely Acidic (Dangerous)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ EXTREME DANGER - Never drink or touch this water!</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>Industrial acid contamination (battery acid, chemical spills)</li>
+                        <li>Acid mine drainage from coal or metal mining</li>
+                        <li>Volcanic lake water with sulfuric acid</li>
+                        <li>Strong acid pollution from factories</li>
+                      </ul>
+                      <p><strong>Health risks:</strong></p>
+                      <ul>
+                        <li>Immediate chemical burns on skin and eyes</li>
+                        <li>Irreversible damage to internal organs if ingested</li>
+                        <li>Corrosion of teeth, esophagus, and stomach</li>
+                        <li>Can be fatal even in small amounts</li>
+                      </ul>
+                      <p><strong>Action required:</strong> Do not use this water for any purpose. Report to authorities immediately if found in public water sources. Professional hazmat cleanup required.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 2.5-4.0: Highly Acidic -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 2.5 - 4.0: Highly Acidic (Unsafe)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ UNSAFE - Do not drink!</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>Acid rain effects in poorly buffered water</li>
+                        <li>Mining runoff and industrial pollution</li>
+                        <li>Natural acidic wetlands and peat bogs</li>
+                        <li>Decomposing organic matter producing acids</li>
+                      </ul>
+                      <p><strong>Effects on health:</strong></p>
+                      <ul>
+                        <li>Severe stomach pain and gastrointestinal damage</li>
+                        <li>Skin and eye irritation on contact</li>
+                        <li>Increased absorption of toxic metals (aluminum, copper, lead)</li>
+                        <li>Tooth enamel erosion with regular exposure</li>
+                      </ul>
+                      <p><strong>Effects on infrastructure:</strong></p>
+                      <ul>
+                        <li>Rapidly corrodes metal pipes and fixtures</li>
+                        <li>Leaches copper, lead, and iron from plumbing</li>
+                        <li>Damages concrete and stone structures</li>
+                      </ul>
+                      <p><strong>Treatment needed:</strong> Limestone filtration, pH neutralization with soda ash or lime, professional water treatment system.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 4.0-5.5: Acidic -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 4.0 - 5.5: Acidic (Not Recommended)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>Not safe for drinking without treatment</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>Natural rainwater (pH ~5.6) without mineral buffering</li>
+                        <li>Water from acidic soils and pine forests</li>
+                        <li>Some natural spring water from granite regions</li>
+                        <li>Acid rain in areas with pollution</li>
+                      </ul>
+                      <p><strong>Effects:</strong></p>
+                      <ul>
+                        <li>Sour or metallic taste</li>
+                        <li>Can cause stomach discomfort with prolonged use</li>
+                        <li>Corrodes copper pipes, turning water blue-green</li>
+                        <li>Increases levels of lead, copper, and zinc in water</li>
+                        <li>Harmful to fish (most fish die below pH 5.0)</li>
+                      </ul>
+                      <p><strong>Agricultural impact:</strong></p>
+                      <ul>
+                        <li>Reduces availability of nutrients like phosphorus and calcium</li>
+                        <li>Increases aluminum toxicity in soil</li>
+                        <li>Most crops suffer reduced yields</li>
+                      </ul>
+                      <p><strong>Treatment options:</strong> Install neutralizing filters with calcite or magnesium oxide, blend with alkaline water, use soda ash injection system.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 5.5-6.5: Slightly Acidic -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 5.5 - 6.5: Slightly Acidic (Marginal)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="info-box">
+                        <strong>Below ideal range but acceptable in some cases</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>Natural water from forested watersheds</li>
+                        <li>Well water in areas with low mineral content</li>
+                        <li>Water with dissolved CO2 from decomposition</li>
+                      </ul>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Slightly acidic taste, often described as "soft"</li>
+                        <li>Generally safe for short-term drinking</li>
+                        <li>May cause mild corrosion in metal pipes over time</li>
+                        <li>Some people prefer the taste of slightly acidic water</li>
+                      </ul>
+                      <p><strong>Health considerations:</strong></p>
+                      <ul>
+                        <li>Generally minimal health impact for healthy adults</li>
+                        <li>Can gradually leach metals from pipes if persistent</li>
+                        <li>May cause mild digestive sensitivity in some people</li>
+                      </ul>
+                      <p><strong>For agriculture:</strong></p>
+                      <ul>
+                        <li>Good for acid-loving crops (blueberries, azaleas, potatoes)</li>
+                        <li>Most vegetables prefer 6.0-7.0</li>
+                      </ul>
+                      <p><strong>Recommendations:</strong> Consider pH adjustment if using old copper pipes. Monitor for metal content. For drinking, light treatment with calcite filter recommended.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 6.5-8.5: SAFE RANGE -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 6.5 - 8.5: Safe & Ideal Range ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ SAFE FOR DRINKING - This is the ideal range recommended by WHO and EPA</strong>
+                      </div>
+                      <p><strong>Optimal pH levels within this range:</strong></p>
+                      <ul>
+                        <li><strong>pH 6.5-7.0:</strong> Slightly acidic, good taste, safe, works well with chlorine disinfection</li>
+                        <li><strong>pH 7.0:</strong> Neutral - pure water standard, perfect balance</li>
+                        <li><strong>pH 7.0-7.5:</strong> Most ideal for drinking water, best chlorine effectiveness</li>
+                        <li><strong>pH 7.5-8.0:</strong> Slightly alkaline, mineral-rich taste, good for health</li>
+                        <li><strong>pH 8.0-8.5:</strong> Upper safe range, may have mild alkaline taste</li>
+                      </ul>
+                      <p><strong>Benefits of water in this range:</strong></p>
+                      <ul>
+                        <li>Safe for all age groups including babies and elderly</li>
+                        <li>Good taste - neither sour nor bitter</li>
+                        <li>Does not corrode pipes or leach metals</li>
+                        <li>Chlorine and other disinfectants work effectively</li>
+                        <li>Supports healthy digestion and hydration</li>
+                        <li>Suitable for cooking and all household uses</li>
+                      </ul>
+                      <p><strong>For agriculture:</strong></p>
+                      <ul>
+                        <li>Supports growth of most crops and vegetables</li>
+                        <li>Allows optimal nutrient absorption by plants</li>
+                        <li>Safe for livestock and irrigation</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Regularly test pH to ensure it stays in this range. Minor fluctuations are normal and acceptable.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 8.5-11.0: Alkaline -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 8.5 - 11.0: Alkaline (Not Recommended)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>Above safe drinking range - treatment recommended</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>High concentration of dissolved minerals (hard water)</li>
+                        <li>Limestone-rich soil and rock formations</li>
+                        <li>Excessive use of cleaning chemicals</li>
+                        <li>Natural alkaline springs</li>
+                        <li>Contamination from detergents or soaps</li>
+                      </ul>
+                      <p><strong>Health effects:</strong></p>
+                      <ul>
+                        <li>Bitter, soapy, or chalky taste</li>
+                        <li>Can cause skin irritation and dryness</li>
+                        <li>May lead to eye irritation</li>
+                        <li>Digestive discomfort and nausea in some people</li>
+                        <li>Above pH 10: Risk of gastrointestinal irritation</li>
+                      </ul>
+                      <p><strong>Infrastructure problems:</strong></p>
+                      <ul>
+                        <li>Causes scaling and mineral deposits in pipes</li>
+                        <li>Reduces efficiency of water heaters and appliances</li>
+                        <li>Interferes with soap and detergent effectiveness</li>
+                        <li>Chlorine disinfection becomes ineffective above pH 8.5</li>
+                      </ul>
+                      <p><strong>Agricultural impact:</strong></p>
+                      <ul>
+                        <li>Reduces availability of iron, manganese, and phosphorus</li>
+                        <li>Can cause nutrient deficiencies in plants</li>
+                        <li>Soil becomes compacted and hard to work</li>
+                      </ul>
+                      <p><strong>Treatment options:</strong> Acid injection systems, blend with neutral water, reverse osmosis, citric acid or vinegar treatment.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- pH 11.0-14.0: Extremely Alkaline -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">pH 11.0 - 14.0: Extremely Alkaline (Dangerous)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ EXTREME DANGER - Never drink or touch this water!</strong>
+                      </div>
+                      <p><strong>What causes this:</strong></p>
+                      <ul>
+                        <li>Industrial contamination (lye, caustic soda)</li>
+                        <li>Natural soda lakes with extreme evaporation</li>
+                        <li>Chemical spills from cleaning products</li>
+                        <li>Concrete or cement contamination</li>
+                      </ul>
+                      <p><strong>Extreme health risks:</strong></p>
+                      <ul>
+                        <li>Chemical burns on skin, eyes, and mucous membranes</li>
+                        <li>Severe damage to esophagus and stomach if ingested</li>
+                        <li>Can cause blindness if it contacts eyes</li>
+                        <li>Respiratory damage from vapors</li>
+                        <li>Potentially fatal</li>
+                      </ul>
+                      <p><strong>Environmental impact:</strong></p>
+                      <ul>
+                        <li>Kills almost all aquatic life</li>
+                        <li>Destroys vegetation</li>
+                        <li>Causes severe ecosystem damage</li>
+                      </ul>
+                      <p><strong>Action required:</strong> Do not touch or use this water. Evacuate area if vapors are present. Call emergency services and environmental authorities immediately. Only trained professionals should handle this water.</p>
+                      <p><strong>Examples:</strong> Drain cleaner (pH 14), ammonia solution (pH 11-12), natural alkaline lakes like Lake Natron, Tanzania (pH 10-12).</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end sub-accordion -->
+
+              <h4>How to Test pH:</h4>
+              <ul>
+                <li><strong>pH Test Strips:</strong> Dip in water, compare color to chart (±0.5 accuracy)</li>
+                <li><strong>Liquid pH Test Kit:</strong> Add drops to water sample, compare color (±0.2 accuracy)</li>
+                <li><strong>Digital pH Meter:</strong> Most accurate (±0.01), requires calibration</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Pro Tip:</strong> pH can vary throughout the day due to photosynthesis and respiration. Test at the same time daily for consistent readings.
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- TDS Card -->
+        <!-- ========== TDS (Total Dissolved Solids) ========== -->
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">💎</span>
-              <h3 class="accordion-title" data-i18n="param_tds_title">TDS (Total Dissolved Solids)</h3>
+              <h3 class="accordion-title">TDS (Total Dissolved Solids)</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="param_tds_desc">
-                TDS measures all minerals, salts, and metals dissolved in water, measured in mg/L or ppm.
+              <p>
+                TDS (Total Dissolved Solids) measures the total concentration of dissolved substances in water, including minerals, salts, metals, and organic matter. It's measured in milligrams per liter (mg/L) or parts per million (ppm), where 1 mg/L = 1 ppm.
               </p>
+              
               <div class="highlight-box">
-                <strong data-i18n="param_tds_safe">Safe Range: Below 500 mg/L (excellent), 500-1000 mg/L (acceptable)</strong>
+                <strong>Safe Range for Drinking: Below 500 ppm (Excellent: 50-150 ppm)</strong><br>
+                WHO recommends maximum 300-600 ppm; BIS (India) allows up to 500 ppm.
               </div>
-              <h4 data-i18n="param_tds_levels_title">TDS Levels:</h4>
+
+              <h4>What's in TDS:</h4>
               <ul>
-                <li data-i18n="param_tds_level1">0-300 mg/L: Excellent for drinking</li>
-                <li data-i18n="param_tds_level2">300-600 mg/L: Good quality</li>
-                <li data-i18n="param_tds_level3">600-1000 mg/L: Fair, may need treatment</li>
-                <li data-i18n="param_tds_level4">Above 1000 mg/L: Poor, unsuitable for drinking</li>
+                <li><strong>Beneficial minerals:</strong> Calcium, magnesium, potassium, sodium</li>
+                <li><strong>Neutral salts:</strong> Bicarbonates, chlorides, sulfates</li>
+                <li><strong>Harmful substances:</strong> Arsenic, lead, nitrates, fluorides (in excess), heavy metals</li>
+                <li><strong>Organic matter:</strong> Dissolved organic compounds</li>
               </ul>
+
+              <!-- SUB-ACCORDIONS FOR DIFFERENT TDS RANGES -->
+              <div class="sub-accordion">
+
+                <!-- TDS 0-50 ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 0 - 50 ppm: Ultra-Pure (Not Recommended Long-Term)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Type of water:</strong> Distilled water, RO purified water, deionized water, rainwater</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Very flat, bland taste (lacks minerals)</li>
+                        <li>Extremely soft water</li>
+                        <li>Almost no dissolved minerals</li>
+                      </ul>
+                      <div class="warning-box">
+                        <strong>⚠️ Not recommended for long-term drinking</strong>
+                      </div>
+                      <p><strong>Health considerations:</strong></p>
+                      <ul>
+                        <li>Lacks essential minerals like calcium and magnesium</li>
+                        <li>Can leach minerals from your body</li>
+                        <li>May cause mineral deficiencies over time</li>
+                        <li>Some studies link to increased cardiovascular risk</li>
+                      </ul>
+                      <p><strong>When it's used:</strong></p>
+                      <ul>
+                        <li>Laboratories and medical equipment</li>
+                        <li>Electronics manufacturing</li>
+                        <li>Batteries and scientific research</li>
+                        <li>Steam irons and humidifiers (to prevent scaling)</li>
+                      </ul>
+                      <p><strong>Recommendation:</strong> If drinking RO water in this range, add a mineralizer or mix with 20-30% untreated water to reach 50-150 ppm.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TDS 50-150 ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 50 - 150 ppm: Excellent ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ IDEAL RANGE - Excellent for drinking!</strong>
+                      </div>
+                      <p><strong>Type of water:</strong> High-quality spring water, well-treated municipal water, properly mineralized RO water</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Pleasant, slightly sweet taste</li>
+                        <li>Contains balanced minerals</li>
+                        <li>Clean and refreshing</li>
+                        <li>Recommended by health experts</li>
+                      </ul>
+                      <p><strong>Health benefits:</strong></p>
+                      <ul>
+                        <li>Provides essential minerals (calcium, magnesium)</li>
+                        <li>Good for bone and heart health</li>
+                        <li>Supports proper hydration</li>
+                        <li>Safe for babies, children, and elderly</li>
+                        <li>Does not leach minerals from body</li>
+                      </ul>
+                      <p><strong>Uses:</strong></p>
+                      <ul>
+                        <li>Perfect for drinking and cooking</li>
+                        <li>Good for coffee and tea preparation</li>
+                        <li>Safe for aquariums (check specific species requirements)</li>
+                        <li>Excellent for hydroponic gardening</li>
+                      </ul>
+                      <p><strong>Taste profile:</strong> Crisp, clean taste with subtle mineral notes. Premium bottled water brands often target this range.</p>
+                      <p><strong>No action needed - maintain this level!</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TDS 150-300 ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 150 - 300 ppm: Good ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ GOOD QUALITY - Safe and acceptable for drinking</strong>
+                      </div>
+                      <p><strong>Type of water:</strong> Municipal tap water, groundwater, spring water</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Good taste, slightly mineral-rich</li>
+                        <li>Typically considered "hard" water if calcium/magnesium is high</li>
+                        <li>May have slight taste variation depending on minerals</li>
+                      </ul>
+                      <p><strong>Health impact:</strong></p>
+                      <ul>
+                        <li>Safe and healthy for drinking</li>
+                        <li>Provides beneficial minerals</li>
+                        <li>No health risks</li>
+                        <li>May actually provide some protection against cardiovascular disease</li>
+                      </ul>
+                      <p><strong>Potential minor issues:</strong></p>
+                      <ul>
+                        <li>May cause minor scaling in kettles and appliances</li>
+                        <li>Some people may notice slight aftertaste</li>
+                        <li>Can require slightly more soap for washing</li>
+                      </ul>
+                      <p><strong>Uses:</strong></p>
+                      <ul>
+                        <li>Fully safe for drinking, cooking, and all household uses</li>
+                        <li>Good for most plants and agriculture</li>
+                        <li>Acceptable for most industrial processes</li>
+                      </ul>
+                      <p><strong>Recommendation:</strong> Excellent water quality. No treatment needed unless you prefer softer water for washing or specific industrial requirements.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TDS 300-500 ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 300 - 500 ppm: Fair/Acceptable</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="info-box">
+                        <strong>Acceptable but at upper limit - consider testing for specific contaminants</strong>
+                      </div>
+                      <p><strong>Type of water:</strong> Hard groundwater, well water, some municipal supplies</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Noticeable mineral taste</li>
+                        <li>Hard water - high calcium and magnesium</li>
+                        <li>May have slight cloudiness</li>
+                      </ul>
+                      <p><strong>Health considerations:</strong></p>
+                      <ul>
+                        <li>Generally safe for healthy adults</li>
+                        <li>At upper limit of WHO palatability guidelines</li>
+                        <li>Important to verify what minerals/salts are present</li>
+                        <li>May cause digestive adjustment period for some people</li>
+                        <li>Can contribute to kidney stones in susceptible individuals</li>
+                      </ul>
+                      <p><strong>Common problems:</strong></p>
+                      <ul>
+                        <li>Visible scale buildup on faucets and fixtures</li>
+                        <li>Reduced appliance lifespan (water heaters, washing machines)</li>
+                        <li>Requires more detergent for cleaning</li>
+                        <li>Can leave white deposits on dishes</li>
+                        <li>May cause dry skin and hair</li>
+                      </ul>
+                      <p><strong>Agricultural impact:</strong></p>
+                      <ul>
+                        <li>Borderline for irrigation - depends on crop type</li>
+                        <li>Can cause salt buildup in soil over time</li>
+                        <li>Sensitive crops may show reduced yields</li>
+                      </ul>
+                      <p><strong>Recommendation:</strong> Get a detailed water test to identify specific minerals. Consider installing a water softener for household use, or RO system for drinking water. Monitor for specific contaminants like arsenic, fluoride, or nitrates.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TDS 500-1000 ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 500 - 1000 ppm: Poor (Not Suitable for Drinking)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ NOT RECOMMENDED for drinking - Treatment required</strong>
+                      </div>
+                      <p><strong>Type of water:</strong> Heavily mineralized groundwater, coastal wells with saltwater intrusion, industrial discharge areas</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Unpleasant salty or brackish taste</li>
+                        <li>Very hard water</li>
+                        <li>May appear cloudy or discolored</li>
+                      </ul>
+                      <p><strong>Health risks:</strong></p>
+                      <ul>
+                        <li>Can cause diarrhea, especially in new users</li>
+                        <li>May lead to dehydration rather than hydration</li>
+                        <li>High sodium can affect blood pressure</li>
+                        <li>Risk of excessive mineral intake</li>
+                        <li>Can contain harmful contaminants (arsenic, fluoride, nitrates)</li>
+                        <li>May cause kidney problems with long-term use</li>
+                      </ul>
+                      <p><strong>Household problems:</strong></p>
+                      <ul>
+                        <li>Severe scaling in pipes and appliances</li>
+                        <li>Greatly reduced appliance lifespan</li>
+                        <li>Soap won't lather properly</li>
+                        <li>Stains on clothes and dishes</li>
+                        <li>Unpleasant taste in cooked food</li>
+                      </ul>
+                      <p><strong>Not suitable for:</strong></p>
+                      <ul>
+                        <li>Drinking or cooking</li>
+                        <li>Baby formula preparation</li>
+                        <li>Most agricultural irrigation</li>
+                        <li>Industrial processes requiring pure water</li>
+                      </ul>
+                      <p><strong>Treatment required:</strong> Install RO system for drinking water, water softener for household use, or connect to municipal supply if available. Do not use untreated.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TDS 1000+ ppm -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">TDS 1000+ ppm: Unacceptable (Unsafe)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ UNSAFE - Do not drink!</strong>
+                      </div>
+                      <p><strong>Type of water:</strong> Brackish water, seawater (ocean is ~35,000 ppm), heavily polluted water, industrial wastewater</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Very salty taste</li>
+                        <li>May cause immediate nausea</li>
+                        <li>Often cloudy or discolored</li>
+                        <li>Unpleasant odor</li>
+                      </ul>
+                      <p><strong>Serious health risks:</strong></p>
+                      <ul>
+                        <li>Immediate digestive distress and diarrhea</li>
+                        <li>Dehydration (body uses water to flush out excess salts)</li>
+                        <li>Electrolyte imbalance</li>
+                        <li>Kidney damage with repeated exposure</li>
+                        <li>High blood pressure</li>
+                        <li>Potential heavy metal poisoning</li>
+                      </ul>
+                      <p><strong>Specific TDS categories:</strong></p>
+                      <ul>
+                        <li><strong>1,000-3,000 ppm:</strong> Brackish water - unsuitable for drinking</li>
+                        <li><strong>3,000-10,000 ppm:</strong> Highly brackish - agricultural use very limited</li>
+                        <li><strong>10,000-35,000 ppm:</strong> Saline water - no beneficial uses without treatment</li>
+                        <li><strong>35,000+ ppm:</strong> Seawater - requires desalination</li>
+                      </ul>
+                      <p><strong>Sources:</strong></p>
+                      <ul>
+                        <li>Coastal areas with saltwater intrusion</li>
+                        <li>Over-extracted aquifers</li>
+                        <li>Mining discharge areas</li>
+                        <li>Industrial contamination</li>
+                        <li>Natural salt deposits</li>
+                      </ul>
+                      <p><strong>What to do:</strong></p>
+                      <ul>
+                        <li>Do not use for drinking or cooking</li>
+                        <li>Seek alternative water source immediately</li>
+                        <li>Professional RO or desalination required</li>
+                        <li>Report to water authorities if from public supply</li>
+                      </ul>
+                      <p><strong>For reference:</strong> Ocean water has TDS around 35,000 ppm, which is why drinking seawater causes dehydration and death.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end TDS sub-accordion -->
+
+              <h4>How to Measure TDS:</h4>
+              <ul>
+                <li><strong>Digital TDS Meter:</strong> Dip probe in water, reads value in ppm (most common and affordable)</li>
+                <li><strong>Conductivity Meter:</strong> Measures electrical conductivity, converts to TDS (professional)</li>
+                <li><strong>Laboratory Testing:</strong> Evaporation method for precise measurement (expensive)</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Important:</strong> TDS measures total dissolved content but doesn't tell you what is dissolved. A water sample with 200 ppm could be healthy minerals or harmful arsenic. Always do a detailed chemical analysis for high TDS water.
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Turbidity Card -->
+        <!-- ========== TURBIDITY ========== -->
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🌫️</span>
-              <h3 class="accordion-title" data-i18n="param_turbidity_title">Turbidity</h3>
+              <h3 class="accordion-title">Turbidity (Water Clarity)</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="param_turbidity_desc">
-                Turbidity measures water clarity - how cloudy or hazy it appears due to suspended particles.
+              <p>
+                Turbidity measures how clear or cloudy water appears. It's caused by suspended particles like soil, algae, microorganisms, and organic matter that scatter light passing through water. Turbidity is measured in Nephelometric Turbidity Units (NTU) or Jackson Turbidity Units (JTU).
               </p>
+              
               <div class="highlight-box">
-                <strong data-i18n="param_turbidity_safe">Safe Range: Below 5 NTU for drinking</strong>
+                <strong>Safe Range for Drinking: Below 1 NTU (Maximum 5 NTU)</strong><br>
+                WHO recommends below 5 NTU; EPA requires below 1 NTU for treated water in the US.
               </div>
-              <h4 data-i18n="param_turbidity_problems_title">High Turbidity Problems:</h4>
+
+              <h4>Why Turbidity Matters:</h4>
               <ul>
-                <li data-i18n="param_turbidity_problem1">Harbors bacteria, viruses, and parasites</li>
-                <li data-i18n="param_turbidity_problem2">Makes water treatment difficult</li>
-                <li data-i18n="param_turbidity_problem3">Reduces oxygen levels for aquatic life</li>
-                <li data-i18n="param_turbidity_problem4">Can contain heavy metals</li>
+                <li><strong>Health hazard:</strong> Particles can harbor harmful bacteria, viruses, and parasites</li>
+                <li><strong>Disinfection barrier:</strong> High turbidity makes chlorination less effective</li>
+                <li><strong>Indicator of pollution:</strong> Sudden increase may signal contamination</li>
+                <li><strong>Aesthetic:</strong> Cloudy water is unappetizing and looks unsafe</li>
               </ul>
+
+              <!-- SUB-ACCORDIONS FOR TURBIDITY LEVELS -->
+              <div class="sub-accordion">
+
+                <!-- Turbidity 0-0.3 NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">0 - 0.3 NTU: Crystal Clear ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ EXCELLENT - Crystal clear water</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Completely clear, transparent, like bottled water</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>No visible particles or cloudiness</li>
+                        <li>EPA standard for treated municipal water</li>
+                        <li>Optimal for disinfection</li>
+                        <li>High-quality drinking water</li>
+                      </ul>
+                      <p><strong>Found in:</strong></p>
+                      <ul>
+                        <li>Well-filtered municipal water</li>
+                        <li>RO purified water</li>
+                        <li>Premium bottled water</li>
+                        <li>Protected deep wells</li>
+                      </ul>
+                      <p><strong>Perfect for all uses - maintain this level!</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Turbidity 0.3-1 NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">0.3 - 1 NTU: Very Clear ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ VERY GOOD - Safe for drinking</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Clear, might have extremely slight haze when viewed closely</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Barely visible turbidity</li>
+                        <li>Meets WHO drinking water standards</li>
+                        <li>Chlorination still very effective</li>
+                        <li>Aesthetically acceptable</li>
+                      </ul>
+                      <p><strong>Health impact:</strong></p>
+                      <ul>
+                        <li>Safe for drinking without concerns</li>
+                        <li>Negligible risk of microbial contamination</li>
+                        <li>Good for all household uses</li>
+                      </ul>
+                      <p><strong>Found in:</strong></p>
+                      <ul>
+                        <li>Most treated municipal supplies</li>
+                        <li>Good quality well water</li>
+                        <li>Spring water</li>
+                      </ul>
+                      <p><strong>No treatment needed - excellent quality!</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Turbidity 1-5 NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">1 - 5 NTU: Acceptable</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="info-box">
+                        <strong>Acceptable but approaching upper limit - monitor closely</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Slight cloudiness, noticeable when looked at closely</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Visible cloudiness in glass</li>
+                        <li>WHO maximum acceptable limit (5 NTU)</li>
+                        <li>Disinfection still works but less efficient</li>
+                        <li>May indicate recent rainfall or disturbance</li>
+                      </ul>
+                      <p><strong>Health considerations:</strong></p>
+                      <ul>
+                        <li>Generally safe if properly disinfected</li>
+                        <li>Increased risk of microbial presence</li>
+                        <li>Particles can shield pathogens from chlorine</li>
+                        <li>Recommended to investigate cause</li>
+                      </ul>
+                      <p><strong>Causes:</strong></p>
+                      <ul>
+                        <li>Clay or silt from soil erosion</li>
+                        <li>Algae growth</li>
+                        <li>Aging filtration system</li>
+                        <li>Disturbance in water main</li>
+                      </ul>
+                      <p><strong>Recommendation:</strong> Investigate source of turbidity. Consider installing sediment filter. Ensure proper disinfection. Monitor for changes.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Turbidity 5-10 NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">5 - 10 NTU: Cloudy (Treatment Needed)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ Above safe limit - Treatment required before drinking</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Noticeably cloudy, like diluted milk</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Obviously turbid water</li>
+                        <li>Unappetizing appearance</li>
+                        <li>Disinfection significantly less effective</li>
+                        <li>Indicates poor water source or treatment</li>
+                      </ul>
+                      <p><strong>Health risks:</strong></p>
+                      <ul>
+                        <li>High risk of bacterial contamination</li>
+                        <li>Viruses and parasites may be present</li>
+                        <li>Can cause gastrointestinal issues</li>
+                        <li>Chlorine may not reach all pathogens</li>
+                      </ul>
+                      <p><strong>Common causes:</strong></p>
+                      <ul>
+                        <li>Heavy rainfall runoff</li>
+                        <li>Soil erosion into water source</li>
+                        <li>Construction activities nearby</li>
+                        <li>Inadequate filtration</li>
+                      </ul>
+                      <p><strong>Action required:</strong> Do not drink without treatment. Boil water for at least 1 minute, or use proper filtration system. Report to water supplier if municipal.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Turbidity 10-50 NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">10 - 50 NTU: Very Cloudy (Unsafe)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ UNSAFE for drinking - Significant health risk</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Milky, opaque, difficult to see through</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Heavy sediment visible</li>
+                        <li>Muddy or milky appearance</li>
+                        <li>Particles settle to bottom of container</li>
+                        <li>Disinfection nearly ineffective</li>
+                      </ul>
+                      <p><strong>Serious health risks:</strong></p>
+                      <ul>
+                        <li>Very high risk of waterborne diseases</li>
+                        <li>Likely contains harmful microorganisms</li>
+                        <li>Can cause diarrhea, cholera, typhoid</li>
+                        <li>Chlorine cannot penetrate particle coating on pathogens</li>
+                      </ul>
+                      <p><strong>Sources:</strong></p>
+                      <ul>
+                        <li>Flood water</li>
+                        <li>Stormwater runoff</li>
+                        <li>Unprotected surface water</li>
+                        <li>Shallow wells near construction</li>
+                      </ul>
+                      <p><strong>Treatment required:</strong> Multi-stage filtration + disinfection. Let water settle, filter through cloth, then boil. RO or ultrafiltration system recommended for regular use.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Turbidity 50+ NTU -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">50+ NTU: Extremely Turbid (Unacceptable)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ EXTREMELY UNSAFE - Do not use!</strong>
+                      </div>
+                      <p><strong>Appearance:</strong> Muddy, brown, or opaque - looks like dirty dishwater or soil suspension</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Cannot see through at all</li>
+                        <li>Heavy sediment content</li>
+                        <li>May contain visible debris</li>
+                        <li>Completely unsuitable for consumption</li>
+                      </ul>
+                      <p><strong>Extreme health hazards:</strong></p>
+                      <ul>
+                        <li>Extremely high pathogen load likely</li>
+                        <li>Risk of cholera, dysentery, giardia, cryptosporidium</li>
+                        <li>May contain heavy metals and toxins</li>
+                        <li>Can cause severe illness even with brief exposure</li>
+                      </ul>
+                      <p><strong>Common in:</strong></p>
+                      <ul>
+                        <li>Rivers during monsoon/flooding</li>
+                        <li>Ponds with heavy algae blooms</li>
+                        <li>Water contaminated by sewage</li>
+                        <li>Construction site runoff</li>
+                      </ul>
+                      <p><strong>Emergency treatment:</strong> Let settle for several hours, carefully pour off top layer, filter through multiple layers of cloth, boil vigorously for 3+ minutes. Still not ideal - seek clean water source.</p>
+                      <p><strong>Best action: Find alternative water source immediately. Report contamination to authorities.</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end turbidity sub-accordion -->
+
+              <h4>How to Measure Turbidity:</h4>
+              <ul>
+                <li><strong>Turbidity Meter (Nephelometer):</strong> Shines light through sample, measures scatter (professional, accurate)</li>
+                <li><strong>Secchi Disk:</strong> Lowered into water until invisible (for lakes/ponds)</li>
+                <li><strong>Visual Comparison:</strong> Compare water to turbidity standards in tubes</li>
+                <li><strong>Smartphone Apps:</strong> Use camera to estimate turbidity (approximate)</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Remember:</strong> Clear water is not always safe (it could still contain dissolved chemicals), but turbid water is almost always unsafe without proper treatment.
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Temperature Card -->
+        <!-- ========== TEMPERATURE ========== -->
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🌡️</span>
-              <h3 class="accordion-title" data-i18n="param_temp_title">Temperature</h3>
+              <h3 class="accordion-title">Temperature</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="param_temp_desc">
-                Water temperature affects chemical reactions, oxygen levels, and biological activity in water.
+              <p>
+                Water temperature affects chemical reactions, biological processes, oxygen levels, and the taste of drinking water. Temperature influences the entire aquatic ecosystem and water quality.
               </p>
+              
               <div class="highlight-box">
-                <strong data-i18n="param_temp_safe">Ideal Range: 15-25°C for drinking water</strong>
+                <strong>Ideal Range for Drinking: 10-15°C (50-59°F)</strong><br>
+                Most pleasant for consumption. Room temperature (20-25°C) is also acceptable.
               </div>
-              <h4 data-i18n="param_temp_impacts_title">Temperature Impacts:</h4>
+
+              <h4>Why Temperature Matters:</h4>
               <ul>
-                <li data-i18n="param_temp_impact1">Higher temperature reduces dissolved oxygen</li>
-                <li data-i18n="param_temp_impact2">Affects taste and increases bacterial growth</li>
-                <li data-i18n="param_temp_impact3">Influences effectiveness of water treatment</li>
-                <li data-i18n="param_temp_impact4">Cold water holds more oxygen (better quality)</li>
+                <li><strong>Dissolved Oxygen:</strong> Cold water holds more O2 (healthier for aquatic life)</li>
+                <li><strong>Chemical Reactions:</strong> Higher temp speeds up reactions and decay</li>
+                <li><strong>Bacterial Growth:</strong> Warm water encourages microbial multiplication</li>
+                <li><strong>Taste & Acceptability:</strong> Affects how water tastes to humans</li>
+                <li><strong>Treatment Efficiency:</strong> Temperature affects chlorination and filtration</li>
               </ul>
+
+              <!-- SUB-ACCORDIONS FOR TEMPERATURE RANGES -->
+              <div class="sub-accordion">
+
+                <!-- Temperature 0-5°C -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">0 - 5°C (32 - 41°F): Very Cold</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Source:</strong> Mountain streams, glacial melt, deep wells, refrigerated water</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Very refreshing and crisp</li>
+                        <li>Maximum dissolved oxygen capacity</li>
+                        <li>Very low bacterial activity</li>
+                        <li>Near freezing point (0°C)</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Highest water quality in terms of oxygen content</li>
+                        <li>Naturally inhibits bacterial growth</li>
+                        <li>Excellent for fish like trout and salmon</li>
+                        <li>Very refreshing in hot weather</li>
+                      </ul>
+                      <p><strong>Considerations:</strong></p>
+                      <ul>
+                        <li>May be too cold for comfortable drinking</li>
+                        <li>Can cause stomach discomfort if drunk quickly</li>
+                        <li>Drinking very cold water can shock the system</li>
+                      </ul>
+                      <p><strong>Best for:</strong> Natural refrigeration, aquatic ecosystems, post-exercise hydration (if consumed slowly)</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Temperature 5-15°C -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">5 - 15°C (41 - 59°F): Cold/Cool ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ IDEAL temperature for drinking water!</strong>
+                      </div>
+                      <p><strong>Source:</strong> Deep wells, piped water in cool climates, stored water, springs</p>
+                      <p><strong>Why it's best:</strong></p>
+                      <ul>
+                        <li>Most pleasant taste and refreshing feel</li>
+                        <li>High dissolved oxygen levels</li>
+                        <li>Minimal bacterial growth</li>
+                        <li>Comfortable to drink in any weather</li>
+                        <li>Preferred temperature for drinking water globally</li>
+                      </ul>
+                      <p><strong>Health benefits:</strong></p>
+                      <ul>
+                        <li>Easier on digestive system than very cold water</li>
+                        <li>Encourages adequate hydration</li>
+                        <li>Doesn't interfere with digestion</li>
+                        <li>Good for all age groups</li>
+                      </ul>
+                      <p><strong>Practical notes:</strong></p>
+                      <ul>
+                        <li>Standard refrigerator water temp (10°C)</li>
+                        <li>Ideal for sports bottles</li>
+                        <li>Perfect for cooking and beverages</li>
+                      </ul>
+                      <p><strong>Maintain this range for optimal drinking water quality!</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Temperature 15-25°C -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">15 - 25°C (59 - 77°F): Room Temperature ✓</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>✓ ACCEPTABLE - Standard room temperature</strong>
+                      </div>
+                      <p><strong>Source:</strong> Indoor stored water, tap water in warm climates, bottled water at room temp</p>
+                      <p><strong>Characteristics:</strong></p>
+                      <ul>
+                        <li>Comfortable for drinking</li>
+                        <li>Neither refreshing nor off-putting</li>
+                        <li>Moderate dissolved oxygen</li>
+                        <li>Some bacterial growth possible if stored long-term</li>
+                      </ul>
+                      <p><strong>Acceptability:</strong></p>
+                      <ul>
+                        <li>Perfectly safe and healthy</li>
+                        <li>Some traditional medicine systems prefer room temp water</li>
+                        <li>Better for digestion according to Ayurveda</li>
+                        <li>Common in tropical countries</li>
+                      </ul>
+                      <p><strong>Considerations:</strong></p>
+                      <ul>
+                        <li>Less refreshing than cold water</li>
+                        <li>May develop taste if stored in plastic for extended time</li>
+                        <li>More prone to bacterial growth than cold water</li>
+                        <li>Consume stored water within 24 hours</li>
+                      </ul>
+                      <p><strong>Storage tip:</strong> Store in cool, dark place. Keep containers covered and clean.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Temperature 25-35°C -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">25 - 35°C (77 - 95°F): Warm (Not Recommended)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>Not ideal for drinking - bacterial growth risk increases</strong>
+                      </div>
+                      <p><strong>Source:</strong> Outdoor storage tanks in summer, pipes exposed to sun, shallow wells in hot weather</p>
+                      <p><strong>Problems:</strong></p>
+                      <ul>
+                        <li>Unpleasant to drink, lacks refreshment</li>
+                        <li>Low dissolved oxygen</li>
+                        <li>Rapid bacterial multiplication</li>
+                        <li>Increased chemical reaction rates</li>
+                        <li>Can taste stale or "flat"</li>
+                      </ul>
+                      <p><strong>Health risks:</strong></p>
+                      <ul>
+                        <li>Bacteria can double every 20 minutes at 30°C</li>
+                        <li>Increased risk of waterborne diseases</li>
+                        <li>Algae growth in storage containers</li>
+                        <li>Faster degradation of water quality</li>
+                      </ul>
+                      <p><strong>Water supply concerns:</strong></p>
+                      <ul>
+                        <li>Chlorine dissipates faster at higher temperatures</li>
+                        <li>Requires higher disinfectant doses</li>
+                        <li>Taste and odor issues more pronounced</li>
+                      </ul>
+                      <p><strong>Solutions:</strong> Insulate water tanks, keep pipes shaded, store water in cool places, use water quickly, increase chlorination if necessary.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Temperature 35+ °C -->
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">35°C+ (95°F+): Hot (Unsafe for Drinking)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ UNSAFE for drinking - Cool before use</strong>
+                      </div>
+                      <p><strong>Source:</strong> Pipes in direct sunlight, rooftop tanks in summer, hot springs, industrial discharge</p>
+                      <p><strong>Major problems:</strong></p>
+                      <ul>
+                        <li>Unsafe to drink at body temperature or above</li>
+                        <li>Very low dissolved oxygen (hypoxic conditions)</li>
+                        <li>Rapid bacterial and algal bloom</li>
+                        <li>Can cause burns if above 50°C</li>
+                      </ul>
+                      <p><strong>Health hazards:</strong></p>
+                      <ul>
+                        <li>Ideal temperature for pathogen growth (35-45°C)</li>
+                        <li>E. coli, Salmonella, Legionella thrive at these temps</li>
+                        <li>Can cause gastrointestinal illness</li>
+                        <li>Drinking hot water doesn't hydrate effectively</li>
+                      </ul>
+                      <p><strong>Special cases:</strong></p>
+                      <ul>
+                        <li><strong>Hot Springs (40-60°C):</strong> May be safe for bathing but analyze before drinking</li>
+                        <li><strong>Thermal Pollution:</strong> Industrial discharge raising river temps harms aquatic life</li>
+                        <li><strong>Above 60°C:</strong> No bacterial growth, but too hot to drink</li>
+                      </ul>
+                      <p><strong>Action required:</strong> Cool water to below 25°C before drinking. Investigate heat source. Insulate pipes and tanks. Never drink water above body temperature (37°C) except as intentional hot beverage.</p>
+                      <p><strong>For aquatic life:</strong> Fish begin dying above 30-35°C depending on species. Ecosystem collapse likely above 40°C.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end temperature sub-accordion -->
+
+              <h4>Temperature Impacts on Water Quality:</h4>
+              <ul>
+                <li><strong>Dissolved Oxygen:</strong> Every 10°C increase cuts oxygen capacity by ~30%</li>
+                <li><strong>Bacterial Doubling Time:</strong> ~20 min at 30°C vs several hours at 5°C</li>
+                <li><strong>Chlorine Decay:</strong> 2x faster for every 10°C increase</li>
+                <li><strong>Chemical Reactions:</strong> Speed doubles for each 10°C rise (rule of thumb)</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Practical Tip:</strong> In hot climates, insulate water storage tanks and pipes. Use clay pots (naturally cool water through evaporation) or store water bottles in wet cloth.</div>
             </div>
           </div>
         </div>
+
       </section>
 
-      <!-- Section 2: Health & Safety -->
+      <!-- SECTION 2: Health & Diseases -->
       <section class="category-section">
-        <h2 class="category-title" data-i18n="section2_title">Health & Safety</h2>
+        <h2 class="category-title">Health & Safety</h2>
 
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
-              <span class="accordion-icon">🏥</span>
-              <h3 class="accordion-title" data-i18n="health_diseases_title">Waterborne Diseases</h3>
+              <span class="accordion-icon">🦠</span>
+              <h3 class="accordion-title">Waterborne Diseases</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="health_diseases_desc">
-                Contaminated water can cause serious illnesses. Common waterborne diseases include:
-              </p>
-              <ul>
-                <li data-i18n="health_disease1">Diarrhea and dysentery (from bacteria)</li>
-                <li data-i18n="health_disease2">Cholera (from contaminated drinking water)</li>
-                <li data-i18n="health_disease3">Typhoid fever (from poor sanitation)</li>
-                <li data-i18n="health_disease4">Hepatitis A (from fecal contamination)</li>
-                <li data-i18n="health_disease5">Skin and eye infections</li>
-              </ul>
+              <p>Contaminated water causes over 2 million deaths annually worldwide, mostly in developing countries. Understanding these diseases helps you recognize symptoms and take preventive action.</p>
+
+              <div class="sub-accordion">
+                
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Diarrheal Diseases</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Causes:</strong> Bacteria (E. coli, Campylobacter), viruses (Rotavirus, Norovirus), parasites (Giardia)</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Frequent loose or watery stools</li>
+                        <li>Abdominal cramps and pain</li>
+                        <li>Fever and nausea</li>
+                        <li>Dehydration (dry mouth, dizziness, reduced urination)</li>
+                      </ul>
+                      <p><strong>Onset:</strong> Hours to days after drinking contaminated water</p>
+                                            <p><strong>Prevention:</strong></p>
+                      <ul>
+                        <li>Drink only treated or boiled water</li>
+                        <li>Wash hands before eating</li>
+                        <li>Use clean utensils and containers</li>
+                        <li>Avoid street food prepared with questionable water</li>
+                      </ul>
+                      <p><strong>Treatment:</strong> Oral rehydration solution (ORS), rest, medical attention if severe or persists >2 days. Extremely dangerous for young children.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Cholera</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ MEDICAL EMERGENCY - Can be fatal within hours</strong>
+                      </div>
+                      <p><strong>Cause:</strong> Vibrio cholerae bacterium from sewage-contaminated water</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Severe watery diarrhea ("rice water" appearance)</li>
+                        <li>Rapid dehydration</li>
+                        <li>Vomiting and leg cramps</li>
+                        <li>Can lose 1 liter/hour of fluid</li>
+                        <li>Death from dehydration if untreated</li>
+                      </ul>
+                      <p><strong>Onset:</strong> Few hours to 5 days after exposure</p>
+                      <p><strong>High-risk areas:</strong> Areas with poor sanitation, refugee camps, after natural disasters</p>
+                      <p><strong>Treatment:</strong> Immediate rehydration (IV fluids), antibiotics, medical supervision required. 80-90% survival with proper treatment.</p>
+                      <p><strong>Prevention:</strong> Only drink boiled or chlorinated water in outbreak areas. Cook food thoroughly. Practice strict hygiene.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Typhoid Fever</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Cause:</strong> Salmonella typhi bacteria from fecal contamination of water</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Prolonged fever (103-104°F) for weeks</li>
+                        <li>Weakness and fatigue</li>
+                        <li>Stomach pain and headache</li>
+                        <li>Loss of appetite</li>
+                        <li>Sometimes a rash</li>
+                      </ul>
+                      <p><strong>Onset:</strong> 1-3 weeks after exposure</p>
+                      <p><strong>Danger:</strong> Can cause intestinal perforation and internal bleeding. Fatal if untreated (10-30% mortality).</p>
+                      <p><strong>Treatment:</strong> Antibiotics (ciprofloxacin or azithromycin), hospitalization for severe cases</p>
+                      <p><strong>Prevention:</strong> Typhoid vaccine, safe water, good hygiene, avoid raw vegetables washed with contaminated water</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Hepatitis A</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Cause:</strong> Hepatitis A virus from fecal contamination</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Jaundice (yellowing of eyes and skin)</li>
+                        <li>Dark urine and pale stools</li>
+                        <li>Fever and fatigue</li>
+                        <li>Abdominal pain (especially upper right side)</li>
+                        <li>Nausea and loss of appetite</li>
+                      </ul>
+                      <p><strong>Onset:</strong> 2-6 weeks after exposure</p>
+                      <p><strong>Duration:</strong> Can last several weeks to months</p>
+                      <p><strong>Treatment:</strong> No specific treatment - rest, adequate nutrition, avoid alcohol. Most recover fully but can take 6 months.</p>
+                      <p><strong>Prevention:</strong> Hepatitis A vaccine, safe water, hand washing, avoid shellfish from contaminated water</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Dysentery</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Causes:</strong> Shigella bacteria (bacillary dysentery) or Entamoeba histolytica parasite (amoebic dysentery)</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Bloody diarrhea</li>
+                        <li>Severe abdominal cramps</li>
+                        <li>Fever and chills</li>
+                        <li>Mucus in stool</li>
+                        <li>Painful bowel movements</li>
+                      </ul>
+                      <p><strong>Severity:</strong> Can be fatal, especially in children and elderly</p>
+                      <p><strong>Treatment:</strong> Antibiotics for bacterial, antiparasitic drugs for amoebic. Rehydration essential.</p>
+                      <p><strong>Prevention:</strong> Safe drinking water, proper sanitation, hand washing after using toilet</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Giardiasis (Giardia)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Cause:</strong> Giardia lamblia parasite - common in streams, lakes, wells</p>
+                      <p><strong>Symptoms:</strong></p>
+                      <ul>
+                        <li>Explosive, foul-smelling diarrhea</li>
+                        <li>Greasy stools that float</li>
+                        <li>Bloating and gas</li>
+                        <li>Stomach cramps</li>
+                        <li>Weight loss</li>
+                      </ul>
+                      <p><strong>Onset:</strong> 1-3 weeks after exposure</p>
+                      <p><strong>Duration:</strong> Can persist for weeks or months if untreated</p>
+                      <p><strong>Common in:</strong> Hikers drinking from streams ("backpacker's diarrhea"), areas with poor sanitation</p>
+                      <p><strong>Treatment:</strong> Metronidazole or tinidazole antibiotics</p>
+                      <p><strong>Prevention:</strong> Filter or boil all wilderness water. Giardia cysts survive chlorine but die with boiling.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Arsenic Poisoning (Chronic)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="warning-box">
+                        <strong>⚠️ Silent killer - no immediate symptoms but causes cancer long-term</strong>
+                      </div>
+                      <p><strong>Cause:</strong> Naturally occurring arsenic in groundwater, especially in Bangladesh, West Bengal, Vietnam</p>
+                      <p><strong>Early symptoms (years of exposure):</strong></p>
+                      <ul>
+                        <li>Skin pigmentation changes</li>
+                        <li>Hard patches on palms and soles</li>
+                        <li>White lines on nails</li>
+                        <li>Skin lesions and warts</li>
+                      </ul>
+                      <p><strong>Long-term effects (10-20 years):</strong></p>
+                      <ul>
+                        <li>Skin, lung, bladder, and kidney cancer</li>
+                        <li>Heart disease and diabetes</li>
+                        <li>Nerve damage</li>
+                        <li>Developmental issues in children</li>
+                      </ul>
+                      <p><strong>Safe limit:</strong> WHO recommends below 10 ppb (parts per billion)</p>
+                      <p><strong>Prevention:</strong> Test well water for arsenic. Use arsenic-removal filters or switch to arsenic-free sources.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Fluorosis</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Cause:</strong> Excessive fluoride in groundwater (>1.5 mg/L)</p>
+                      <p><strong>Dental Fluorosis:</strong></p>
+                      <ul>
+                        <li>White spots or streaks on teeth</li>
+                        <li>Brown or black stains in severe cases</li>
+                        <li>Occurs during tooth development (children)</li>
+                        <li>Permanent damage</li>
+                      </ul>
+                      <p><strong>Skeletal Fluorosis (severe, long-term):</strong></p>
+                      <ul>
+                        <li>Joint pain and stiffness</li>
+                        <li>Bone hardening and calcification</li>
+                        <li>Limited mobility</li>
+                        <li>In extreme cases, crippling deformity</li>
+                      </ul>
+                      <p><strong>High-risk areas:</strong> Rajasthan, Andhra Pradesh, Tamil Nadu in India; parts of Africa and China</p>
+                      <p><strong>Prevention:</strong> Use defluoridation filters (activated alumina). Test water before use. Provide fluoride-free water for children.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end diseases sub-accordion -->
             </div>
           </div>
         </div>
@@ -581,53 +1874,131 @@
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">⚠️</span>
-              <h3 class="accordion-title" data-i18n="health_warning_title">Warning Signs</h3>
+              <h3 class="accordion-title">Warning Signs of Contaminated Water</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="health_warning_desc">
-                Do not use water if you notice:
-              </p>
+              <p>Learn to recognize signs of water contamination to protect your health:</p>
+
+              <h4>Visual Warning Signs:</h4>
               <ul>
-                <li data-i18n="health_warning1">Unusual color (brown, yellow, or green)</li>
-                <li data-i18n="health_warning2">Strange smell or taste</li>
-                <li data-i18n="health_warning3">Cloudy or murky appearance</li>
-                <li data-i18n="health_warning4">Visible particles or sediment</li>
-                <li data-i18n="health_warning5">Oily film on surface</li>
+                <li><strong>Unusual Color:</strong>
+                  <ul>
+                    <li>Brown/Yellow: Soil, rust, or organic matter</li>
+                    <li>Green: Algae growth</li>
+                    <li>Blue/Green: Copper pipe corrosion</li>
+                    <li>Reddish/Orange: Iron or manganese</li>
+                    <li>Black: Manganese or sewage contamination</li>
+                  </ul>
+                </li>
+                <li><strong>Cloudiness/Turbidity:</strong> Sediment, microorganisms, or pollution</li>
+                <li><strong>Visible Particles:</strong> Suspended solids, sediment, or debris</li>
+                <li><strong>Oily Film:</strong> Industrial pollution or petroleum contamination</li>
+                <li><strong>Foam/Bubbles:</strong> Detergent pollution or organic matter</li>
               </ul>
-              <div class="highlight-box">
-                <strong data-i18n="health_warning_action">Action: Use our Measure tool to test the water and see Care tips for treatment options.</strong>
+
+              <h4>Smell Warning Signs:</h4>
+              <ul>
+                <li><strong>Rotten Egg Smell:</strong> Hydrogen sulfide gas (from bacteria or natural sources)</li>
+                <li><strong>Chlorine Smell:</strong> Excessive disinfection (usually safe but unpleasant)</li>
+                <li><strong>Musty/Earthy Smell:</strong> Algae or decaying organic matter</li>
+                <li><strong>Chemical Smell:</strong> Industrial contamination</li>
+                <li><strong>Sewage Smell:</strong> Fecal contamination - DO NOT USE</li>
+              </ul>
+
+              <h4>Taste Warning Signs:</h4>
+              <ul>
+                <li><strong>Salty:</strong> High TDS, saltwater intrusion, or mineral content</li>
+                <li><strong>Metallic:</strong> Heavy metals (lead, copper, iron)</li>
+                <li><strong>Bitter:</strong> High alkalinity or contamination</li>
+                <li><strong>Chemical:</strong> Pesticides or industrial pollution</li>
+              </ul>
+
+              <div class="warning-box">
+                <strong>⚠️ NEVER TASTE WATER if it looks or smells contaminated!</strong>
               </div>
+
+              <h4>Environmental Warning Signs:</h4>
+              <ul>
+                <li>Dead fish or animals near water source</li>
+                <li>Absence of aquatic life</li>
+                <li>Unusual plant growth or algae blooms</li>
+                <li>Industrial or agricultural activity nearby</li>
+                <li>Visible sewage pipes or runoff</li>
+                <li>Recent flooding or heavy rainfall</li>
+              </ul>
+
+              <h4>Immediate Action if Contamination Suspected:</h4>
+              <ol style="margin-left: 1.5rem;">
+                <li>Stop using the water immediately</li>
+                <li>Use our Measure tool to test pH, TDS, and turbidity</li>
+                <li>Seek alternative water source</li>
+                <li>Report to local water authority or health department</li>
+                <li>Warn neighbors if using shared water source</li>
+                <li>Do not resume use until water is tested and declared safe</li>
+              </ol>
             </div>
           </div>
         </div>
+
       </section>
 
-      <!-- Section 3: Improvement Tips -->
+      <!-- SECTION 3: Water Treatment & Improvement -->
       <section class="category-section">
-        <h2 class="category-title" data-i18n="section3_title">Improving Water Quality</h2>
+        <h2 class="category-title">Water Treatment & Improvement Methods</h2>
 
         <div class="accordion-card">
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🔥</span>
-              <h3 class="accordion-title" data-i18n="improve_boiling_title">Boiling Water</h3>
+              <h3 class="accordion-title">Boiling Water</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="improve_boiling_desc">
-                Boiling is the most effective way to kill bacteria, viruses, and parasites.
-              </p>
+              <div class="highlight-box">
+                <strong>Most effective method to kill all pathogens - 99.9% effective</strong>
+              </div>
+              
+              <h4>How to Boil Water Properly:</h4>
+              <ol style="margin-left: 1.5rem;">
+                <li><strong>Filter first if turbid:</strong> Pass through cloth to remove visible particles</li>
+                <li><strong>Bring to rolling boil:</strong> Vigorous bubbling throughout</li>
+                <li><strong>Time:</strong>
+                  <ul>
+                    <li>At sea level: 1 minute of rolling boil</li>
+                    <li>Above 2,000m altitude: 3 minutes (water boils at lower temperature)</li>
+                  </ul>
+                </li>
+                <li><strong>Cool naturally:</strong> Don't add ice or unboiled water</li>
+                <li><strong>Store safely:</strong> In clean, covered containers</li>
+              </ol>
+
+              <h4>What Boiling Kills:</h4>
               <ul>
-                <li data-i18n="improve_boiling_step1">Bring water to a rolling boil for 1 minute</li>
-                <li data-i18n="improve_boiling_step2">At high altitudes (above 2000m), boil for 3 minutes</li>
-                <li data-i18n="improve_boiling_step3">Let it cool naturally</li>
-                <li data-i18n="improve_boiling_step4">Store in clean, covered containers</li>
+                <li>All bacteria (E. coli, Salmonella, Vibrio cholerae, etc.)</li>
+                <li>All viruses (Hepatitis A, Rotavirus, Norovirus)</li>
+                <li>All parasites and their cysts (Giardia, Cryptosporidium, Amoeba)</li>
+                <li>Fungal spores</li>
               </ul>
+
+              <h4>What Boiling DOESN'T Remove:</h4>
+              <ul>
+                <li>Heavy metals (lead, arsenic, mercury)</li>
+                <li>Chemicals (pesticides, industrial pollutants)</li>
+                <li>Excessive salts or TDS</li>
+                <li>Fluoride or nitrates</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Tip:</strong> Boiled water tastes flat because dissolved oxygen is removed. Pour back and forth between containers to re-oxygenate and improve taste.
+              </div>
+
+              <h4>Best for:</h4>
+              <p>Emergency situations, areas with microbial contamination, when other methods unavailable, camping/travel.</p>
             </div>
           </div>
         </div>
@@ -636,21 +2007,355 @@
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🧹</span>
-              <h3 class="accordion-title" data-i18n="improve_filtration_title">Filtration Methods</h3>
+              <h3 class="accordion-title">Filtration Methods</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="improve_filtration_desc">
-                Simple filtration can remove particles and improve clarity:
-              </p>
-              <ul>
-                <li data-i18n="improve_filtration_method1">Cloth filter: Fold clean cloth 4-6 times</li>
-                <li data-i18n="improve_filtration_method2">Sand filter: Layers of sand, gravel, and charcoal</li>
-                <li data-i18n="improve_filtration_method3">Ceramic filters: Remove bacteria and sediment</li>
-                <li data-i18n="improve_filtration_method4">RO (Reverse Osmosis): Removes TDS and most contaminants</li>
-              </ul>
+              <p>Filtration physically removes particles, sediment, and some microorganisms from water.</p>
+
+              <div class="sub-accordion">
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Cloth Filtration (Basic)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>How it works:</strong> Physical barrier removes large particles and some pathogens</p>
+                      <p><strong>Method:</strong></p>
+                      <ul>
+                        <li>Fold clean cotton cloth 4-8 times</li>
+                        <li>Old sari cloth works well (used traditionally in Bangladesh)</li>
+                        <li>Pour water slowly through cloth</li>
+                        <li>Wash cloth regularly with soap and dry in sun</li>
+                      </ul>
+                      <p><strong>What it removes:</strong></p>
+                      <ul>
+                        <li>50% of bacteria (attached to particles)</li>
+                        <li>Cholera bacteria (which attach to zooplankton)</li>
+                        <li>Visible particles and sediment</li>
+                        <li>Some parasites and larvae</li>
+                      </ul>
+                      <p><strong>What it DOESN'T remove:</strong> Viruses, dissolved chemicals, most bacteria</p>
+                      <p><strong>Effectiveness:</strong> Basic, but better than nothing. Must boil or chlorinate after filtering.</p>
+                      <p><strong>Cost:</strong> Free (use existing cloth)</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Sand Filter</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>How it works:</strong> Water passes through layers of sand and gravel that trap particles</p>
+                      <p><strong>DIY Slow Sand Filter Setup:</strong></p>
+                      <ol style="margin-left: 1.5rem;">
+                        <li>Use clean bucket or drum</li>
+                        <li><strong>Top layer:</strong> 5 cm gravel (largest)</li>
+                        <li><strong>Middle layer:</strong> 60 cm fine sand</li>
+                        <li><strong>Bottom layer:</strong> 10 cm gravel (medium size)</li>
+                        <li><strong>Outlet:</strong> Small hole near bottom with tap/tube</li>
+                      </ol>
+                      <p><strong>What it removes:</strong></p>
+                      <ul>
+                        <li>90-99% of bacteria (after maturation period)</li>
+                        <li>Sediment and turbidity</li>
+                        <li>Some parasites and cysts</li>
+                        <li>Reduces taste and odor</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>No electricity or chemicals needed</li>
+                        <li>Low cost</li>
+                        <li>Lasts for years</li>
+                        <li>Develops biological layer that enhances filtration</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Clean top layer monthly. Replace sand every 2-3 years.</p>
+                      <p><strong>Limitation:</strong> Slow flow rate (may take hours for one bucket). Still boil for complete safety.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Ceramic Filter</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>How it works:</strong> Porous ceramic material with tiny pores (0.2-0.5 microns) blocks contaminants</p>
+                      <p><strong>Types:</strong></p>
+                      <ul>
+                        <li><strong>Candle filters:</strong> Cylindrical ceramic element inserted in container</li>
+                        <li><strong>Pot filters:</strong> Ceramic pot sits inside bucket, water drips through</li>
+                      </ul>
+                      <p><strong>What it removes:</strong></p>
+                      <ul>
+                        <li>99.9% of bacteria</li>
+                        <li>99.9% of protozoan cysts</li>
+                        <li>Sediment and turbidity</li>
+                        <li>Some viruses (if coated with silver)</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>No electricity required</li>
+                        <li>Long lifespan (2-3 years with proper care)</li>
+                        <li>Affordable for household use</li>
+                        <li>Simple to use</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Clean with brush or cloth every 1-2 weeks. Do not use soap (clogs pores).</p>
+                      <p><strong>Cost:</strong> ₹500-2000 for home unit in India</p>
+                      <p><strong>Best for:</strong> Household use, areas with turbid water, rural communities</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Activated Carbon Filter</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>How it works:</strong> Porous carbon adsorbs (traps) chemicals and organic compounds on its surface</p>
+                      <p><strong>What it removes:</strong></p>
+                      <ul>
+                        <li>Chlorine and chlorination by-products</li>
+                        <li>Pesticides and herbicides</li>
+                        <li>Organic chemicals and VOCs</li>
+                        <li>Bad taste and odor</li>
+                        <li>Some heavy metals (depending on type)</li>
+                      </ul>
+                      <p><strong>What it DOESN'T remove:</strong></p>
+                      <ul>
+                        <li>Dissolved salts (TDS)</li>
+                        <li>Fluoride, arsenic, nitrates</li>
+                        <li>Bacteria and viruses (though can reduce numbers)</li>
+                        <li>Hardness (calcium/magnesium)</li>
+                      </ul>
+                      <p><strong>Types:</strong></p>
+                      <ul>
+                        <li><strong>Granular Activated Carbon (GAC):</strong> Loose carbon in cartridge</li>
+                        <li><strong>Carbon Block:</strong> Compressed carbon, better filtration</li>
+                        <li><strong>Coconut Shell Carbon:</strong> More effective, sustainable</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Replace cartridge every 3-6 months depending on usage</p>
+                      <p><strong>Best for:</strong> Improving taste, removing chemicals from treated municipal water</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">RO (Reverse Osmosis)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <div class="highlight-box">
+                        <strong>Most comprehensive filtration - removes almost everything</strong>
+                      </div>
+                      <p><strong>How it works:</strong> Water forced through semi-permeable membrane with pores ~0.0001 microns. Only water molecules pass through.</p>
+                      <p><strong>What it removes (95-99%):</strong></p>
+                      <ul>
+                        <li>All TDS (salts, minerals, metals)</li>
+                        <li>Heavy metals (lead, arsenic, mercury, chromium)</li>
+                        <li>Fluoride and nitrates</li>
+                        <li>Bacteria and viruses</li>
+                        <li>Pesticides and chemicals</li>
+                        <li>Radioactive elements</li>
+                      </ul>
+                      <p><strong>Stages in typical RO system:</strong></p>
+                      <ol style="margin-left: 1.5rem;">
+                        <li><strong>Sediment filter:</strong> Removes particles >5 microns</li>
+                        <li><strong>Pre-carbon filter:</strong> Removes chlorine and organics</li>
+                        <li><strong>RO membrane:</strong> Removes dissolved solids</li>
+                        <li><strong>Post-carbon filter:</strong> Final taste/odor polish</li>
+                        <li><strong>Mineralizer (optional):</strong> Adds back beneficial minerals</li>
+                      </ol>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Most thorough purification</li>
+                        <li>Effective for high TDS water</li>
+                        <li>Removes arsenic and fluoride</li>
+                        <li>Safe for all uses</li>
+                      </ul>
+                      <p><strong>Disadvantages:</strong></p>
+                      <ul>
+                        <li>Wastes 3-4 liters for every 1 liter purified</li>
+                        <li>Removes beneficial minerals</li>
+                        <li>Requires electricity and water pressure</li>
+                        <li>Expensive (₹6,000-20,000 in India)</li>
+                        <li>Requires regular filter replacement</li>
+                      </ul>
+                      <p><strong>Best for:</strong> High TDS water, areas with arsenic/fluoride, comprehensive home purification</p>
+                      <div class="info-box">
+                        <strong>💡 Tip:</strong> Use waste water for plants, cleaning, or laundry. Add mineralizer to prevent demineralized water issues.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">UV (Ultraviolet) Purification</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>How it works:</strong> UV-C light (254 nm wavelength) damages microbial DNA, making them unable to reproduce</p>
+                      <p><strong>What it kills:</strong></p>
+                      <ul>
+                        <li>99.99% of bacteria</li>
+                        <li>99.99% of viruses</li>
+                        <li>99.9% of protozoan cysts</li>
+                      </ul>
+                      <p><strong>What it DOESN'T remove:</strong></p>
+                      <ul>
+                        <li>Dissolved solids (TDS remains same)</li>
+                        <li>Chemicals and heavy metals</li>
+                        <li>Turbidity or particles</li>
+                        <li>Taste and odor</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>No chemicals added</li>
+                        <li>Instant purification</li>
+                        <li>Doesn't change taste</li>
+                        <li>Low maintenance</li>
+                        <li>Environmentally friendly</li>
+                      </ul>
+                      <p><strong>Limitations:</strong></p>
+                      <ul>
+                        <li>Only works on clear water (turbidity must be <5 NTU)</li>
+                        <li>No residual protection after treatment</li>
+                        <li>Requires electricity</li>
+                        <li>Must pre-filter if water is turbid</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Replace UV lamp annually. Clean quartz sleeve monthly.</p>
+                      <p><strong>Best for:</strong> Municipal water that's clear but might have microbial contamination. Often combined with RO.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end filtration sub-accordion -->
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">💧</span>
+              <h3 class="accordion-title">Chemical Disinfection</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <div class="sub-accordion">
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Chlorination</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Most common method for municipal water treatment worldwide</strong></p>
+                      <p><strong>How it works:</strong> Chlorine kills bacteria and viruses by oxidizing their cell membranes</p>
+                      <p><strong>Forms available:</strong></p>
+                      <ul>
+                        <li><strong>Liquid chlorine bleach:</strong> 5-6% sodium hypochlorite (household bleach)</li>
+                        <li><strong>Chlorine tablets:</strong> For water purification</li>
+                        <li><strong>Calcium hypochlorite (powdered bleach):</strong> 65-70% available chlorine</li>
+                      </ul>
+                      <p><strong>Dosage for clear water:</strong></p>
+                      <ul>
+                        <li>2 drops of bleach per liter (or 8 drops per gallon)</li>
+                        <li>For cloudy water: Double the dose</li>
+                        <li>Wait 30 minutes before drinking</li>
+                        <li>Should have slight chlorine smell; if not, repeat dose and wait another 15 minutes</li>
+                      </ul>
+                      <p><strong>What it kills:</strong></p>
+                      <ul>
+                        <li>Most bacteria (99.9%)</li>
+                        <li>Most viruses</li>
+                        <li>Some parasites (but NOT Giardia or Cryptosporidium cysts)</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Cheap and widely available</li>
+                        <li>Provides residual protection</li>
+                        <li>Easy to use</li>
+                      </ul>
+                      <p><strong>Disadvantages:</strong></p>
+                      <ul>
+                        <li>Taste and odor</li>
+                        <li>Doesn't remove chemicals or TDS</li>
+                        <li>Forms trihalomethanes (THMs) with organic matter (potentially carcinogenic in high amounts)</li>
+                        <li>Less effective in turbid or alkaline water</li>
+                      </ul>
+                      <div class="warning-box">
+                        <strong>⚠️ Only use unscented, pure bleach without additives for water treatment!</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Iodine Treatment</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Common for camping and travel</strong></p>
+                      <p><strong>Forms:</strong></p>
+                      <ul>
+                        <li>Iodine tablets (tetraglycine hydroperiodide)</li>
+                        <li>Tincture of iodine (2%)</li>
+                        <li>Povidone-iodine solution</li>
+                      </ul>
+                      <p><strong>Dosage:</strong></p>
+                      <ul>
+                        <li>Tablets: 1-2 tablets per liter (follow package instructions)</li>
+                        <li>2% tincture: 5 drops per liter for clear water, 10 for cloudy</li>
+                        <li>Wait 30 minutes (60 minutes if water is cold or cloudy)</li>
+                      </ul>
+                      <p><strong>What it kills:</strong></p>
+                      <ul>
+                        <li>Bacteria and viruses</li>
+                        <li>Giardia cysts (requires longer contact time)</li>
+                        <li>Cryptosporidium (less effective)</li>
+                      </ul>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Lightweight and portable</li>
+                        <li>Effective in various temperatures</li>
+                        <li>Long shelf life</li>
+                      </ul>
+                      <p><strong>Disadvantages:</strong></p>
+                      <ul>
+                        <li>Unpleasant taste (can use vitamin C to neutralize after treatment)</li>
+                        <li>Not for pregnant women</li>
+                        <li>Not for people with thyroid conditions</li>
+                        <li>Not for long-term use (>few weeks)</li>
+                      </ul>
+                      <div class="warning-box">
+                        <strong>⚠️ Not recommended for prolonged use or for pregnant women and people with thyroid issues</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end chemical disinfection sub-accordion -->
             </div>
           </div>
         </div>
@@ -659,24 +2364,72 @@
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">☀️</span>
-              <h3 class="accordion-title" data-i18n="improve_solar_title">Solar Disinfection (SODIS)</h3>
+              <h3 class="accordion-title">Solar Disinfection (SODIS)</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="improve_solar_desc">
-                Use sunlight to purify water naturally:
-              </p>
-              <ul>
-                <li data-i18n="improve_solar_step1">Fill clear plastic bottles (PET) with water</li>
-                <li data-i18n="improve_solar_step2">Place in direct sunlight for 6 hours</li>
-                <li data-i18n="improve_solar_step3">On cloudy days, expose for 2 days</li>
-                <li data-i18n="improve_solar_step4">UV rays kill most harmful organisms</li>
-              </ul>
               <div class="highlight-box">
-                <strong data-i18n="improve_solar_note">Note: Works best when turbidity is low (water is relatively clear)</strong>
+                <strong>FREE, chemical-free method perfect for developing regions</strong>
               </div>
+              <p><strong>How it works:</strong> UV-A rays and heat from sunlight kill pathogens in water</p>
+              
+              <h4>Step-by-Step SODIS Method:</h4>
+              <ol style="margin-left: 1.5rem;">
+                <li><strong>Choose container:</strong> Clear PET plastic bottles (0.5-2 liters) or glass bottles</li>
+                <li><strong>Pre-treat if turbid:</strong> Filter through cloth if cloudiness >30 NTU</li>
+                <li><strong>Fill completely:</strong> Leave no air space, shake to oxygenate</li>
+                <li><strong>Place in sun:</strong> Lay bottles horizontally on corrugated metal sheet or dark surface</li>
+                <li><strong>Exposure time:</strong>
+                  <ul>
+                    <li>Bright sun: 6 hours</li>
+                    <li>50% cloudy: 6 hours</li>
+                    <li>Fully cloudy: 2 consecutive days</li>
+                  </ul>
+                </li>
+                <li><strong>Ready to drink:</strong> Let cool, drink directly from bottle</li>
+              </ol>
+
+              <h4>What SODIS Kills:</h4>
+              <ul>
+                <li>99.9% of bacteria (E. coli, Salmonella, Cholera, Typhoid)</li>
+                <li>99.9% of viruses (Rotavirus, Hepatitis A)</li>
+                <li>Most protozoan parasites</li>
+              </ul>
+
+              <h4>Effectiveness Enhanced By:</h4>
+              <ul>
+                <li><strong>Temperature:</strong> >50°C greatly speeds process</li>
+                <li><strong>Oxygen:</strong> Shake bottle before exposure</li>
+                <li><strong>Reflective surface:</strong> Place on corrugated metal sheet</li>
+                <li><strong>Clear bottles:</strong> Scratched bottles reduce UV penetration</li>
+              </ul>
+
+              <h4>Advantages:</h4>
+              <ul>
+                <li>Completely free (uses sunlight)</li>
+                <li>No chemicals or electricity</li>
+                <li>Minimal equipment needed</li>
+                <li>Safe and simple</li>
+                <li>Proven by WHO and Swiss research</li>
+              </ul>
+
+              <h4>Limitations:</h4>
+              <ul>
+                <li>Doesn't work in rainy/cloudy weather</li>
+                <li>Only for clear water (turbidity <30 NTU)</li>
+                <li>Small volumes only (1-2 liters per bottle)</li>
+                <li>Doesn't remove chemicals or TDS</li>
+                <li>Requires full sun exposure</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 Pro Tips:</strong> Paint one side of bottle black to absorb more heat. Mark bottles with "X" before exposure and check mark after to avoid confusion. Replace bottles every 6 months as scratches reduce effectiveness.
+              </div>
+
+              <h4>Best For:</h4>
+              <p>Rural areas with abundant sunlight, emergency situations, households without electricity, refugee camps, areas with microbiological (not chemical) contamination.</p>
             </div>
           </div>
         </div>
@@ -685,46 +2438,185 @@
           <div class="accordion-header">
             <div class="accordion-title-wrap">
               <span class="accordion-icon">🏪</span>
-              <h3 class="accordion-title" data-i18n="improve_storage_title">Safe Storage</h3>
+              <h3 class="accordion-title">Safe Water Storage</h3>
             </div>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="accordion-content">
             <div class="accordion-content-inner">
-              <p data-i18n="improve_storage_desc">
-                Keep treated water safe from recontamination:
-              </p>
+              <p>Even treated water can become contaminated during storage if not handled properly.</p>
+
+              <h4>Container Selection:</h4>
               <ul>
-                <li data-i18n="improve_storage_tip1">Use clean, covered containers with narrow openings</li>
-                <li data-i18n="improve_storage_tip2">Keep containers away from animals and dirt</li>
-                <li data-i18n="improve_storage_tip3">Use a clean cup or ladle to pour (don't dip hands)</li>
-                <li data-i18n="improve_storage_tip4">Clean storage containers weekly with soap</li>
-                <li data-i18n="improve_storage_tip5">Store in cool, dark place</li>
+                <li><strong>Best materials:</strong> Food-grade plastic, stainless steel, glass, or ceramic with glaze</li>
+                <li><strong>Avoid:</strong> Containers that previously held chemicals, pesticides, or fuel</li>
+                <li><strong>Design:</strong> Narrow mouth with tight-fitting lid (prevents hands from entering)</li>
+                <li><strong>Capacity:</strong> 10-20 liters for household use</li>
+                <li><strong>Color:</strong> Opaque or dark-colored prevents algae growth</li>
               </ul>
+
+              <h4>Storage Best Practices:</h4>
+              <ol style="margin-left: 1.5rem;">
+                <li><strong>Clean containers weekly:</strong> Wash with soap and water, rinse thoroughly, dry in sun</li>
+                <li><strong>Keep covered:</strong> Always keep lid on to prevent contamination</li>
+                <li><strong>Cool, dark location:</strong> Reduces bacterial growth and algae</li>
+                <li><strong>Elevated position:</strong> Keep off ground (on stand or table)</li>
+                <li><strong>Away from toilets:</strong> At least 10 meters from sanitation facilities</li>
+                <li><strong>Use clean cup/ladle:</strong> Never dip hands or dirty containers into stored water</li>
+                <li><strong>Label and date:</strong> Mark treatment date, consume within 24-48 hours if unchlorinated</li>
+                <li><strong>First in, first out:</strong> Use older water first</li>
+              </ol>
+
+              <h4>Types of Storage Containers:</h4>
+              <div class="sub-accordion">
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Clay Pot (Matka)</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Traditional and effective for hot climates</strong></p>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Naturally cools water through evaporation</li>
+                        <li>Eco-friendly and traditional</li>
+                        <li>Alkaline property can neutralize acidity</li>
+                        <li>No chemicals leach into water</li>
+                      </ul>
+                      <p><strong>Maintenance:</strong> Clean weekly with tamarind or lemon, rinse well, sun-dry. Season new pot before use by filling and emptying 3-4 times.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Jerry Cans / Plastic Containers</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>Most common household storage</strong></p>
+                      <p><strong>Advantages:</strong></p>
+                      <ul>
+                        <li>Lightweight and durable</li>
+                        <li>Easy to transport</li>
+                        <li>Affordable</li>
+                        <li>Available in various sizes</li>
+                      </ul>
+                      <p><strong>Choose:</strong> Food-grade HDPE plastic, BPA-free</p>
+                      <p><strong>Avoid:</strong> Storing in direct sunlight (chemicals can leach from plastic)</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sub-accordion-card">
+                  <div class="sub-accordion-header">
+                    <h4 class="sub-accordion-title">Large Storage Tanks</h4>
+                    <span class="sub-accordion-arrow">▼</span>
+                  </div>
+                  <div class="sub-accordion-content">
+                    <div class="sub-accordion-content-inner">
+                      <p><strong>For bulk household or community storage</strong></p>
+                      <p><strong>Requirements:</strong></p>
+                      <ul>
+                        <li>Covered with secure lid</li>
+                        <li>Cleaning port for maintenance</li>
+                        <li>Tap at bottom (not dipping)</li>
+                        <li>Overflow pipe covered with mesh</li>
+                        <li>Insulated or shaded</li>
+                      </ul>
+                      <p><strong>Cleaning schedule:</strong> Every 3-6 months - drain completely, scrub inside, disinfect with chlorine solution, rinse thoroughly</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h4>Signs Water Storage is Contaminated:</h4>
+              <ul>
+                <li>Slippery or slimy feel inside container</li>
+                <li>Visible algae growth (green layer)</li>
+                <li>Cloudy water or floating particles</li>
+                <li>Bad smell or unusual taste</li>
+              </ul>
+
+              <div class="warning-box">
+                <strong>⚠️ If storage contamination is suspected, clean container thoroughly and re-treat water before use.</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SECTION 4: For Farmers -->
+      <section class="category-section">
+        <h2 class="category-title">Water Quality for Agriculture</h2>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🌾</span>
+              <h3 class="accordion-title">Irrigation Water Quality</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Water quality significantly affects crop health, yield, and soil condition. Poor irrigation water can damage crops and degrade soil over time.</p>
+
+              <h4>Key Parameters for Agriculture:</h4>
+              <ul>
+                <li><strong>pH:</strong> 6.0-7.5 ideal for most crops</li>
+                <li><strong>TDS/Salinity:</strong> <450 ppm excellent, 450-2000 ppm acceptable for most crops</li>
+                <li><strong>Sodium:</strong> High sodium damages soil structure</li>
+                <li><strong>Chloride:</strong> Toxic to sensitive crops at >350 ppm</li>
+                <li><strong>Boron:</strong> Essential micronutrient but toxic >2 ppm</li>
+              </ul>
+
+              <h4>Water Quality Classification for Irrigation:</h4>
+              <ul>
+                <li><strong>Excellent:</strong> <200 ppm - suitable for all crops and soils</li>
+                <li><strong>Good:</strong> 200-500 ppm - suitable for most crops</li>
+                <li><strong>Permissible:</strong> 500-1500 ppm - use with leaching and drainage</li>
+                <li><strong>Doubtful:</strong> 1500-3000 ppm - only for salt-tolerant crops with special management</li>
+                <li><strong>Unsuitable:</strong> >3000 ppm - not recommended</li>
+              </ul>
+
+              <h4>Problems from Poor Water Quality:</h4>
+              <ul>
+                <li><strong>Salt buildup in soil:</strong> Reduces water uptake by plants</li>
+                <li><strong>Nutrient imbalance:</strong> Excessive minerals block nutrient absorption</li>
+                <li><strong>Soil structure damage:</strong> Sodium causes soil compaction</li>
+                <li><strong>Toxicity:</strong> Boron, chloride can poison sensitive crops</li>
+                <li><strong>Clogged irrigation:</strong> Sediment blocks drippers and sprinklers</li>
+              </ul>
+
+              <h4>Solutions for Farmers:</h4>
+              <ul>
+                <li><strong>Blend water sources:</strong> Mix high-salinity with low-salinity water</li>
+                <li><strong>Improve drainage:</strong> Prevents salt accumulation</li>
+                <li><strong>Leaching:</strong> Apply excess water to wash salts below root zone</li>
+                <li><strong>Choose salt-tolerant crops:</strong> Barley, cotton, dates, beets</li>
+                <li><strong>Add gypsum:</strong> Displaces sodium in soil</li>
+                <li><strong>Filter irrigation water:</strong> Prevent clogging</li>
+              </ul>
+
+              <div class="info-box">
+                <strong>💡 For Farmers:</strong> Test your irrigation water annually. Use our Map feature to see water quality in your region and share data with neighbors.
+              </div>
             </div>
           </div>
         </div>
       </section>
-    </div>
-  </div>
 
-  <script src="learn.translations.js"></script>
+    </div> <!-- end learn-container -->
+  </div> <!-- end main-wrap -->
+
   <script>
-    // Language system
+    // Language system (placeholder - you'll add translations later)
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
-    const i18nNodes = document.querySelectorAll('[data-i18n]');
-
-    function applyLearnLanguage(langCode) {
-      if (typeof getLearnStrings !== "function") return;
-      const t = getLearnStrings(langCode);
-      i18nNodes.forEach(el => {
-        const key = el.dataset.i18n;
-        if (t[key]) {
-          el.textContent = t[key];
-        }
-      });
-    }
 
     langBtn.addEventListener('click', function(e){
       e.stopPropagation();
@@ -741,21 +2633,51 @@
       btn.addEventListener('click',function(){
         document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
         this.classList.add('selected');
-
         const langCode = this.dataset.lang || 'en';
         langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
         langDropdown.classList.remove('open');
-
-        applyLearnLanguage(langCode);
+        // Add translation function call here later
       });
     });
 
-    // Accordion functionality
+    // Main accordion functionality
     document.querySelectorAll('.accordion-card').forEach(card => {
       const header = card.querySelector('.accordion-header');
       const content = card.querySelector('.accordion-content');
       
       header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+        
+        // Close all other main accordions (optional - remove if you want multiple open)
+        // document.querySelectorAll('.accordion-card').forEach(c => {
+        //   if (c !== card) {
+        //     c.classList.remove('open');
+        //     c.querySelector('.accordion-content').style.maxHeight = null;
+        //   }
+        // });
+        
+        if (isOpen) {
+          content.style.maxHeight = null;
+          card.classList.remove('open');
+        } else {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          card.classList.add('open');
+          
+          // Recalculate when sub-accordions open/close
+          setTimeout(() => {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }, 50);
+        }
+      });
+    });
+
+    // Sub-accordion functionality
+    document.querySelectorAll('.sub-accordion-card').forEach(card => {
+      const header = card.querySelector('.sub-accordion-header');
+      const content = card.querySelector('.sub-accordion-content');
+      
+      header.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent triggering parent accordion
         const isOpen = card.classList.contains('open');
         
         if (isOpen) {
@@ -764,6 +2686,14 @@
         } else {
           content.style.maxHeight = content.scrollHeight + 'px';
           card.classList.add('open');
+        }
+        
+        // Update parent accordion height
+        const parentAccordion = card.closest('.accordion-content');
+        if (parentAccordion) {
+          setTimeout(() => {
+            parentAccordion.style.maxHeight = parentAccordion.scrollHeight + 'px';
+          }, 50);
         }
       });
     });
@@ -814,9 +2744,7 @@
         }
       });
     })();
-
-    // Apply default language
-    applyLearnLanguage('en');
   </script>
 </body>
 </html>
+
