@@ -84,6 +84,38 @@
       display:flex;flex-direction:column;position:relative;z-index:1;
     }
 
+    .lang-wrap{
+      position:fixed;top:1.3rem;right:1.4rem;z-index:1500;
+    }
+    .lang-current{
+      background:#51daf7;color:#173048;font-weight:bold;
+      font-size:1.05rem;border:none;border-radius:20px;
+      padding:.55rem 1.7rem .55rem 1rem;cursor:pointer;
+      box-shadow:0 2px 12px #2183a235;
+      display:flex;align-items:center;gap:.6rem;
+    }
+    .lang-dropdown{
+      display:none;flex-direction:column;
+      position:absolute;top:2.5rem;right:0;
+      background:#184c6cfa;border-radius:14px;
+      box-shadow:0 7px 26px #155070ad;
+      padding:.4rem .55rem;border:1.4px solid #39bbe9;
+      max-height:50vh;min-width:170px;overflow-y:auto;
+    }
+    .lang-dropdown.open{display:flex;}
+    .lang-opt{
+      background:transparent;color:#55ebca;
+      border-radius:11px;border:1.2px solid #39bbe9;
+      font-size:1rem;font-family:inherit;
+      margin-bottom:.22rem;cursor:pointer;
+      padding:.4rem .76rem;text-align:left;
+      transition:background .12s,color .12s,border-color .12s;
+      font-weight:600;
+    }
+    .lang-opt:hover,.lang-opt.selected{
+      background:#51daf7;color:#143d53;border-color:#48e8c2;
+    }
+
     .care-header{
       margin-top:4vw;margin-left:1vw;margin-bottom:1.8rem;
       padding:.8rem 1rem 1rem;border-radius:18px;
@@ -207,54 +239,62 @@
       .care-layout{margin-left:.3rem;margin-right:.3rem;flex-direction:column;}
     }
     @media(max-width:520px){
+      .lang-wrap{right:.7rem;top:.7rem;}
+      .lang-current{font-size:1rem;padding:.5rem 1.3rem .5rem .8rem;}
       .care-title{font-size:1.45rem;}
       .care-header{margin-top:22vw;}
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <span class="logo-img" aria-hidden="true">🌊</span>
       <span class="logo-text">Water<br>Index</span>
     </div>
     <nav>
-      <a href="index.html" class="nav-link"><span aria-hidden="true">🏠</span><span class="label">Home</span></a>
-      <a href="measure.html" class="nav-link"><span aria-hidden="true">🧪</span><span class="label">Measure</span></a>
-      <a href="map.html" class="nav-link"><span aria-hidden="true">🗺️</span><span class="label">Map</span></a>
-      <a href="care.html" class="nav-link active"><span aria-hidden="true">💧</span><span class="label">Care</span></a>
-      <a href="farmers.html" class="nav-link"><span aria-hidden="true">🌾</span><span class="label">Farmers assistant</span></a>
-      <a href="chart.html" class="nav-link"><span aria-hidden="true">📊</span><span class="label">Chart</span></a>
-      <a href="learn.html" class="nav-link"><span aria-hidden="true">📚</span><span class="label">Learn</span></a>
-      <a href="buykit.html" class="nav-link"><span aria-hidden="true">🛒</span><span class="label">Buy kit</span></a>
-      <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label">About</span></a>
+      <a href="index.html" class="nav-link"><span aria-hidden="true">🏠</span><span class="label" data-i18n="nav_home">Home</span></a>
+      <a href="measure.html" class="nav-link"><span aria-hidden="true">🧪</span><span class="label" data-i18n="nav_measure">Measure</span></a>
+      <a href="map.html" class="nav-link"><span aria-hidden="true">🗺️</span><span class="label" data-i18n="nav_map">Map</span></a>
+      <a href="care.html" class="nav-link active"><span aria-hidden="true">💧</span><span class="label" data-i18n="nav_care">Care</span></a>
+      <a href="farmers.html" class="nav-link"><span aria-hidden="true">🌾</span><span class="label" data-i18n="nav_farmers">Farmers assistant</span></a>
+      <a href="chart.html" class="nav-link"><span aria-hidden="true">📊</span><span class="label" data-i18n="nav_chart">Chart</span></a>
+      <a href="learn.html" class="nav-link"><span aria-hidden="true">📚</span><span class="label" data-i18n="nav_learn">Learn</span></a>
+      <a href="buykit.html" class="nav-link"><span aria-hidden="true">🛒</span><span class="label" data-i18n="nav_buykit">Buy kit</span></a>
+      <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label" data-i18n="nav_about">About</span></a>
     </nav>
     <footer class="sidebar-footer">
       &copy; 2025 Water Health Index · Regional project
     </footer>
   </aside>
 
-  <!-- Main -->
-  <div class="main-wrap" id="mainWrap">
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">▼</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+    </div>
+  </div>
+
+  <div class="main-wrap">
     <header class="care-header">
-      <h1 class="care-title">Water care &amp; actions</h1>
-      <p class="care-subtitle">
-        See what your latest reading means, get a simple care plan for your water,
-        and learn how to protect wells, tanks, ponds, and community water bodies.
+      <h1 class="care-title" data-i18n="care_title">Water care &amp; actions</h1>
+      <p class="care-subtitle" data-i18n="care_intro">
+        Understand your latest reading, follow a clear care plan for your water, and see simple ways to guard wells, tanks, ponds and shared water bodies.
       </p>
     </header>
 
     <section class="care-layout">
-      <!-- Left -->
       <div class="care-left">
         <div class="care-card">
-          <!-- 1. Latest reading -->
           <div class="section">
-            <div class="section-title">1. My latest reading</div>
+            <div class="section-title" data-i18n="last_title">1. My latest reading</div>
             <div class="controls-row">
-              <button id="loadLast" class="btn-main">Load latest from history</button>
-              <button id="clearChecks" class="btn-ghost">Clear care checklist</button>
+              <button id="loadLast" class="btn-main" data-i18n="last_load_btn">Load latest from history</button>
+              <button id="clearChecks" class="btn-ghost" data-i18n="last_clear_checks">Clear care checklist</button>
             </div>
             <div class="reading-box" id="readingBox">
               <div class="reading-top">
@@ -266,39 +306,37 @@
               </div>
               <div class="reading-details" id="readingDetails"></div>
             </div>
-            <p class="section-note" id="noReadingNote">
-              Load the latest reading from the Measure page to see a care plan based on its index and pH.
+            <p class="section-note" id="noReadingNote" data-i18n="last_empty_note">
+              Load the latest reading from the Measure page to see a care plan created from its index and pH.
             </p>
           </div>
 
-          <!-- 2. Care plan -->
           <div class="section" id="carePlanSection" style="display:none;">
-            <div class="section-title">2. Care plan for this band</div>
+            <div class="section-title" data-i18n="careplan_title">2. Care plan for this band</div>
             <div class="care-plan-cards">
               <div class="care-plan-card">
-                <div class="care-plan-title">Health &amp; safety first</div>
+                <div class="care-plan-title" data-i18n="safety_title">Health and safety first</div>
                 <ul id="safetyList"></ul>
               </div>
               <div class="care-plan-card">
-                <div class="care-plan-title">Improve water quality</div>
+                <div class="care-plan-title" data-i18n="improve_title">Improving water quality</div>
                 <ul id="improveList"></ul>
               </div>
               <div class="care-plan-card">
-                <div class="care-plan-title">When to seek expert help</div>
+                <div class="care-plan-title" data-i18n="expert_title">When to call an expert</div>
                 <ul id="expertList"></ul>
               </div>
               <div class="care-plan-card">
-                <div class="care-plan-title">My care checklist</div>
+                <div class="care-plan-title" data-i18n="checklist_title">My care checklist</div>
                 <ul class="checklist" id="checklist"></ul>
               </div>
             </div>
           </div>
 
-          <!-- 3. Symptom helper -->
           <div class="section">
-            <div class="section-title">3. What does your water look like?</div>
+            <div class="section-title" data-i18n="symptom_title">3. What does your water look like?</div>
             <div class="symptom-controls">
-              <label for="symptomSelect">Choose a symptom</label>
+              <label for="symptomSelect" data-i18n="symptom_label">Choose a symptom</label>
               <select id="symptomSelect">
                 <option value="none" selected>-- Select --</option>
                 <option value="muddy">Looks brown or muddy</option>
@@ -311,511 +349,406 @@
             <div class="symptom-cards" id="symptomCards">
               <div class="care-plan-cards">
                 <div class="care-plan-card">
-                  <div class="care-plan-title">Likely causes</div>
+                  <div class="care-plan-title" data-i18n="symptom_cause_title">Possible causes</div>
                   <ul id="symptomCauseList"></ul>
                 </div>
                 <div class="care-plan-card">
-                  <div class="care-plan-title">What you can do now</div>
+                  <div class="care-plan-title" data-i18n="symptom_action_title">What you can do now</div>
                   <ul id="symptomActionList"></ul>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 4. Reminders -->
           <div class="section">
-            <div class="section-title">4. Reminders</div>
+            <div class="section-title" data-i18n="reminder_title">4. Reminders</div>
             <div class="controls-row">
-              <label for="reminderSelect">Check water every</label>
+              <label for="reminderSelect" data-i18n="reminder_label">Check water every</label>
               <select id="reminderSelect">
-                <option value="0">No reminder</option>
-                <option value="7">7 days</option>
-                <option value="30">30 days</option>
-                <option value="90">90 days</option>
+                <option value="0" data-i18n="reminder_none">No reminder</option>
+                <option value="7" data-i18n="reminder_7">7 days</option>
+                <option value="30" data-i18n="reminder_30">30 days</option>
+                <option value="90" data-i18n="reminder_90">90 days</option>
               </select>
-              <button id="saveReminder" class="btn-ghost">Save reminder</button>
+              <button id="saveReminder" class="btn-ghost" data-i18n="reminder_save_btn">Save reminder</button>
             </div>
             <div class="reminder-banner" id="reminderBanner"></div>
           </div>
         </div>
       </div>
 
-      <!-- Right -->
       <div class="care-right">
         <div class="care-card">
-          <div class="library-section-title">Care library</div>
-
+          <div class="library-section-title" data-i18n="library_title">Care library</div>
           <div class="library-card">
-            <div class="library-card-title">At home (drinking &amp; cooking)</div>
+            <div class="library-card-title" data-i18n="home_care_title">At home (drinking &amp; cooking)</div>
             <ul id="homeCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title">For farms &amp; ponds</div>
+            <div class="library-card-title" data-i18n="farm_care_title">For farms &amp; ponds</div>
             <ul id="farmCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title">Community water bodies</div>
+            <div class="library-card-title" data-i18n="community_care_title">Community water bodies</div>
             <ul id="communityCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title">Did you know?</div>
+            <div class="library-card-title" data-i18n="facts_title">Did you know?</div>
             <ul id="factsList"></ul>
           </div>
         </div>
       </div>
     </section>
 
-    <p class="care-footer">
-      Tip: Use this care plan together with the Map and Farmers Assistant pages to decide next actions for your family, farm, or community.
+    <p class="care-footer" data-i18n="care_footer_note">
+      Use this care plan together with the Map and Farmers assistant pages to choose next steps for your family, farm or community.
     </p>
   </div>
 
+  <script src="care.translations.js"></script>
   <script>
-    // ---------- Static English text used by widgets ----------
-    const strings = {
-      last_saved_prefix: "Last saved: ",
-      location_prefix: "Location: ",
-      band_good: "Good quality",
-      band_med: "Moderate quality",
-      band_poor: "Poor quality",
-      band_unknown: "No index",
-      details_index: "Index",
-      details_ph: "pH",
-      details_temp: "Temp",
-      details_turb: "Turbidity",
-      reminder_due: "Reminder: it has been {n} days, please test your water again.",
-      reminder_ok: "You tested {n} days ago. Keep an eye and test again when the reminder is due.",
-      reminder_saved: "Reminder saved for every {n} days.",
-      carePlan: {
-        good: {
-          safety: [
-            "Water is generally safe if the source is protected; still boil for babies and people with weak immunity.",
-            "Store drinking water in clean, covered containers and avoid dipping hands or cups."
-          ],
-          improve: [
-            "Clean storage tanks and household filters at least once every 1–3 months.",
-            "Keep soaps, detergents and oils away from wells and tanks."
-          ],
-          expert: [
-            "Repeat tests if colour, smell or taste changes suddenly.",
-            "Share good results with neighbours so they also keep the source clean."
-          ]
-        },
-        med: {
-          safety: [
-            "Do not drink this water directly; always boil or filter before use.",
-            "Avoid using it for infant feeding or very sick people."
-          ],
-          improve: [
-            "Clean tanks, pipes and taps; remove settled sludge where possible.",
-            "Improve drainage around wells so waste water does not flow back.",
-            "Use simple home filters such as ceramic, RO or UV if available."
-          ],
-          expert: [
-            "If several tests stay in the moderate band, ask local officials for a detailed lab test.",
-            "Keep a small notebook of readings and cleaning dates."
-          ]
-        },
-        poor: {
-          safety: [
-            "Do not use this water for drinking or cooking until new tests show improvement.",
-            "Use bottled water, tanker water or public taps for drinking."
-          ],
-          improve: [
-            "Look for sewage leaks, dumping or industrial discharge and report them.",
-            "Use this water only for low‑contact tasks like floor cleaning or toilet flushing.",
-            "Plan medium‑term fixes such as new wells or treatment units."
-          ],
-          expert: [
-            "Send your results to the panchayat, water board or health department.",
-            "If fish or animals are dying near the source, treat it as an emergency."
-          ]
-        },
-        unknown: {
-          safety: [
-            "Test this water at least once before using it every day for drinking.",
-            "If colour, smell or taste seems strange, treat it as unsafe until you test it."
-          ],
-          improve: [
-            "Keep the area around the source clean and free from rubbish, oil and chemicals."
-          ],
-          expert: [
-            "Report any suspected industrial or sewage pollution to authorities."
-          ]
+    function safeGetStrings(lang){
+      try{
+        if(typeof getCareStrings==="function"){
+          return getCareStrings(lang)||getCareStrings("en");
         }
-      },
-      checklistItems: [
-        "I cleaned or inspected my storage tank or main container this month.",
-        "I checked my usual source for new smells, colour change or oil/foam.",
-        "I keep drinking water covered and use a tap or ladle instead of dipping cups.",
-        "I avoid throwing chemicals, oil, medicine or plastic into drains or water bodies.",
-        "I plan to re‑test this water within the reminder period."
-      ],
-      symptomOptions: {
-        muddy: {
-          causes: [
-            "Heavy rain or upstream soil erosion has added a lot of mud.",
-            "The pump or well is drawing water from near the bottom."
-          ],
-          actions: [
-            "Let water settle in a clean bucket and pour off the clearer top layer.",
-            "Filter through cloth or a cartridge before boiling.",
-            "Reduce soil erosion into ponds and canals by keeping grass strips on the banks."
-          ]
-        },
-        green: {
-          causes: [
-            "Extra fertiliser, detergents or sewage are feeding algal growth.",
-            "Slow or stagnant water in strong sunlight favours algal blooms."
-          ],
-          actions: [
-            "Do not drink or bathe in strongly green, smelly water.",
-            "Stop fertiliser and detergent run‑off from flowing directly into ponds or tanks.",
-            "Add shade or mixing where possible and ask fisheries staff if fish are present."
-          ]
-        },
-        smell: {
-          causes: [
-            "Rotten‑egg smell often comes from hydrogen sulphide in low‑oxygen, rotting water.",
-            "Sewage or industrial waste water may be entering the source."
-          ],
-          actions: [
-            "Do not drink foul‑smelling water even after boiling; find a safer source.",
-            "Check for leaking toilets, drains or sewer lines and report them.",
-            "Improve ventilation of storage tanks and keep rotting waste away from wells."
-          ]
-        },
-        scale: {
-          causes: [
-            "White scale usually means hard water with high calcium and magnesium.",
-            "Very hard water may also taste different because of dissolved salts."
-          ],
-          actions: [
-            "Descale kettles and taps using mild vinegar or citric acid.",
-            "Consider RO or softeners if hardness is very high.",
-            "Use hard water mainly for washing and cleaning; keep softer sources for drinking."
-          ]
-        },
-        foam: {
-          causes: [
-            "Detergents, soaps or other chemicals are entering the water body.",
-            "Grey‑water or sewage may be going straight into drains or streams."
-          ],
-          actions: [
-            "Avoid washing clothes or dishes directly in rivers, ponds or wells.",
-            "Send grey‑water through soak pits or simple filter beds instead of open drains.",
-            "Report persistent foam in public water bodies to local authorities."
-          ]
+      }catch(e){
+        console.error("care.translations.js error:",e);
+      }
+      return {
+        last_saved_prefix:"Last saved: ",
+        location_prefix:"Location: ",
+        band_good:"Good quality",
+        band_med:"Moderate quality",
+        band_poor:"Poor quality",
+        band_unknown:"No index",
+        details_index:"Index",
+        details_ph:"pH",
+        details_temp:"Temp",
+        details_turb:"Turb",
+        reminder_due:"Reminder: it has been {n} days, please test your water again.",
+        reminder_ok:"You tested {n} days ago.",
+        reminder_saved:"Reminder saved for every {n} days.",
+        carePlan:{},checklistItems:[],symptomOptions:{},
+        homeCareList:[],farmCareList:[],communityCareList:[],factsList:[]
+      };
+    }
+
+    let currentLang=localStorage.getItem("whilang")||"en";
+    let strings=safeGetStrings(currentLang);
+
+    const langBtn=document.getElementById("langCurrentBtn");
+    const langDropdown=document.getElementById("langDropdown");
+
+    function applyLanguage(langCode){
+      currentLang=langCode;
+      strings=safeGetStrings(langCode);
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const key=el.dataset.i18n;
+        if(strings[key]) el.textContent=strings[key];
+      });
+      renderChecklist();
+      renderCarePlan(currentBand);
+      renderSymptom();
+      renderLibraryLists();
+      if(lastReading) renderReading();
+      updateReminderBanner(false);
+      localStorage.setItem("whilang",langCode);
+    }
+
+    if(langBtn && langDropdown){
+      langBtn.addEventListener("click",e=>{
+        e.stopPropagation();
+        langDropdown.classList.toggle("open");
+      });
+      document.addEventListener("click",e=>{
+        if(!langBtn.contains(e.target) && !langDropdown.contains(e.target)){
+          langDropdown.classList.remove("open");
         }
-      },
-      homeCareList: [
-        "Boil or filter drinking water, especially for children and elders.",
-        "Clean kitchen storage containers regularly and keep them covered.",
-        "Store drinking water away from fuel, pesticides and strong cleaners."
-      ],
-      farmCareList: [
-        "Avoid over‑use of fertilisers and pesticides near wells and ponds.",
-        "Keep livestock sheds and manure pits away from drinking water sources.",
-        "Plant grass or trees along field edges and canals to slow run‑off."
-      ],
-      communityCareList: [
-        "Do not dump solid waste or plastic into ponds, lakes, rivers or drains.",
-        "Organise periodic clean‑ups of local ponds, tanks and riverbanks.",
-        "Report sewage leaks and industrial discharge to the local authority."
-      ],
-      factsList: [
-        "Regular testing catches small changes before they become big health problems.",
-        "Protecting the catchment area is often cheaper than treating polluted water.",
-        "Simple actions at home and on farms can greatly reduce water contamination."
-      ]
-    };
+      });
+      document.querySelectorAll(".lang-opt").forEach(btn=>{
+        btn.addEventListener("click",function(){
+          const code=this.dataset.lang||"en";
+          langBtn.innerHTML=this.textContent+' <span style="font-size:1rem;">▼</span>';
+          langDropdown.classList.remove("open");
+          applyLanguage(code);
+        });
+      });
+    }
 
-    // ---------- Data from Measure page ----------
-    let readings = [];
-    try {
-      readings = JSON.parse(localStorage.getItem("whReadings") || "[]");
-      if (!Array.isArray(readings)) readings = [];
-    } catch (e) { readings = []; }
-    readings.forEach((r, i) => { if (r.id == null) r.id = i; });
+    let readings=[];
+    try{
+      readings=JSON.parse(localStorage.getItem("whReadings")||"[]");
+      if(!Array.isArray(readings)) readings=[];
+    }catch(e){readings=[];}
+    readings.forEach((r,i)=>{if(r.id==null) r.id=i;});
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const readingParam = urlParams.get("reading");
-    let preselectedId = readingParam != null ? Number(readingParam) : null;
+    const urlParams=new URLSearchParams(window.location.search);
+    const readingParam=urlParams.get("reading");
+    let preselectedId=readingParam!=null?Number(readingParam):null;
 
-    let lastReading = null;
-    let currentBand = "unknown";
+    let lastReading=null;
+    let currentBand="unknown";
 
     function classifyBand(idx){
-      idx = Number(idx);
-      if (isNaN(idx)) return "unknown";
-      if (idx >= 70) return "good";
-      if (idx >= 40) return "med";
+      idx=Number(idx);
+      if(isNaN(idx)) return "unknown";
+      if(idx>=70) return "good";
+      if(idx>=40) return "med";
       return "poor";
     }
 
     function bandTextAndClass(band){
-      let text = strings.band_unknown;
-      let cls = "band-unknown";
-      if (band === "good"){ text = strings.band_good; cls = "band-good"; }
-      else if (band === "med"){ text = strings.band_med; cls = "band-med"; }
-      else if (band === "poor"){ text = strings.band_poor; cls = "band-poor"; }
-      return { text, cls };
+      let text=strings.band_unknown;
+      let cls="band-unknown";
+      if(band==="good"){text=strings.band_good;cls="band-good";}
+      else if(band==="med"){text=strings.band_med;cls="band-med";}
+      else if(band==="poor"){text=strings.band_poor;cls="band-poor";}
+      return {text,cls};
     }
 
     function renderReading(){
-      const box = document.getElementById("readingBox");
-      const detailsEl = document.getElementById("readingDetails");
-      const whenEl = document.getElementById("readingWhen");
-      const placeEl = document.getElementById("readingPlace");
-      const bandEl = document.getElementById("bandLabel");
-      const noteEl = document.getElementById("noReadingNote");
+      const box=document.getElementById("readingBox");
+      const detailsEl=document.getElementById("readingDetails");
+      const whenEl=document.getElementById("readingWhen");
+      const placeEl=document.getElementById("readingPlace");
+      const bandEl=document.getElementById("bandLabel");
+      const noteEl=document.getElementById("noReadingNote");
 
-      if (!lastReading){
-        box.style.display = "none";
-        noteEl.style.display = "block";
-        document.getElementById("carePlanSection").style.display = "none";
+      if(!lastReading){
+        box.style.display="none";
+        noteEl.style.display="block";
+        document.getElementById("carePlanSection").style.display="none";
         return;
       }
 
-      box.style.display = "block";
-      noteEl.style.display = "none";
+      box.style.display="block";
+      noteEl.style.display="none";
 
-      whenEl.textContent = strings.last_saved_prefix + (lastReading.when || "–");
-      placeEl.textContent = lastReading.place ? (strings.location_prefix + lastReading.place) : "";
+      whenEl.textContent=(strings.last_saved_prefix||"Last saved: ")+(lastReading.when||"–");
+      placeEl.textContent=lastReading.place?(strings.location_prefix||"Location: ")+lastReading.place:"";
 
-      const indexVal = Number(lastReading.index);
-      const band = classifyBand(indexVal);
-      currentBand = band;
+      const indexVal=Number(lastReading.index);
+      const band=classifyBand(indexVal);
+      currentBand=band;
 
-      const bt = bandTextAndClass(band);
-      bandEl.textContent = bt.text;
-      bandEl.className = "badge-band " + bt.cls;
+      const bt=bandTextAndClass(band);
+      bandEl.textContent=bt.text;
+      bandEl.className="badge-band "+bt.cls;
 
-      detailsEl.innerHTML = "";
-      function addChip(label, value){
-        if (value === undefined || value === null || value === "") return;
-        const span = document.createElement("span");
-        span.textContent = label + " " + value;
+      detailsEl.innerHTML="";
+      function addChip(label,value){
+        if(value===undefined||value===null||value==="") return;
+        const span=document.createElement("span");
+        span.textContent=label+" "+value;
         detailsEl.appendChild(span);
       }
-      addChip(strings.details_index, isNaN(indexVal) ? "–" : indexVal);
-      addChip(strings.details_ph, lastReading.ph);
-      addChip(strings.details_temp, lastReading.temp);
-      addChip(strings.details_turb, lastReading.turb);
+      addChip(strings.details_index||"Index",isNaN(indexVal)?"–":indexVal);
+      addChip(strings.details_ph||"pH",lastReading.ph);
+      addChip(strings.details_temp||"Temp",lastReading.temp);
+      addChip(strings.details_turb||"Turb",lastReading.turb);
 
       renderCarePlan(band);
     }
 
     function renderCarePlan(band){
-      const sec = document.getElementById("carePlanSection");
-      const planAll = strings.carePlan;
-      const plan = planAll[band] || planAll.unknown;
-      if (!plan){ sec.style.display = "none"; return; }
-      sec.style.display = "block";
+      const sec=document.getElementById("carePlanSection");
+      const planAll=strings.carePlan||{};
+      const plan=planAll[band]||planAll.unknown;
+      if(!plan){sec.style.display="none";return;}
+      sec.style.display="block";
 
-      const safetyList = document.getElementById("safetyList");
-      const improveList = document.getElementById("improveList");
-      const expertList = document.getElementById("expertList");
-      safetyList.innerHTML = "";
-      improveList.innerHTML = "";
-      expertList.innerHTML = "";
+      const safetyList=document.getElementById("safetyList");
+      const improveList=document.getElementById("improveList");
+      const expertList=document.getElementById("expertList");
+      safetyList.innerHTML="";
+      improveList.innerHTML="";
+      expertList.innerHTML="";
 
-      function fill(ul, arr){
-        (arr || []).forEach(text => {
-          const li = document.createElement("li");
-          li.textContent = text;
+      function fill(ul,arr){
+        (arr||[]).forEach(text=>{
+          const li=document.createElement("li");
+          li.textContent=text;
           ul.appendChild(li);
         });
       }
-      fill(safetyList, plan.safety);
-      fill(improveList, plan.improve);
-      fill(expertList, plan.expert);
+      fill(safetyList,plan.safety);
+      fill(improveList,plan.improve);
+      fill(expertList,plan.expert);
     }
 
-    // ---------- Checklist ----------
-    const checklistEl = document.getElementById("checklist");
-    const CHECK_KEY = "whicarechecks";
+    const checklistEl=document.getElementById("checklist");
+    const CHECK_KEY="whicarechecks";
     function loadChecks(){
       try{
-        const obj = JSON.parse(localStorage.getItem(CHECK_KEY));
-        return (obj && typeof obj === "object") ? obj : {};
-      }catch(e){ return {}; }
+        const obj=JSON.parse(localStorage.getItem(CHECK_KEY));
+        return (obj && typeof obj==="object")?obj:{};
+      }catch(e){return {};}
     }
     function saveChecks(obj){
-      localStorage.setItem(CHECK_KEY, JSON.stringify(obj || {}));
+      localStorage.setItem(CHECK_KEY,JSON.stringify(obj||{}));
     }
     function renderChecklist(){
-      const items = strings.checklistItems;
-      const state = loadChecks();
-      checklistEl.innerHTML = "";
-      items.forEach((text, idx) => {
-        const id = "check" + idx;
-        const li = document.createElement("li");
-        const cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.id = id;
-        cb.checked = !!state[id];
-        cb.addEventListener("change", () => {
-          const st = loadChecks();
-          st[id] = cb.checked;
+      const items=strings.checklistItems||[];
+      const state=loadChecks();
+      checklistEl.innerHTML="";
+      items.forEach((text,idx)=>{
+        const id="check"+idx;
+        const li=document.createElement("li");
+        const cb=document.createElement("input");
+        cb.type="checkbox";
+        cb.id=id;
+        cb.checked=!!state[id];
+        cb.addEventListener("change",()=>{
+          const st=loadChecks();
+          st[id]=cb.checked;
           saveChecks(st);
         });
-        const lbl = document.createElement("label");
-        lbl.setAttribute("for", id);
-        lbl.textContent = text;
+        const lbl=document.createElement("label");
+        lbl.setAttribute("for",id);
+        lbl.textContent=text;
         li.appendChild(cb);
         li.appendChild(lbl);
         checklistEl.appendChild(li);
       });
     }
-    document.getElementById("clearChecks").addEventListener("click", () => {
+    document.getElementById("clearChecks").addEventListener("click",()=>{
       saveChecks({});
       renderChecklist();
     });
 
-    // ---------- Symptom helper ----------
-    const symptomSelect = document.getElementById("symptomSelect");
-    const symptomCards = document.getElementById("symptomCards");
-    const symptomCauseList = document.getElementById("symptomCauseList");
-    const symptomActionList = document.getElementById("symptomActionList");
+    const symptomSelect=document.getElementById("symptomSelect");
+    const symptomCards=document.getElementById("symptomCards");
+    const symptomCauseList=document.getElementById("symptomCauseList");
+    const symptomActionList=document.getElementById("symptomActionList");
 
     function renderSymptom(){
-      const val = symptomSelect.value;
-      const opts = strings.symptomOptions;
-      if (!opts[val] || val === "none"){
-        symptomCards.style.display = "none";
-        symptomCauseList.innerHTML = "";
-        symptomActionList.innerHTML = "";
+      const val=symptomSelect.value;
+      const opts=strings.symptomOptions||{};
+      if(!opts[val]||val==="none"){
+        symptomCards.style.display="none";
+        symptomCauseList.innerHTML="";
+        symptomActionList.innerHTML="";
         return;
       }
-      const info = opts[val];
-      symptomCauseList.innerHTML = "";
-      symptomActionList.innerHTML = "";
-      (info.causes || []).forEach(text => {
-        const li = document.createElement("li");
-        li.textContent = text;
+      const info=opts[val];
+      symptomCauseList.innerHTML="";
+      symptomActionList.innerHTML="";
+      (info.causes||[]).forEach(text=>{
+        const li=document.createElement("li");
+        li.textContent=text;
         symptomCauseList.appendChild(li);
       });
-      (info.actions || []).forEach(text => {
-        const li = document.createElement("li");
-        li.textContent = text;
+      (info.actions||[]).forEach(text=>{
+        const li=document.createElement("li");
+        li.textContent=text;
         symptomActionList.appendChild(li);
       });
-      symptomCards.style.display = "block";
+      symptomCards.style.display="block";
     }
-    symptomSelect.addEventListener("change", renderSymptom);
+    symptomSelect.addEventListener("change",renderSymptom);
 
-    // ---------- Reminders ----------
-    const REM_KEY = "whicarereminder";
-    const reminderSelect = document.getElementById("reminderSelect");
-    const reminderBanner = document.getElementById("reminderBanner");
+    const REM_KEY="whicarereminder";
+    const reminderSelect=document.getElementById("reminderSelect");
+    const reminderBanner=document.getElementById("reminderBanner");
 
     function loadReminder(){
       try{
-        const obj = JSON.parse(localStorage.getItem(REM_KEY));
-        return (obj && typeof obj === "object") ? obj : {};
-      }catch(e){ return {}; }
+        const obj=JSON.parse(localStorage.getItem(REM_KEY));
+        return (obj && typeof obj==="object")?obj:{};
+      }catch(e){return {};}
     }
     function saveReminder(obj){
-      localStorage.setItem(REM_KEY, JSON.stringify(obj || {}));
+      localStorage.setItem(REM_KEY,JSON.stringify(obj||{}));
     }
     function updateReminderBanner(forceLastUpdate){
-      let rem = loadReminder();
-      if (forceLastUpdate && lastReading){
-        rem.last = lastReading.when;
+      let rem=loadReminder();
+      if(forceLastUpdate && lastReading){
+        rem.last=lastReading.when;
         saveReminder(rem);
       }
-      reminderBanner.style.display = "none";
-      if (!rem.days || !rem.last) return;
+      reminderBanner.style.display="none";
+      if(!rem.days||!rem.last) return;
 
-      let daysAgo = 0;
+      let daysAgo=0;
       try{
-        const tLast = new Date(rem.last).getTime();
-        if (!isNaN(tLast)){
-          const now = Date.now();
-          daysAgo = Math.round((now - tLast) / (1000*60*60*24));
+        const tLast=new Date(rem.last).getTime();
+        if(!isNaN(tLast)){
+          const now=Date.now();
+          daysAgo=Math.round((now-tLast)/(1000*60*60*24));
         }
-      }catch(e){ daysAgo = 0; }
+      }catch(e){daysAgo=0;}
 
-      if (daysAgo >= rem.days){
-        const msg = strings.reminder_due.replace("{n}", String(daysAgo));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = "block";
-      } else if (daysAgo >= 0){
-        const msg = strings.reminder_ok.replace("{n}", String(daysAgo));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = "block";
+      if(daysAgo>=rem.days){
+        const msg=(strings.reminder_due||"Reminder: it has been {n} days, please test your water again.").replace("{n}",String(daysAgo));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display="block";
+      }else if(daysAgo>=0){
+        const msg=(strings.reminder_ok||"You tested {n} days ago.").replace("{n}",String(daysAgo));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display="block";
       }
     }
 
-    const remInit = loadReminder();
-    if (remInit.days){
-      reminderSelect.value = String(remInit.days);
+    const remInit=loadReminder();
+    if(remInit.days){
+      reminderSelect.value=String(remInit.days);
     }
-    document.getElementById("saveReminder").addEventListener("click", () => {
-      const days = parseInt(reminderSelect.value, 10) || 0;
-      const obj = loadReminder();
-      obj.days = days;
-      if (lastReading) obj.last = lastReading.when;
+    document.getElementById("saveReminder").addEventListener("click",()=>{
+      const days=parseInt(reminderSelect.value,10)||0;
+      const obj=loadReminder();
+      obj.days=days;
+      if(lastReading) obj.last=lastReading.when;
       saveReminder(obj);
-      if (days > 0){
-        const msg = strings.reminder_saved.replace("{n}", String(days));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = "block";
-      } else {
-        reminderBanner.style.display = "none";
+      if(days>0){
+        const msg=(strings.reminder_saved||"Reminder saved for every {n} days.").replace("{n}",String(days));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display="block";
+      }else{
+        reminderBanner.style.display="none";
       }
     });
 
-    // ---------- Care library lists ----------
     function renderLibraryLists(){
-      function fill(id, arr){
-        const ul = document.getElementById(id);
-        if (!ul) return;
-        ul.innerHTML = "";
-        (arr || []).forEach(text => {
-          const li = document.createElement("li");
-          li.textContent = text;
+      function fill(id,arr){
+        const ul=document.getElementById(id);
+        if(!ul) return;
+        ul.innerHTML="";
+        (arr||[]).forEach(text=>{
+          const li=document.createElement("li");
+          li.textContent=text;
           ul.appendChild(li);
         });
       }
-      fill("homeCareList", strings.homeCareList);
-      fill("farmCareList", strings.farmCareList);
-      fill("communityCareList", strings.communityCareList);
-      fill("factsList", strings.factsList);
+      fill("homeCareList",strings.homeCareList);
+      fill("farmCareList",strings.farmCareList);
+      fill("communityCareList",strings.communityCareList);
+      fill("factsList",strings.factsList);
     }
 
-    // ---------- Load latest reading button ----------
-    document.getElementById("loadLast").addEventListener("click", () => {
-      if (!readings.length){
+    document.getElementById("loadLast").addEventListener("click",()=>{
+      if(!readings.length){
         alert("No saved readings found. Go to the Measure page and save at least one reading.");
         return;
       }
-      if (preselectedId != null){
-        const found = readings.find(r => r.id === preselectedId);
-        lastReading = found || readings[readings.length - 1];
-      } else {
-        lastReading = readings[readings.length - 1];
+      if(preselectedId!=null){
+        const found=readings.find(r=>r.id===preselectedId);
+        lastReading=found||readings[readings.length-1];
+      }else{
+        lastReading=readings[readings.length-1];
       }
       renderReading();
       updateReminderBanner(true);
     });
 
-    if (preselectedId != null && readings.length){
-      const found = readings.find(r => r.id === preselectedId);
-      lastReading = found || readings[readings.length - 1];
+    if(preselectedId!=null && readings.length){
+      const found=readings.find(r=>r.id===preselectedId);
+      lastReading=found||readings[readings.length-1];
       renderReading();
       updateReminderBanner(true);
     }
 
-    // Initial render
-    renderChecklist();
-    renderLibraryLists();
-    renderSymptom();
-    updateReminderBanner(false);
+    applyLanguage(currentLang);
   </script>
 </body>
 </html>
