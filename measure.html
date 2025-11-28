@@ -242,57 +242,53 @@
       flex: 1 1 360px;
       min-width: 0;
     }
-
     .measure-card {
-      background: var(--measure-card);
-      border-radius: 26px;
-      padding: 2rem 2rem 1.9rem;
-      box-shadow: var(--shadow);
-      border: 1.6px solid #107dac;
-    }
+  background: var(--measure-card);
+  border-radius: 26px;
+  padding: 2rem 2rem 1.9rem;
+  box-shadow: var(--shadow);
+  border: 1.6px solid #107dac;
+}
 
-    /* Shared field width so left and right look symmetrical */
-    .measure-field {
-      max-width: 540px;
-      margin: 0 auto 1rem auto;   /* center & space out */
-    }
-    .measure-field label {
-      margin-top: 0.45rem;
-      margin-bottom: 0.1rem;
-      display: block;
-      font-weight: bold;
-      color: var(--measure-accent2);
-      font-size: 1.02rem;
-    }
-    .measure-field input,
-    .measure-field select {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid #2aa2cd;
-      margin: .45rem 0 0.8rem 0;
-      padding: .6rem .85rem;
-      font-size: 1.05rem;
-      background: #102636;
-      color: #e9fff5;
-    }
+/* Shared field width so left and right look symmetrical */
+.measure-field {
+  max-width: 540px;
+  margin: 0 auto 1rem auto;   /* center & space out */
+}
 
-    label {
-      font-weight: bold;
-      color: var(--measure-accent2);
-    }
+.measure-field label {
+  margin-top: 0.45rem;
+  margin-bottom: 0.1rem;
+  display: block;
+  font-weight: bold;
+  color: var(--measure-accent2);
+  font-size: 1.02rem;
+}
 
-    /* Numbers: pH & Temp like old page (left), TDS centered & bold */
-    input[type="number"] {
-      text-align: left;
-      font-weight: normal;
-      letter-spacing: 0;
-    }
-    #tds {
-      text-align: center;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
+.measure-field input,
+.measure-field select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #2aa2cd;
+  margin: .45rem 0 0.8rem 0;
+  padding: .6rem .85rem;
+  font-size: 1.05rem;
+  background: #102636;
+  color: #e9fff5;
+}
 
+/* Numbers: pH & Temp left, TDS centered & bold */
+input[type="number"] {
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: 0;
+}
+
+#tds {
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
     /* Center closed turbidity text (browser support varies) */
     #turbidity {
       text-align-last: center;
@@ -460,34 +456,40 @@
 
     /* TDS card */
     .tds-card {
-      margin-top: 1.4rem;
-      background: var(--measure-card2);
-      border-radius: 16px;
-      padding: 1.2rem 1.2rem 1.4rem;
-      border: 1.2px solid #2aa2cd;
+      margin-top: 1.4rem;                 /* spacing below map */
+      background: var(--measure-card);    /* SAME as .measure-card */
+      border-radius: 26px;                /* SAME as .measure-card */
+      padding: 2rem 2rem 1.9rem;          /* SAME as .measure-card */
+      border: 1.6px solid #107dac;        /* SAME as .measure-card */
+      box-shadow: var(--shadow);
     }
-    .tds-card h2 {
-      margin: 0 0 .5rem 0;
-      font-size: 1.2rem;
-      color: var(--measure-accent);
-    }
-    .tds-intro {
-      margin: 0 0 .7rem 0;
-      font-size: .95rem;
-      color: #d9fbff;
-    }
-    .tds-result {
-      margin-top: .6rem;
-      font-size: .92rem;
-    }
-    .tds-flag {
-      font-weight: bold;
-      margin-bottom: .25rem;
-      color: var(--measure-accent);
-    }
-    .tds-note {
-      color: #d9fbff;
-    }
+
+.tds-card h2 {
+  margin: 0 0 .5rem 0;
+  font-size: 1.2rem;
+  color: var(--measure-accent);
+}
+
+.tds-intro {
+  margin: 0 0 .7rem 0;
+  font-size: .95rem;
+  color: #d9fbff;
+}
+
+.tds-result {
+  margin-top: .6rem;
+  font-size: .92rem;
+}
+
+.tds-flag {
+  font-weight: bold;
+  margin-bottom: .25rem;
+  color: var(--measure-accent);
+}
+
+.tds-note {
+  color: #d9fbff;
+}
 
     /* History */
     .history-title {
