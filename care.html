@@ -4,551 +4,277 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Water Health Index - Care</title>
-
   <style>
-    :root {
-      --sidebar-wide: 225px;
-      --sidebar-narrow: 64px;
-      --sidebar-min: 210px;
-      --sidebar-max: 380px;
-      --accent: #51daf7;
-      --active: #48e8c2;
-      --card-bg: #1d334b;
-      --shadow: 0 8px 32px #17487d40;
-
+    :root{
+      --sidebar-wide:225px;
+      --sidebar-narrow:64px;
+      --sidebar-min:210px;
+      --sidebar-max:380px;
+      --accent:#51daf7;
+      --active:#48e8c2;
+      --card-bg:#1d334b;
+      --shadow:0 8px 32px #17487d40;
       --good:#26c96a;
       --med:#f1c644;
       --poor:#e0526a;
       --unknown:#607d8b;
     }
-
-    html, body {
-      margin: 0;
+    html,body{
+      margin:0;
       background:
-        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        linear-gradient(120deg,rgba(81,218,247,0.74),rgba(23,72,125,0.81) 85%),
         url('assets/bg-water.jpg');
-      background-size: cover, cover;
-      background-repeat: no-repeat, no-repeat;
-      background-attachment: fixed;
-      color: #e3fbfa;
-      font-family: "Times New Roman", Times, serif;
-      min-height: 100vh;
-      box-sizing: border-box;
+      background-size:cover,cover;
+      background-repeat:no-repeat,no-repeat;
+      background-attachment:fixed;
+      color:#e3fbfa;
+      font-family:"Times New Roman",Times,serif;
+      min-height:100vh;
+      box-sizing:border-box;
     }
-    body { position: relative; }
+    body{position:relative;}
 
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-wide);
-      min-width: var(--sidebar-min);
-      max-width: var(--sidebar-max);
-      background: rgba(16,38,54,0.98);
-      box-shadow: 3px 0 20px #143d5344;
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      display: flex;
-      flex-direction: column;
-      z-index: 2000;
-      box-sizing: border-box;
-      overflow-y: auto;
-      overscroll-behavior: contain;
+    /* sidebar */
+    .sidebar{
+      width:var(--sidebar-wide);
+      min-width:var(--sidebar-min);
+      max-width:var(--sidebar-max);
+      background:rgba(16,38,54,0.98);
+      box-shadow:3px 0 20px #143d5344;
+      position:fixed;left:0;top:0;bottom:0;
+      display:flex;flex-direction:column;
+      z-index:2000;overflow-y:auto;
     }
-    .sidebar-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 2.1rem 0 2.3rem 0;
+    .sidebar-header{
+      display:flex;flex-direction:column;
+      align-items:center;margin:2.1rem 0 2.3rem;
     }
-    .logo-img {
-      font-size: 2.7rem;
-      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
-      filter: drop-shadow(0 2px 19px #51daf7a0);
+    .logo-img{
+      font-size:2.7rem;
+      animation:waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter:drop-shadow(0 2px 19px #51daf7a0);
     }
-    .logo-text {
-      color: var(--accent);
-      font-size: 2.1rem;
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: .02em;
-      line-height: 1.16;
+    .logo-text{
+      color:var(--accent);
+      font-size:2.1rem;font-weight:bold;
+      text-align:center;letter-spacing:.02em;line-height:1.16;
     }
-    @keyframes waveMotion {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-8px); }
+    @keyframes waveMotion{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-8px);}
     }
-    .sidebar nav {
-      display: flex;
-      flex-direction: column;
-      gap: 1.05rem;
-      margin-bottom: auto;
+    .sidebar nav{display:flex;flex-direction:column;gap:1.05rem;margin-bottom:auto;}
+    .nav-link{
+      color:#e3fbfa;text-decoration:none;
+      padding:.7rem 1.15rem;font-size:1.09rem;
+      display:flex;align-items:center;gap:.7rem;
+      border-radius:13px;margin:0 .4rem;
+      transition:background .12s,color .12s;
+      font-weight:500;
     }
-    .nav-link {
-      color: #e3fbfa;
-      text-decoration: none;
-      padding: 0.7rem 1.15rem;
-      font-size: 1.09rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      border-radius: 13px;
-      margin: 0 .4rem;
-      transition: background .12s, color .12s;
-      font-weight: 500;
-      box-sizing: border-box;
+    .nav-link.active,.nav-link:hover{
+      background:var(--active);color:#154b68;
     }
-    .nav-link.active,
-    .nav-link:hover {
-      background: var(--active);
-      color: #154b68;
+    .sidebar-footer{
+      color:#9ee8ff;font-size:.95rem;font-style:italic;
+      padding:1.1rem .8rem 1rem;text-align:center;
     }
-    .sidebar-footer {
-      color: #9ee8ff;
-      font-size: .95rem;
-      font-style: italic;
-      padding: 1.1rem .8rem 1rem .8rem;
-      text-align: center;
+    .sidebar-handle{
+      position:absolute;top:0;right:0;width:6px;height:100%;
+      cursor:ew-resize;background:transparent;
     }
-    .sidebar-handle {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 6px;
-      height: 100%;
-      cursor: ew-resize;
-      background: transparent;
-      pointer-events: auto;
-    }
-    .sidebar-handle:hover {
-      background: rgba(81,218,247,0.45);
+    .sidebar-handle:hover{background:rgba(81,218,247,0.45);}
+
+    .main-wrap{
+      margin-left:var(--sidebar-wide);
+      padding:4vw 4vw 3vw 4vw;
+      min-height:100vh;box-sizing:border-box;
+      display:flex;flex-direction:column;position:relative;z-index:1;
     }
 
-    /* Main wrapper */
-    .main-wrap {
-      margin-left: var(--sidebar-wide);
-      padding: 4vw 4vw 3vw 4vw;
-      min-height: 100vh;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 1;
+    /* language pill */
+    .lang-wrap{
+      position:fixed;top:1.3rem;right:1.4rem;z-index:1500;
+    }
+    .lang-current{
+      background:#51daf7;color:#173048;font-weight:bold;
+      font-size:1.1rem;border:none;border-radius:20px;
+      padding:.6rem 1.7rem .6rem 1rem;cursor:pointer;
+      box-shadow:0 2px 12px #2183a235;
+      display:flex;align-items:center;gap:.6rem;
+    }
+    .lang-dropdown{
+      display:none;flex-direction:column;
+      position:absolute;top:2.7rem;right:0;
+      background:#184c6cfa;border-radius:14px;
+      box-shadow:0 7px 26px #155070ad;
+      padding:.4rem .55rem;border:1.4px solid #39bbe9;
+      max-height:50vh;min-width:170px;overflow-y:auto;
+    }
+    .lang-dropdown.open{display:flex;}
+    .lang-opt{
+      background:transparent;color:#55ebca;
+      border-radius:11px;border:1.2px solid #39bbe9;
+      font-size:1rem;font-family:inherit;
+      margin-bottom:.22rem;cursor:pointer;
+      padding:.4rem .76rem;text-align:left;
+      transition:background .12s,color .12s,border-color .12s;
+      font-weight:600;
+    }
+    .lang-opt:hover,.lang-opt.selected{
+      background:#51daf7;color:#143d53;border-color:#48e8c2;
     }
 
-    /* Language pill */
-    .lang-wrap {
-      position: fixed;
-      top: 1.3rem;
-      right: 1.4rem;
-      z-index: 1500;
+    /* header */
+    .care-header{
+      margin-top:4vw;margin-left:1vw;margin-bottom:1.8rem;
+      padding:.8rem 1rem 1rem;border-radius:18px;
+      background:linear-gradient(135deg,rgba(9,39,60,0.9),rgba(17,64,97,0.85));
     }
-    .lang-current {
-      background: #51daf7;
-      color: #173048;
-      font-weight: bold;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 20px;
-      padding: 0.6rem 1.7rem 0.6rem 1rem;
-      cursor: pointer;
-      box-shadow: 0 2px 12px #2183a235;
-      display: flex;
-      align-items: center;
-      gap: .6rem;
+    .care-title{
+      font-size:2.1rem;color:#f5feff;font-weight:bold;
+      letter-spacing:.03em;margin:0 0 .4rem;
+      text-shadow:0 3px 14px #0b2236;
     }
-    .lang-dropdown {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 2.7rem;
-      right: 0;
-      background: #184c6cfa;
-      border-radius: 14px;
-      box-shadow: 0 7px 26px #155070ad;
-      padding: .4rem .55rem;
-      border: 1.4px solid #39bbe9;
-      overflow-y: auto;
-      max-height: 50vh;
-      min-width: 170px;
-      box-sizing: border-box;
-    }
-    .lang-dropdown.open { display: flex; }
-    .lang-opt {
-      background: transparent;
-      color: #55ebca;
-      border-radius: 11px;
-      border: 1.2px solid #39bbe9;
-      font-size: 1rem;
-      font-family: inherit;
-      margin-bottom: .22rem;
-      cursor: pointer;
-      padding: .4rem .76rem;
-      text-align: left;
-      transition: background .12s, color .12s, border-color .12s;
-      font-weight: 600;
-    }
-    .lang-opt:hover,
-    .lang-opt.selected {
-      background: #51daf7;
-      color: #143d53;
-      border-color: #48e8c2;
+    .care-subtitle{
+      margin:0;font-size:1.02rem;color:#d9fbff;max-width:760px;
     }
 
-    /* Header */
-    .care-header {
-      margin-top: 4vw;
-      margin-left: 1vw;
-      margin-bottom: 1.8rem;
-      padding: .8rem 1rem 1rem;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(9,39,60,0.9), rgba(17,64,97,0.85));
+    .care-layout{
+      display:flex;flex-wrap:wrap;gap:1.7rem;
+      margin-left:1vw;margin-right:1.3vw;margin-bottom:2.2rem;
     }
-    .care-title {
-      font-size: 2.1rem;
-      color: #f5feff;
-      font-weight: bold;
-      letter-spacing: .03em;
-      margin: 0 0 .4rem 0;
-      text-shadow: 0 3px 14px #0b2236;
-    }
-    .care-subtitle {
-      margin: 0;
-      font-size: 1.02rem;
-      color: #d9fbff;
-      max-width: 760px;
+    .care-left,.care-right{flex:1 1 360px;min-width:0;}
+    .care-card{
+      background:#1d334b;border-radius:26px;
+      padding:1.5rem 1.4rem;box-shadow:var(--shadow);
+      border:1.5px solid #107dac;box-sizing:border-box;
     }
 
-    /* Layout */
-    .care-layout {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.7rem;
-      margin-left: 1vw;
-      margin-right: 1.3vw;
-      margin-bottom: 2.2rem;
+    .section{margin-top:1.1rem;padding-top:.7rem;border-top:1px solid rgba(160,220,240,0.26);}
+    .section:first-of-type{margin-top:.2rem;padding-top:0;border-top:none;}
+    .section-title{font-weight:bold;color:#39bbe9;margin-bottom:.35rem;font-size:1rem;}
+    .section-note{font-size:.88rem;color:#b8e3ff;margin-top:.3rem;}
+
+    /* buttons etc */
+    .controls-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.2rem 0 .5rem;}
+    .btn-main{
+      border-radius:8px;border:none;padding:.45rem .95rem;
+      font-family:inherit;font-size:.96rem;font-weight:bold;
+      cursor:pointer;background:#2cb5d6;color:#fff;
     }
-    .care-left,
-    .care-right {
-      flex: 1 1 360px;
-      min-width: 0;
+    .btn-main:hover{background:#168eaf;}
+    .btn-ghost{
+      border-radius:8px;border:1px solid #3b7b95;
+      background:transparent;padding:.42rem .9rem;
+      font-family:inherit;font-size:.94rem;font-weight:bold;
+      cursor:pointer;color:#cdefff;
     }
-    .care-card {
-      background: #1d334b;
-      border-radius: 26px;
-      padding: 1.5rem 1.4rem 1.5rem;
-      box-shadow: var(--shadow);
-      border: 1.5px solid #107dac;
-      box-sizing: border-box;
+    .btn-ghost:hover{background:#182b35;}
+
+    .reading-box{
+      background:#1b3240;border-radius:13px;
+      padding:.7rem .8rem .8rem;font-size:.9rem;
+      color:#e5fbff;display:none;
+    }
+    .reading-top{
+      display:flex;justify-content:space-between;gap:.6rem;
+      flex-wrap:wrap;align-items:center;
+    }
+    .badge-band{
+      padding:4px 9px;border-radius:999px;
+      font-size:.82rem;font-weight:bold;color:#fff;
+    }
+    .band-good{background:var(--good);}
+    .band-med{background:var(--med);color:#333;}
+    .band-poor{background:var(--poor);}
+    .band-unknown{background:var(--unknown);}
+
+    .reading-details{
+      display:flex;flex-wrap:wrap;gap:.6rem;
+      margin-top:.4rem;font-size:.86rem;color:#d1f3ff;
+    }
+    .reading-details span{
+      padding:2px 6px;border-radius:7px;background:#102632;
     }
 
-    .section {
-      margin-top: 1.1rem;
-      padding-top: .7rem;
-      border-top: 1px solid rgba(160,220,240,0.26);
+    .care-plan-cards{display:flex;flex-direction:column;gap:.6rem;margin-top:.3rem;}
+    .care-plan-card{
+      background:#1b3441;border-radius:10px;
+      padding:.6rem .7rem .7rem;font-size:.9rem;color:#e5fbff;
     }
-    .section:first-of-type {
-      margin-top: .2rem;
-      padding-top: 0;
-      border-top: none;
+    .care-plan-title{font-weight:bold;color:#39bbe9;margin-bottom:.2rem;}
+    .care-plan-card ul{margin:.2rem 0 0 1.1rem;padding:0;list-style:disc;font-size:.88rem;}
+
+    .checklist{list-style:none;margin:.25rem 0 0 .1rem;padding:0;font-size:.88rem;}
+    .checklist li{margin-bottom:.25rem;display:flex;align-items:flex-start;gap:.35rem;}
+    .checklist input[type="checkbox"]{margin-top:.18rem;}
+
+    .symptom-controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
+    .symptom-controls label{font-weight:bold;color:#39bbe9;font-size:.96rem;}
+    .symptom-controls select{
+      min-width:170px;padding:.4rem .7rem;border-radius:9px;
+      border:1px solid #27536b;background:#102636;
+      color:#e7fbff;font-family:inherit;font-size:.95rem;
     }
-    .section-title {
-      font-weight: bold;
-      color: #39bbe9;
-      margin-bottom: .35rem;
-      font-size: 1rem;
-    }
-    .section-note {
-      font-size: .88rem;
-      color: #b8e3ff;
-      margin-top: .3rem;
+    .symptom-cards{margin-top:.4rem;display:none;}
+
+    .reminder-banner{
+      margin-top:.45rem;background:#193241;border-radius:10px;
+      padding:.45rem .6rem;font-size:.86rem;color:#d3f2ff;display:none;
     }
 
-    /* Latest reading */
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .6rem;
-      align-items: center;
-      margin-top: .2rem;
-      margin-bottom: .5rem;
-    }
-    .btn-main {
-      border-radius: 8px;
-      border: none;
-      padding: .45rem .95rem;
-      font-family: inherit;
-      font-size: .96rem;
-      font-weight: bold;
-      cursor: pointer;
-      background: #2cb5d6;
-      color: #fff;
-    }
-    .btn-main:hover { background:#168eaf; }
-    .btn-ghost {
-      border-radius: 8px;
-      border: 1px solid #3b7b95;
-      background: transparent;
-      padding: .42rem .9rem;
-      font-family: inherit;
-      font-size: .94rem;
-      font-weight: bold;
-      cursor: pointer;
-      color: #cdefff;
-    }
-    .btn-ghost:hover { background:#182b35; }
-
-    .reading-box {
-      background: #1b3240;
-      border-radius: 13px;
-      padding: .7rem .8rem .8rem;
-      font-size: .9rem;
-      color: #e5fbff;
-      display: none;
-    }
-    .reading-top {
-      display: flex;
-      justify-content: space-between;
-      gap: .6rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .badge-band {
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: .82rem;
-      font-weight: bold;
-      color: #fff;
-    }
-    .band-good { background: var(--good); }
-    .band-med  { background: var(--med); color:#333; }
-    .band-poor { background: var(--poor); }
-    .band-unknown { background: var(--unknown); }
-
-    .reading-details {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .6rem;
-      margin-top: .4rem;
-      font-size: .86rem;
-      color: #d1f3ff;
-    }
-    .reading-details span {
-      padding: 2px 6px;
-      border-radius: 7px;
-      background:#102632;
-    }
-
-    /* Care plan cards */
-    .care-plan-cards {
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
-      margin-top: .3rem;
-    }
-    .care-plan-card {
-      background: #1b3441;
-      border-radius: 10px;
-      padding: .6rem .7rem .7rem;
-      font-size: .9rem;
-      color: #e5fbff;
-    }
-    .care-plan-title {
-      font-weight: bold;
-      color: #39bbe9;
-      margin-bottom: .2rem;
-    }
-    .care-plan-card ul {
-      margin: .2rem 0 0 1.1rem;
-      padding: 0;
-      list-style: disc;
-      font-size: .88rem;
-    }
-
-    /* Checklist */
-    .checklist {
-      list-style: none;
-      margin: .25rem 0 0 .1rem;
-      padding: 0;
-      font-size: .88rem;
-    }
-    .checklist li {
-      margin-bottom: .25rem;
-      display: flex;
-      align-items: flex-start;
-      gap: .35rem;
-    }
-    .checklist input[type="checkbox"] {
-      margin-top: .18rem;
-    }
-
-    /* Symptom helper */
-    .symptom-controls {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.6rem;
-      align-items:center;
-    }
-    .symptom-controls label {
-      font-weight:bold;
-      color:#39bbe9;
-      font-size:.96rem;
-    }
-    .symptom-controls select {
-      min-width:170px;
-      padding:.4rem .7rem;
-      border-radius:9px;
-      border:1px solid #27536b;
-      background:#102636;
-      color:#e7fbff;
-      font-family:inherit;
-      font-size:.95rem;
-    }
-    .symptom-cards {
-      margin-top:.4rem;
-      display:none;
-    }
-
-    /* Reminder banner */
-    .reminder-banner {
-      margin-top:.45rem;
-      background:#193241;
-      border-radius:10px;
-      padding:.45rem .6rem;
-      font-size:.86rem;
-      color:#d3f2ff;
-      display:none;
-    }
-
-    /* Right column: care library */
-    .library-section-title {
-      font-weight:bold;
-      color:#39bbe9;
-      margin:.1rem 0 .4rem 0;
-      font-size:1.02rem;
-    }
-    .library-card {
-      background:#1b3441;
-      border-radius:10px;
-      padding:.6rem .7rem .7rem;
-      font-size:.9rem;
-      color:#e5fbff;
+    .library-section-title{font-weight:bold;color:#39bbe9;margin:.1rem 0 .4rem;font-size:1.02rem;}
+    .library-card{
+      background:#1b3441;border-radius:10px;
+      padding:.6rem .7rem .7rem;font-size:.9rem;color:#e5fbff;
       margin-top:.55rem;
     }
-    .library-card-title {
-      font-weight:bold;
-      color:#39bbe9;
-      margin-bottom:.2rem;
-    }
-    .library-card ul {
-      margin:.2rem 0 0 1.1rem;
-      padding:0;
-      list-style:disc;
-      font-size:.88rem;
+    .library-card-title{font-weight:bold;color:#39bbe9;margin-bottom:.2rem;}
+    .library-card ul{margin:.2rem 0 0 1.1rem;padding:0;list-style:disc;font-size:.88rem;}
+
+    .care-footer{
+      margin-top:1.2rem;margin-left:1vw;
+      font-size:.88rem;color:#9ee8ff;opacity:.9;
     }
 
-    .care-footer {
-      margin-top:1.2rem;
-      margin-left:1vw;
-      font-size:.88rem;
-      color:#9ee8ff;
-      opacity:.9;
+    @media(max-width:900px){
+      .sidebar{width:var(--sidebar-narrow)!important;min-width:var(--sidebar-narrow);max-width:var(--sidebar-narrow);}
+      .sidebar-header{margin:1rem 0;}
+      .logo-img{font-size:2.1rem;}
+      .logo-text{font-size:1.1rem;}
+      .sidebar nav .nav-link{font-size:0;padding:.9rem .3rem;justify-content:center;}
+      .sidebar nav .nav-link .label{display:none;}
+      .sidebar-handle{pointer-events:none;}
+      .main-wrap{margin-left:var(--sidebar-narrow)!important;padding:4vw 2.2vw 3vw;}
+      .care-header{margin-top:18vw;margin-left:.3rem;}
+      .care-layout{margin-left:.3rem;margin-right:.3rem;flex-direction:column;}
     }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
-      }
-      .sidebar-header { margin: 1rem 0; }
-      .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
-
-      .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
-      }
-      .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle { pointer-events:none; }
-
-      .main-wrap {
-        margin-left: var(--sidebar-narrow) !important;
-        padding: 4vw 2.2vw 3vw 2.2vw;
-      }
-      .care-header {
-        margin-top: 18vw;
-        margin-left: .3rem;
-      }
-      .care-layout {
-        margin-left:.3rem;
-        margin-right:.3rem;
-        flex-direction:column;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .lang-wrap {
-        right: .7rem;
-        top: .7rem;
-      }
-      .lang-current {
-        font-size: 1rem;
-        padding: .5rem 1.3rem .5rem .8rem;
-      }
-      .care-title {
-        font-size: 1.45rem;
-      }
-      .care-header {
-        margin-top: 22vw;
-      }
+    @media(max-width:520px){
+      .lang-wrap{right:.7rem;top:.7rem;}
+      .lang-current{font-size:1rem;padding:.5rem 1.3rem .5rem .8rem;}
+      .care-title{font-size:1.45rem;}
+      .care-header{margin-top:22vw;}
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
+  <!-- sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <span class="logo-img" aria-hidden="true">🌊</span>
       <span class="logo-text">Water<br>Index</span>
     </div>
     <nav>
-      <a href="index.html" class="nav-link">
-        <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
-      </a>
-      <a href="measure.html" class="nav-link">
-        <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
-      </a>
-      <a href="map.html" class="nav-link">
-        <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
-      </a>
-      <a href="care.html" class="nav-link active">
-        <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
-      </a>
-      <a href="farmers.html" class="nav-link">
-        <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
-      </a>
-      <a href="chart.html" class="nav-link">
-        <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
-      </a>
-      <a href="learn.html" class="nav-link">
-        <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
-      </a>
-      <a href="buykit.html" class="nav-link">
-        <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
-      </a>
-      <a href="about.html" class="nav-link">
-        <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
-      </a>
+      <a href="index.html" class="nav-link"><span aria-hidden="true">🏠</span><span class="label" data-i18n="nav_home">Home</span></a>
+      <a href="measure.html" class="nav-link"><span aria-hidden="true">🧪</span><span class="label" data-i18n="nav_measure">Measure</span></a>
+      <a href="map.html" class="nav-link"><span aria-hidden="true">🗺️</span><span class="label" data-i18n="nav_map">Map</span></a>
+      <a href="care.html" class="nav-link active"><span aria-hidden="true">💧</span><span class="label" data-i18n="nav_care">Care</span></a>
+      <a href="farmers.html" class="nav-link"><span aria-hidden="true">🌾</span><span class="label" data-i18n="nav_farmers">Farmers Assistant</span></a>
+      <a href="chart.html" class="nav-link"><span aria-hidden="true">📊</span><span class="label" data-i18n="nav_chart">Chart</span></a>
+      <a href="learn.html" class="nav-link"><span aria-hidden="true">📚</span><span class="label" data-i18n="nav_learn">Learn</span></a>
+      <a href="buykit.html" class="nav-link"><span aria-hidden="true">🛒</span><span class="label" data-i18n="nav_buykit">Buy Kit</span></a>
+      <a href="about.html" class="nav-link"><span aria-hidden="true">ℹ️</span><span class="label" data-i18n="nav_about">About</span></a>
     </nav>
     <footer class="sidebar-footer">
       &copy; 2025 Water Health Index · Regional project
@@ -556,10 +282,10 @@
     <div class="sidebar-handle" id="sidebarHandle"></div>
   </aside>
 
-  <!-- Language pill -->
+  <!-- language pill -->
   <div class="lang-wrap">
     <button class="lang-current" id="langCurrentBtn">
-      English <span style="font-size:1rem;">&#x25BC;</span>
+      English <span style="font-size:1rem;">▼</span>
     </button>
     <div class="lang-dropdown" id="langDropdown">
       <button class="lang-opt" data-lang="en">English</button>
@@ -575,61 +301,45 @@
     </div>
   </div>
 
-  <!-- Main content -->
+  <!-- main -->
   <div class="main-wrap" id="mainWrap">
     <header class="care-header">
-      <h1 class="care-title" data-i18n="care_title">
-        Water care & actions
-      </h1>
+      <h1 class="care-title" data-i18n="care_title">Water care &amp; actions</h1>
       <p class="care-subtitle" data-i18n="care_intro">
         See what your latest reading means, get a simple care plan for your water, and learn how to protect wells, tanks, ponds, and community water bodies.
       </p>
     </header>
 
     <section class="care-layout">
-      <!-- LEFT COLUMN -->
+      <!-- left -->
       <div class="care-left">
         <div class="care-card">
-          <!-- 1. My latest reading -->
           <div class="section">
-            <div class="section-title" data-i18n="last_title">
-              1. My latest reading
-            </div>
+            <div class="section-title" data-i18n="last_title">1. My latest reading</div>
             <div class="controls-row">
-              <button id="loadLast" class="btn-main" data-i18n="last_load_btn">
-                Load latest from history
-              </button>
-              <button id="clearChecks" class="btn-ghost" data-i18n="last_clear_checks">
-                Clear care checklist
-              </button>
+              <button id="loadLast" class="btn-main" data-i18n="last_load_btn">Load latest from history</button>
+              <button id="clearChecks" class="btn-ghost" data-i18n="last_clear_checks">Clear care checklist</button>
             </div>
-
             <div class="reading-box" id="readingBox">
               <div class="reading-top">
                 <div>
                   <div id="readingWhen"></div>
                   <div id="readingPlace" style="font-size:.84rem;color:#c7eafe;"></div>
                 </div>
-                <div>
-                  <span id="bandLabel" class="badge-band band-unknown">No index</span>
-                </div>
+                <div><span id="bandLabel" class="badge-band band-unknown">No index</span></div>
               </div>
               <div class="reading-details" id="readingDetails"></div>
             </div>
-
             <p class="section-note" id="noReadingNote" data-i18n="last_empty_note">
               Load the latest reading from the Measure page to see a care plan based on its index and pH.
             </p>
           </div>
 
-          <!-- 2. Care plan -->
           <div class="section" id="carePlanSection" style="display:none;">
-            <div class="section-title" data-i18n="careplan_title">
-              2. Care plan for this band
-            </div>
+            <div class="section-title" data-i18n="careplan_title">2. Care plan for this band</div>
             <div class="care-plan-cards">
               <div class="care-plan-card">
-                <div class="care-plan-title" data-i18n="safety_title">Health safety first</div>
+                <div class="care-plan-title" data-i18n="safety_title">Health &amp; safety first</div>
                 <ul id="safetyList"></ul>
               </div>
               <div class="care-plan-card">
@@ -647,15 +357,10 @@
             </div>
           </div>
 
-          <!-- 3. Symptom helper -->
           <div class="section">
-            <div class="section-title" data-i18n="symptom_title">
-              3. What does your water look like?
-            </div>
+            <div class="section-title" data-i18n="symptom_title">3. What does your water look like?</div>
             <div class="symptom-controls">
-              <label for="symptomSelect" data-i18n="symptom_label">
-                Choose a symptom
-              </label>
+              <label for="symptomSelect" data-i18n="symptom_label">Choose a symptom</label>
               <select id="symptomSelect">
                 <option value="none" selected>-- Select --</option>
                 <option value="muddy">Looks brown or muddy</option>
@@ -665,81 +370,55 @@
                 <option value="foam">Foam or detergent bubbles</option>
               </select>
             </div>
-
             <div class="symptom-cards" id="symptomCards">
               <div class="care-plan-cards">
                 <div class="care-plan-card">
-                  <div class="care-plan-title" data-i18n="symptom_cause_title">
-                    Likely causes
-                  </div>
+                  <div class="care-plan-title" data-i18n="symptom_cause_title">Likely causes</div>
                   <ul id="symptomCauseList"></ul>
                 </div>
                 <div class="care-plan-card">
-                  <div class="care-plan-title" data-i18n="symptom_action_title">
-                    What you can do now
-                  </div>
+                  <div class="care-plan-title" data-i18n="symptom_action_title">What you can do now</div>
                   <ul id="symptomActionList"></ul>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 4. Reminders -->
           <div class="section">
-            <div class="section-title" data-i18n="reminder_title">
-              4. Reminders
-            </div>
+            <div class="section-title" data-i18n="reminder_title">4. Reminders</div>
             <div class="controls-row">
-              <label for="reminderSelect" data-i18n="reminder_label">
-                Check water every
-              </label>
+              <label for="reminderSelect" data-i18n="reminder_label">Check water every</label>
               <select id="reminderSelect">
                 <option value="0" data-i18n="reminder_none">No reminder</option>
                 <option value="7" data-i18n="reminder_7">7 days</option>
                 <option value="30" data-i18n="reminder_30">30 days</option>
                 <option value="90" data-i18n="reminder_90">90 days</option>
               </select>
-              <button id="saveReminder" class="btn-ghost" data-i18n="reminder_save_btn">
-                Save reminder
-              </button>
+              <button id="saveReminder" class="btn-ghost" data-i18n="reminder_save_btn">Save reminder</button>
             </div>
             <div class="reminder-banner" id="reminderBanner"></div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN -->
+      <!-- right -->
       <div class="care-right">
         <div class="care-card">
-          <div class="library-section-title" data-i18n="library_title">
-            Care library
-          </div>
-
+          <div class="library-section-title" data-i18n="library_title">Care library</div>
           <div class="library-card">
-            <div class="library-card-title" data-i18n="home_care_title">
-              At home (drinking & cooking)
-            </div>
+            <div class="library-card-title" data-i18n="home_care_title">At home (drinking &amp; cooking)</div>
             <ul id="homeCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title" data-i18n="farm_care_title">
-              For farms & ponds
-            </div>
+            <div class="library-card-title" data-i18n="farm_care_title">For farms &amp; ponds</div>
             <ul id="farmCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title" data-i18n="community_care_title">
-              Community water bodies
-            </div>
+            <div class="library-card-title" data-i18n="community_care_title">Community water bodies</div>
             <ul id="communityCareList"></ul>
           </div>
-
           <div class="library-card">
-            <div class="library-card-title" data-i18n="facts_title">
-              Did you know?
-            </div>
+            <div class="library-card-title" data-i18n="facts_title">Did you know?</div>
             <ul id="factsList"></ul>
           </div>
         </div>
@@ -751,446 +430,478 @@
     </p>
   </div>
 
-  <!-- Translations + scripts -->
+  <!-- translations -->
   <script src="care.translations.js"></script>
-
   <script>
-    // ---------- Language wiring ----------
-    const langBtn = document.getElementById('langCurrentBtn');
-    const langDropdown = document.getElementById('langDropdown');
-
-    let currentLang = localStorage.getItem('whilang') || 'en';
-
-    function applyCareLanguage(langCode) {
-      if (typeof getCareStrings !== "function") return;
-      const t = getCareStrings(langCode) || {};
-
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        if (t[key]) {
-          el.textContent = t[key];
+    // -------- fallback strings in case translations file has an error --------
+    const fallbackStrings = {
+      care_title:"Water care & actions",
+      care_intro:"See what your latest reading means, get a simple care plan for your water, and learn how to protect wells, tanks, ponds, and community water bodies.",
+      last_title:"1. My latest reading",
+      last_load_btn:"Load latest from history",
+      last_clear_checks:"Clear care checklist",
+      last_empty_note:"Load the latest reading from the Measure page to see a care plan based on its index and pH.",
+      last_saved_prefix:"Last saved: ",
+      location_prefix:"Location: ",
+      band_good:"Good quality",
+      band_med:"Moderate quality",
+      band_poor:"Poor quality",
+      band_unknown:"No index",
+      details_index:"Index",
+      details_ph:"pH",
+      details_temp:"Temp",
+      details_turb:"Turbidity",
+      careplan_title:"2. Care plan for this band",
+      safety_title:"Health & safety first",
+      improve_title:"Improve water quality",
+      expert_title:"When to seek expert help",
+      checklist_title:"My care checklist",
+      symptom_title:"3. What does your water look like?",
+      symptom_label:"Choose a symptom",
+      symptom_cause_title:"Likely causes",
+      symptom_action_title:"What you can do now",
+      reminder_title:"4. Reminders",
+      reminder_label:"Check water every",
+      reminder_none:"No reminder",
+      reminder_7:"7 days",
+      reminder_30:"30 days",
+      reminder_90:"90 days",
+      reminder_save_btn:"Save reminder",
+      reminder_due:"Reminder: it has been {n} days, please test your water again.",
+      reminder_ok:"You tested {n} days ago. Keep an eye and test again when the reminder is due.",
+      reminder_saved:"Reminder saved for every {n} days.",
+      library_title:"Care library",
+      home_care_title:"At home (drinking & cooking)",
+      farm_care_title:"For farms & ponds",
+      community_care_title:"Community water bodies",
+      facts_title:"Did you know?",
+      care_footer_note:"Tip: Use this care plan together with the Map and Farmers Assistant pages to decide next actions for your family, farm, or community.",
+      carePlan:{
+        good:{safety:["Water is generally safe if the source is protected."],improve:["Clean storage tanks regularly."],expert:["Repeat tests if quality suddenly changes."]},
+        med:{safety:["Do not drink directly; boil or filter first."],improve:["Clean tanks and improve drainage."],expert:["Ask local authorities for detailed tests."]},
+        poor:{safety:["Do not use for drinking or cooking."],improve:["Find and stop pollution sources."],expert:["Report results to local officials."]},
+        unknown:{safety:["Test water at least once before regular use."],improve:["Keep the area around the source clean."],expert:["Report suspected pollution even without an index."]}
+      },
+      checklistItems:[
+        "I cleaned or inspected my storage tank this month.",
+        "I checked for smell, colour change or oil/foam in my source.",
+        "I keep drinking water covered and use a ladle or tap.",
+        "I avoid throwing chemicals or plastic into drains or water bodies.",
+        "I plan to re-test water within the reminder period."
+      ],
+      symptomOptions:{
+        muddy:{
+          label:"Looks brown or muddy",
+          causes:["Heavy rain or soil erosion has added a lot of mud.","The pump is drawing water from near the bottom."],
+          actions:["Let water settle and use the clearer top layer.","Filter through cloth or cartridge before boiling."]
+        },
+        green:{
+          label:"Green layer / algae on top",
+          causes:["Excess fertiliser or sewage feeding algal growth."],
+          actions:["Avoid drinking very green water.","Reduce fertiliser and detergent runoff into ponds."]
+        },
+        smell:{
+          label:"Strong smell (rotten egg / sewage)",
+          causes:["Hydrogen sulphide from decaying organic matter.","Possible sewage or industrial discharge."],
+          actions:["Do not drink smelly water even after boiling.","Check for leaking toilets or drains and report them."]
+        },
+        scale:{
+          label:"White scale on taps / utensils",
+          causes:["Hard water with high calcium and magnesium."],
+          actions:["Clean scale with mild vinegar or citric acid.","Use hard water mainly for washing/cleaning."]
+        },
+        foam:{
+          label:"Foam or detergent bubbles",
+          causes:["Detergents and soaps entering the water body."],
+          actions:["Do not wash clothes directly in rivers or ponds.","Route grey-water through soak pits instead of open drains."]
         }
+      },
+      homeCareList:[
+        "Boil or filter drinking water, especially for children and elders.",
+        "Clean kitchen storage containers regularly and keep them covered.",
+        "Do not store drinking water near chemicals or fuel."
+      ],
+      farmCareList:[
+        "Avoid over-use of fertilisers and pesticides near wells and ponds.",
+        "Keep livestock sheds and manure pits away from drinking water sources.",
+        "Use buffer strips of grass along field edges and canals."
+      ],
+      communityCareList:[
+        "Do not dump solid waste into ponds, lakes, rivers or drains.",
+        "Organise periodic clean-ups of local ponds and riverbanks.",
+        "Report sewage leaks and industrial discharge to local authorities."
+      ],
+      factsList:[
+        "Regular testing helps detect changes before they become serious health risks.",
+        "Protecting the catchment area is often cheaper than treating polluted water.",
+        "Simple actions at home and on farms can greatly reduce water contamination."
+      ]
+    };
+
+    function safeGetStrings(lang){
+      try{
+        if(typeof getCareStrings === "function"){
+          return getCareStrings(lang) || fallbackStrings;
+        }
+      }catch(e){
+        console.error("care.translations.js error:",e);
+      }
+      return fallbackStrings;
+    }
+
+    const langBtn=document.getElementById('langCurrentBtn');
+    const langDropdown=document.getElementById('langDropdown');
+    let currentLang=localStorage.getItem('whilang') || 'en';
+
+    let readings=[];
+    try{
+      readings=JSON.parse(localStorage.getItem('whReadings')||'[]');
+      if(!Array.isArray(readings)) readings=[];
+    }catch(e){readings=[];}
+    readings.forEach((r,i)=>{if(r.id==null) r.id=i;});
+
+    const urlParams=new URLSearchParams(window.location.search);
+    const readingParam=urlParams.get('reading');
+    let preselectedId=readingParam!=null?Number(readingParam):null;
+
+    let lastReading=null;
+    let currentBand='unknown';
+
+    function applyCareLanguage(langCode){
+      const t=safeGetStrings(langCode);
+
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key=el.dataset.i18n;
+        if(t[key]) el.textContent=t[key];
       });
 
-      // Re-render dynamic content that depends on text
       renderChecklist();
       renderCarePlan(currentBand);
       renderSymptom();
       renderLibraryLists();
-      if (lastReading) renderReading();
+      if(lastReading) renderReading();
       updateReminderBanner(false);
 
-      localStorage.setItem('whilang', langCode);
+      localStorage.setItem('whilang',langCode);
     }
 
-    // init language UI
-    (function initLanguage() {
-      const allOpts = Array.from(document.querySelectorAll('.lang-opt'));
-      const initialOpt = allOpts.find(btn => btn.dataset.lang === currentLang) || allOpts[0];
-      if (initialOpt) {
+    (function initLanguage(){
+      const allOpts=Array.from(document.querySelectorAll('.lang-opt'));
+      const initialOpt=allOpts.find(b=>b.dataset.lang===currentLang) || allOpts[0];
+      if(initialOpt){
         initialOpt.classList.add('selected');
-        currentLang = initialOpt.dataset.lang;
-        langBtn.innerHTML = initialOpt.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        currentLang=initialOpt.dataset.lang;
+        langBtn.innerHTML=initialOpt.textContent+' <span style="font-size:1rem;">▼</span>';
       }
       applyCareLanguage(currentLang);
     })();
 
-    langBtn.addEventListener('click', (e) => {
+    langBtn.addEventListener('click',e=>{
       e.stopPropagation();
       langDropdown.classList.toggle('open');
     });
-    document.addEventListener('click', (e) => {
-      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+    document.addEventListener('click',e=>{
+      if(!langBtn.contains(e.target) && !langDropdown.contains(e.target)){
         langDropdown.classList.remove('open');
       }
     });
-    document.querySelectorAll('.lang-opt').forEach(btn => {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.lang-opt').forEach(btn=>{
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
         this.classList.add('selected');
-        const langCode = this.dataset.lang || 'en';
-        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        const langCode=this.dataset.lang || 'en';
+        langBtn.innerHTML=this.textContent+' <span style="font-size:1rem;">▼</span>';
         langDropdown.classList.remove('open');
-        currentLang = langCode;
+        currentLang=langCode;
         applyCareLanguage(langCode);
       });
     });
 
-    // ---------- Sidebar drag-to-resize (desktop only) ----------
-    (function () {
-      const sidebar = document.getElementById('sidebar');
-      const mainWrap = document.getElementById('mainWrap');
-      const handle = document.getElementById('sidebarHandle');
-      if (!sidebar || !handle || !mainWrap) return;
-
-      let isDragging = false;
-      let startX = 0;
-      let startWidth = 0;
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
-      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
-
-      handle.addEventListener('mousedown', (e) => {
-        if (window.innerWidth <= 900) return;
-        isDragging = true;
-        startX = e.clientX;
-        startWidth = sidebar.offsetWidth;
-        document.body.style.userSelect = 'none';
+    // sidebar resize (same as before)
+    (function(){
+      const sidebar=document.getElementById('sidebar');
+      const mainWrap=document.getElementById('mainWrap');
+      const handle=document.getElementById('sidebarHandle');
+      if(!sidebar||!handle||!mainWrap) return;
+      let isDragging=false,startX=0,startWidth=0;
+      const rootStyles=getComputedStyle(document.documentElement);
+      const minWidth=parseInt(rootStyles.getPropertyValue('--sidebar-min'))||210;
+      const maxWidth=parseInt(rootStyles.getPropertyValue('--sidebar-max'))||380;
+      handle.addEventListener('mousedown',e=>{
+        if(window.innerWidth<=900) return;
+        isDragging=true;startX=e.clientX;startWidth=sidebar.offsetWidth;
+        document.body.style.userSelect='none';
       });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const delta = e.clientX - startX;
-        let newWidth = startWidth + delta;
-        if (newWidth < minWidth) newWidth = minWidth;
-        if (newWidth > maxWidth) newWidth = maxWidth;
-        sidebar.style.width = newWidth + 'px';
-        mainWrap.style.marginLeft = newWidth + 'px';
+      window.addEventListener('mousemove',e=>{
+        if(!isDragging) return;
+        const delta=e.clientX-startX;
+        let newWidth=startWidth+delta;
+        if(newWidth<minWidth) newWidth=minWidth;
+        if(newWidth>maxWidth) newWidth=maxWidth;
+        sidebar.style.width=newWidth+'px';
+        mainWrap.style.marginLeft=newWidth+'px';
       });
-
-      window.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        document.body.style.userSelect = '';
+      window.addEventListener('mouseup',()=>{
+        if(!isDragging) return;
+        isDragging=false;document.body.style.userSelect='';
       });
-
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 900) {
-          sidebar.style.width = '';
-          mainWrap.style.marginLeft = '';
+      window.addEventListener('resize',()=>{
+        if(window.innerWidth<=900){
+          sidebar.style.width='';mainWrap.style.marginLeft='';
         }
       });
     })();
 
-    // ---------- Data from Measure (whReadings) ----------
-    let readings = [];
-    try {
-      readings = JSON.parse(localStorage.getItem('whReadings') || '[]');
-      if (!Array.isArray(readings)) readings = [];
-    } catch (e) {
-      readings = [];
-    }
-    readings.forEach((r, i) => { if (r.id == null) r.id = i; });
-
-    // check for ?reading=ID from Map / Farmers
-    const urlParams = new URLSearchParams(window.location.search);
-    const readingParam = urlParams.get('reading');
-    let preselectedId = readingParam != null ? Number(readingParam) : null;
-
-    let lastReading = null;
-    let currentBand = 'unknown';
-
-    function classifyBand(idx) {
-      idx = Number(idx);
-      if (isNaN(idx)) return 'unknown';
-      if (idx >= 70) return 'good';
-      if (idx >= 40) return 'med';
+    function classifyBand(idx){
+      idx=Number(idx);
+      if(isNaN(idx)) return 'unknown';
+      if(idx>=70) return 'good';
+      if(idx>=40) return 'med';
       return 'poor';
     }
 
-    function bandTextAndClass(band) {
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      let text = s.band_unknown || 'No index';
-      let cls = 'band-unknown';
-      if (band === 'good') {
-        text = s.band_good || 'Good quality';
-        cls = 'band-good';
-      } else if (band === 'med') {
-        text = s.band_med || 'Moderate quality';
-        cls = 'band-med';
-      } else if (band === 'poor') {
-        text = s.band_poor || 'Poor quality';
-        cls = 'band-poor';
-      }
-      return { text, cls };
+    function bandTextAndClass(band){
+      const s=safeGetStrings(currentLang);
+      let text=s.band_unknown || 'No index';
+      let cls='band-unknown';
+      if(band==='good'){text=s.band_good || 'Good quality';cls='band-good';}
+      else if(band==='med'){text=s.band_med || 'Moderate quality';cls='band-med';}
+      else if(band==='poor'){text=s.band_poor || 'Poor quality';cls='band-poor';}
+      return {text,cls};
     }
 
-    function renderReading() {
-      const box = document.getElementById('readingBox');
-      const detailsEl = document.getElementById('readingDetails');
-      const whenEl = document.getElementById('readingWhen');
-      const placeEl = document.getElementById('readingPlace');
-      const bandEl = document.getElementById('bandLabel');
-      const noteEl = document.getElementById('noReadingNote');
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
+    function renderReading(){
+      const box=document.getElementById('readingBox');
+      const detailsEl=document.getElementById('readingDetails');
+      const whenEl=document.getElementById('readingWhen');
+      const placeEl=document.getElementById('readingPlace');
+      const bandEl=document.getElementById('bandLabel');
+      const noteEl=document.getElementById('noReadingNote');
+      const s=safeGetStrings(currentLang);
 
-      if (!lastReading) {
-        box.style.display = 'none';
-        noteEl.style.display = 'block';
-        document.getElementById('carePlanSection').style.display = 'none';
+      if(!lastReading){
+        box.style.display='none';
+        noteEl.style.display='block';
+        document.getElementById('carePlanSection').style.display='none';
         return;
       }
+      box.style.display='block';
+      noteEl.style.display='none';
 
-      box.style.display = 'block';
-      noteEl.style.display = 'none';
+      const whenPrefix=s.last_saved_prefix || 'Last saved: ';
+      const placePrefix=s.location_prefix || 'Location: ';
+      whenEl.textContent=whenPrefix+(lastReading.when || '–');
+      placeEl.textContent=lastReading.place ? (placePrefix+lastReading.place) : '';
 
-      const whenPrefix = s.last_saved_prefix || 'Last saved: ';
-      const placePrefix = s.location_prefix || 'Location: ';
-      whenEl.textContent = whenPrefix + (lastReading.when || '–');
-      placeEl.textContent = lastReading.place ? (placePrefix + lastReading.place) : '';
+      const indexVal=Number(lastReading.index);
+      const band=classifyBand(indexVal);
+      currentBand=band;
 
-      const indexVal = Number(lastReading.index);
-      const band = classifyBand(indexVal);
-      currentBand = band;
+      const bt=bandTextAndClass(band);
+      bandEl.textContent=bt.text;
+      bandEl.className='badge-band '+bt.cls;
 
-      const bt = bandTextAndClass(band);
-      bandEl.textContent = bt.text;
-      bandEl.className = 'badge-band ' + bt.cls;
-
-      detailsEl.innerHTML = '';
-      function addChip(label, value) {
-        if (value === undefined || value === null || value === '') return;
-        const span = document.createElement('span');
-        span.textContent = (label || '') + ' ' + value;
+      detailsEl.innerHTML='';
+      function addChip(label,value){
+        if(value===undefined||value===null||value==='') return;
+        const span=document.createElement('span');
+        span.textContent=(label||'')+' '+value;
         detailsEl.appendChild(span);
       }
-      addChip(s.details_index || 'Index', isNaN(indexVal) ? '–' : indexVal);
-      addChip(s.details_ph || 'pH', lastReading.ph);
-      addChip(s.details_temp || 'Temp', lastReading.temp);
-      addChip(s.details_turb || 'Turb', lastReading.turb);
+      addChip(s.details_index || 'Index',isNaN(indexVal)?'–':indexVal);
+      addChip(s.details_ph || 'pH',lastReading.ph);
+      addChip(s.details_temp || 'Temp',lastReading.temp);
+      addChip(s.details_turb || 'Turb',lastReading.turb);
 
       renderCarePlan(band);
     }
 
-    // ---------- Care plan ----------
-    function renderCarePlan(band) {
-      const sec = document.getElementById('carePlanSection');
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      const planAll = s.carePlan || {};
-      const plan = planAll[band] || planAll.unknown;
+    function renderCarePlan(band){
+      const sec=document.getElementById('carePlanSection');
+      const s=safeGetStrings(currentLang);
+      const planAll=s.carePlan || {};
+      const plan=planAll[band] || planAll.unknown;
+      if(!plan){sec.style.display='none';return;}
+      sec.style.display='block';
 
-      if (!plan) {
-        sec.style.display = 'none';
-        return;
-      }
-      sec.style.display = 'block';
-
-      const safetyList = document.getElementById('safetyList');
-      const improveList = document.getElementById('improveList');
-      const expertList = document.getElementById('expertList');
-      safetyList.innerHTML = '';
-      improveList.innerHTML = '';
-      expertList.innerHTML = '';
-
-      function fillUl(ul, arr) {
-        (arr || []).forEach(text => {
-          const li = document.createElement('li');
-          li.textContent = text;
+      const safetyList=document.getElementById('safetyList');
+      const improveList=document.getElementById('improveList');
+      const expertList=document.getElementById('expertList');
+      safetyList.innerHTML='';improveList.innerHTML='';expertList.innerHTML='';
+      const fill=(ul,arr)=>{
+        (arr||[]).forEach(text=>{
+          const li=document.createElement('li');
+          li.textContent=text;
           ul.appendChild(li);
         });
-      }
-
-      fillUl(safetyList, plan.safety);
-      fillUl(improveList, plan.improve);
-      fillUl(expertList, plan.expert);
+      };
+      fill(safetyList,plan.safety);
+      fill(improveList,plan.improve);
+      fill(expertList,plan.expert);
     }
 
-    // ---------- Checklist ----------
-    const checklistEl = document.getElementById('checklist');
-    const CHECK_KEY = 'whicarechecks';
-
-    function loadChecks() {
-      try {
-        const obj = JSON.parse(localStorage.getItem(CHECK_KEY));
-        return (obj && typeof obj === 'object') ? obj : {};
-      } catch (e) {
-        return {};
-      }
+    const checklistEl=document.getElementById('checklist');
+    const CHECK_KEY='whicarechecks';
+    function loadChecks(){
+      try{
+        const obj=JSON.parse(localStorage.getItem(CHECK_KEY));
+        return (obj && typeof obj==='object') ? obj : {};
+      }catch(e){return {};}
     }
-    function saveChecks(obj) {
-      localStorage.setItem(CHECK_KEY, JSON.stringify(obj || {}));
+    function saveChecks(obj){
+      localStorage.setItem(CHECK_KEY,JSON.stringify(obj || {}));
     }
-
-    function renderChecklist() {
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      const items = s.checklistItems || [];
-      const state = loadChecks();
-      checklistEl.innerHTML = '';
-
-      items.forEach((text, idx) => {
-        const id = 'check' + idx;
-        const li = document.createElement('li');
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.id = id;
-        cb.checked = !!state[id];
-        cb.addEventListener('change', () => {
-          const st = loadChecks();
-          st[id] = cb.checked;
-          saveChecks(st);
+    function renderChecklist(){
+      const s=safeGetStrings(currentLang);
+      const items=s.checklistItems || [];
+      const state=loadChecks();
+      checklistEl.innerHTML='';
+      items.forEach((text,idx)=>{
+        const id='check'+idx;
+        const li=document.createElement('li');
+        const cb=document.createElement('input');
+        cb.type='checkbox';cb.id=id;cb.checked=!!state[id];
+        cb.addEventListener('change',()=>{
+          const st=loadChecks();st[id]=cb.checked;saveChecks(st);
         });
-        const lbl = document.createElement('label');
-        lbl.setAttribute('for', id);
-        lbl.textContent = text;
-
-        li.appendChild(cb);
-        li.appendChild(lbl);
+        const lbl=document.createElement('label');
+        lbl.setAttribute('for',id);
+        lbl.textContent=text;
+        li.appendChild(cb);li.appendChild(lbl);
         checklistEl.appendChild(li);
       });
     }
-
-    document.getElementById('clearChecks').addEventListener('click', () => {
-      saveChecks({});
-      renderChecklist();
+    document.getElementById('clearChecks').addEventListener('click',()=>{
+      saveChecks({});renderChecklist();
     });
 
-    // ---------- Symptom helper ----------
-    const symptomSelect = document.getElementById('symptomSelect');
-    const symptomCards = document.getElementById('symptomCards');
-    const symptomCauseList = document.getElementById('symptomCauseList');
-    const symptomActionList = document.getElementById('symptomActionList');
-
-    function renderSymptom() {
-      const val = symptomSelect.value;
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      const opts = s.symptomOptions || {};
-
-      if (!opts[val] || val === 'none') {
-        symptomCards.style.display = 'none';
-        symptomCauseList.innerHTML = '';
-        symptomActionList.innerHTML = '';
+    // symptom helper
+    const symptomSelect=document.getElementById('symptomSelect');
+    const symptomCards=document.getElementById('symptomCards');
+    const symptomCauseList=document.getElementById('symptomCauseList');
+    const symptomActionList=document.getElementById('symptomActionList');
+    function renderSymptom(){
+      const val=symptomSelect.value;
+      const s=safeGetStrings(currentLang);
+      const opts=s.symptomOptions || {};
+      if(!opts[val] || val==='none'){
+        symptomCards.style.display='none';
+        symptomCauseList.innerHTML='';symptomActionList.innerHTML='';
         return;
       }
-
-      const info = opts[val];
-      symptomCauseList.innerHTML = '';
-      symptomActionList.innerHTML = '';
-      (info.causes || []).forEach(text => {
-        const li = document.createElement('li');
-        li.textContent = text;
+      const info=opts[val];
+      symptomCauseList.innerHTML='';symptomActionList.innerHTML='';
+      (info.causes || []).forEach(text=>{
+        const li=document.createElement('li');
+        li.textContent=text;
         symptomCauseList.appendChild(li);
       });
-      (info.actions || []).forEach(text => {
-        const li = document.createElement('li');
-        li.textContent = text;
+      (info.actions || []).forEach(text=>{
+        const li=document.createElement('li');
+        li.textContent=text;
         symptomActionList.appendChild(li);
       });
-      symptomCards.style.display = 'block';
+      symptomCards.style.display='block';
     }
+    symptomSelect.addEventListener('change',renderSymptom);
 
-    symptomSelect.addEventListener('change', renderSymptom);
-
-    // ---------- Reminder widget ----------
-    const REM_KEY = 'whicarereminder';
-    const reminderSelect = document.getElementById('reminderSelect');
-    const reminderBanner = document.getElementById('reminderBanner');
-
-    function loadReminder() {
-      try {
-        const obj = JSON.parse(localStorage.getItem(REM_KEY));
-        return (obj && typeof obj === 'object') ? obj : {};
-      } catch (e) {
-        return {};
+    // reminders
+    const REM_KEY='whicarereminder';
+    const reminderSelect=document.getElementById('reminderSelect');
+    const reminderBanner=document.getElementById('reminderBanner');
+    function loadReminder(){
+      try{
+        const obj=JSON.parse(localStorage.getItem(REM_KEY));
+        return (obj && typeof obj==='object') ? obj : {};
+      }catch(e){return {};}
+    }
+    function saveReminder(obj){
+      localStorage.setItem(REM_KEY,JSON.stringify(obj || {}));
+    }
+    function updateReminderBanner(forceLastUpdate){
+      const s=safeGetStrings(currentLang);
+      let rem=loadReminder();
+      if(forceLastUpdate && lastReading){
+        rem.last=lastReading.when;saveReminder(rem);
       }
-    }
-    function saveReminder(obj) {
-      localStorage.setItem(REM_KEY, JSON.stringify(obj || {}));
-    }
-
-    function updateReminderBanner(forceLastUpdate) {
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      let rem = loadReminder();
-
-      if (forceLastUpdate && lastReading) {
-        rem.last = lastReading.when;
-        saveReminder(rem);
-      }
-
-      reminderBanner.style.display = 'none';
-      if (!rem.days || !rem.last) return;
-
-      let daysAgo = 0;
-      try {
-        const tLast = new Date(rem.last).getTime();
-        if (!isNaN(tLast)) {
-          const now = Date.now();
-          daysAgo = Math.round((now - tLast) / (1000 * 60 * 60 * 24));
+      reminderBanner.style.display='none';
+      if(!rem.days || !rem.last) return;
+      let daysAgo=0;
+      try{
+        const tLast=new Date(rem.last).getTime();
+        if(!isNaN(tLast)){
+          const now=Date.now();
+          daysAgo=Math.round((now-tLast)/(1000*60*60*24));
         }
-      } catch (e) {
-        daysAgo = 0;
-      }
-
-      if (daysAgo >= rem.days) {
-        const msg = (s.reminder_due || 'Reminder: it has been {n} days, please test your water again.')
-          .replace('{n}', String(daysAgo));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = 'block';
-      } else if (daysAgo >= 0) {
-        const msg = (s.reminder_ok || 'You tested {n} days ago. Keep an eye and test again when the reminder is due.')
-          .replace('{n}', String(daysAgo));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = 'block';
+      }catch(e){daysAgo=0;}
+      if(daysAgo>=rem.days){
+        const msg=(s.reminder_due || fallbackStrings.reminder_due).replace('{n',String(daysAgo)).replace('{n}',String(daysAgo));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display='block';
+      }else if(daysAgo>=0){
+        const msg=(s.reminder_ok || fallbackStrings.reminder_ok).replace('{n',String(daysAgo));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display='block';
       }
     }
-
-    const remInit = loadReminder();
-    if (remInit.days) {
-      reminderSelect.value = String(remInit.days);
-    }
-
-    document.getElementById('saveReminder').addEventListener('click', () => {
-      const days = parseInt(reminderSelect.value, 10) || 0;
-      const obj = loadReminder();
-      obj.days = days;
-      if (lastReading) obj.last = lastReading.when;
+    const remInit=loadReminder();
+    if(remInit.days){reminderSelect.value=String(remInit.days);}
+    document.getElementById('saveReminder').addEventListener('click',()=>{
+      const days=parseInt(reminderSelect.value,10) || 0;
+      const obj=loadReminder();
+      obj.days=days;
+      if(lastReading) obj.last=lastReading.when;
       saveReminder(obj);
-
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      if (days > 0) {
-        const msg = (s.reminder_saved || 'Reminder saved for every {n} days.')
-          .replace('{n}', String(days));
-        reminderBanner.textContent = msg;
-        reminderBanner.style.display = 'block';
-      } else {
-        reminderBanner.style.display = 'none';
+      const s=safeGetStrings(currentLang);
+      if(days>0){
+        const msg=(s.reminder_saved || fallbackStrings.reminder_saved).replace('{n}',String(days));
+        reminderBanner.textContent=msg;
+        reminderBanner.style.display='block';
+      }else{
+        reminderBanner.style.display='none';
       }
     });
 
-    // ---------- Care library lists ----------
-    function renderLibraryLists() {
-      const s = typeof getCareStrings === "function" ? getCareStrings(currentLang) || {} : {};
-      function fill(id, arr) {
-        const ul = document.getElementById(id);
-        if (!ul) return;
-        ul.innerHTML = '';
-        (arr || []).forEach(text => {
-          const li = document.createElement('li');
-          li.textContent = text;
+    function renderLibraryLists(){
+      const s=safeGetStrings(currentLang);
+      function fill(id,arr){
+        const ul=document.getElementById(id);
+        if(!ul) return;
+        ul.innerHTML='';
+        (arr || []).forEach(text=>{
+          const li=document.createElement('li');
+          li.textContent=text;
           ul.appendChild(li);
         });
       }
-      fill('homeCareList', s.homeCareList);
-      fill('farmCareList', s.farmCareList);
-      fill('communityCareList', s.communityCareList);
-      fill('factsList', s.factsList);
+      fill('homeCareList',s.homeCareList);
+      fill('farmCareList',s.farmCareList);
+      fill('communityCareList',s.communityCareList);
+      fill('factsList',s.factsList);
     }
 
-    // ---------- Load latest reading button ----------
-    document.getElementById('loadLast').addEventListener('click', () => {
-      if (!readings.length) {
+    document.getElementById('loadLast').addEventListener('click',()=>{
+      if(!readings.length){
         alert('No saved readings found. Go to the Measure page and save at least one reading.');
         return;
       }
-      if (preselectedId != null) {
-        const found = readings.find(r => r.id === preselectedId);
-        lastReading = found || readings[readings.length - 1];
-      } else {
-        lastReading = readings[readings.length - 1];
+      if(preselectedId!=null){
+        const found=readings.find(r=>r.id===preselectedId);
+        lastReading=found || readings[readings.length-1];
+      }else{
+        lastReading=readings[readings.length-1];
       }
       renderReading();
       updateReminderBanner(true);
     });
-
-    // ---------- Auto-load if coming from Map with ?reading= ----------
-    if (preselectedId != null && readings.length) {
-      const found = readings.find(r => r.id === preselectedId);
-      lastReading = found || readings[readings.length - 1];
+    if(preselectedId!=null && readings.length){
+      const found=readings.find(r=>r.id===preselectedId);
+      lastReading=found || readings[readings.length-1];
       renderReading();
       updateReminderBanner(true);
     }
 
-    // Initial library + checklist (in case language loaded before)
+    // initial
     renderChecklist();
     renderLibraryLists();
     renderSymptom();
