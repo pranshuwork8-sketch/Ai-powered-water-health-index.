@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - Chart</title>
+  <style>
+    :root {
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
+      --accent: #51daf7;
+      --active: #48e8c2;
+      --card-bg: #1d334b;
+      --shadow: 0 8px 32px #17487d40;
+    }
+    html, body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body { position: relative; }
+    
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
+      background: rgba(16,38,54,0.98);
+      box-shadow: 3px 0 20px #143d5344;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 2000;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2.1rem 0 2.3rem 0;
+    }
+    .logo-img {
+      font-size: 2.7rem;
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 2px 19px #51daf7a0);
+    }
+    .logo-text {
+      color: var(--accent);
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.16;
+    }
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin-bottom: auto;
+    }
+    .nav-link {
+      color: #e3fbfa;
+      text-decoration: none;
+      padding: 0.7rem 1.15rem;
+      font-size: 1.09rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border-radius: 13px;
+      margin: 0 .4rem;
+      transition: background .12s, color .12s;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--active);
+      color: #154b68;
+    }
+    .sidebar-footer {
+      color: #9ee8ff;
+      font-size: .95rem;
+      font-style: italic;
+      padding: 1.1rem .8rem 1rem .8rem;
+      text-align: center;
+    }
+    .sidebar-handle {
+      position: absolute;
+      top: 0; right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+      pointer-events: auto;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
+    /* Main wrapper */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 2.5vw 3vw 3vw 3vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Language pill */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #2183a235;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 2.7rem;
+      right: 0;
+      background: #184c6cfa;
+      border-radius: 14px;
+      box-shadow: 0 7px 26px #155070ad;
+      padding: .4rem .55rem;
+      border: 1.4px solid #39bbe9;
+      overflow-y: auto;
+      max-height: 50vh;
+      min-width: 170px;
+      box-sizing: border-box;
+    }
+    .lang-dropdown.open { display: flex; }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: .22rem;
+      cursor: pointer;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+      font-weight: 600;
+    }
+    .lang-opt:hover,
+    .lang-opt.selected {
+      background: #51daf7;
+      color: #143d53;
+      border-color: #48e8c2;
+    }
+
+    /* Content */
+    .page-title {
+      font-size: 2.4rem;
+      color: #55ebca;
+      font-weight: bold;
+      margin: 1.5rem 0 .6rem 0;
+      text-shadow: 0 2px 16px #51daf784;
+    }
+    .page-intro {
+      font-size: 1.08rem;
+      color: #d9fbff;
+      line-height: 1.55;
+      margin-bottom: 2rem;
+      max-width: 920px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.8fr 1.2fr;
+      gap: 1.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1.2px solid #107dac;
+      padding: 1.8rem 1.6rem 1.9rem;
+      box-shadow: var(--shadow);
+      box-sizing: border-box;
+    }
+    .panel h2 {
+      color: #55ebca;
+      font-size: 1.5rem;
+      margin: 0 0 1rem 0;
+      font-weight: bold;
+    }
+
+    /* pH Gradient */
+    .gradient-wrapper { position: relative; margin-top: .8rem; }
+    .gradient-label {
+      font-weight: bold;
+      color: #90e0cf;
+      margin-bottom: .6rem;
+      font-size: 1.05rem;
+    }
+    #phGradient {
+      height: 60px;
+      border-radius: 14px;
+      border: 1.5px solid #0e3b4f;
+      background: linear-gradient(90deg,
+        #6b0000 0%,
+        #ff3b30 6%,
+        #ff7a00 14%,
+        #ffb300 24%,
+        #ffee58 38%,
+        #b2ff59 46%,
+        #64ffda 58%,
+        #00b0ff 72%,
+        #0077ff 86%,
+        #1f0b4b 100%);
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      cursor: pointer;
+      user-select: none;
+    }
+    .pin {
+      position: absolute;
+      top: -24px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #0e3b4f;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      cursor: grab;
+      z-index: 10;
+    }
+    .pin::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 21px;
+      width: 3px;
+      height: 42px;
+      background: #e7f9ff;
+      transform: translateX(-50%);
+    }
+    .ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: .7rem;
+      font-size: .95rem;
+      color: #b7e3f1;
+      font-weight: bold;
+    }
+    .hint {
+      font-size: .93rem;
+      color: #bfe9ff;
+      margin-top: .6rem;
+      line-height: 1.5;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .8rem;
+      margin-top: 1.2rem;
+    }
+    .controls label {
+      font-weight: bold;
+      color: #90e0cf;
+      font-size: 1.05rem;
+    }
+    .controls input[type=number] {
+      width: 110px;
+      padding: .6rem .8rem;
+      border-radius: 10px;
+      border: 1.5px solid #27536b;
+      background: #182b35;
+      color: #e7fbff;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: .65rem 1.1rem;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    button:active { transform: scale(0.97); }
+    .btn-main {
+      background: #48e8c2;
+      color: #173048;
+      box-shadow: 0 2px 12px #48e8c235;
+    }
+    .btn-main:hover { background: #3dd4b0; }
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid #3b7b95;
+      color: #cdefff;
+    }
+    .btn-ghost:hover {
+      background: #223e5b;
+      color: #48e8c2;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 11px;
+      font-size: .92rem;
+      font-weight: bold;
+      color: #fff;
+      margin-left: .4rem;
+    }
+    .cat-acid { background: linear-gradient(135deg, #ff3b30, #ff7a00); }
+    .cat-neutral { background: linear-gradient(135deg, #2e7d32, #66bb6a); }
+    .cat-alk { background: linear-gradient(135deg, #0077ff, #00b0ff); }
+
+    #resultBox {
+      margin-top: 1.3rem;
+      display: none;
+    }
+    #bigPH {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #e9ffff;
+    }
+    .result-row {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      flex-wrap: wrap;
+      margin-bottom: .7rem;
+    }
+    .result-text {
+      font-size: 1rem;
+      color: #d0f5ff;
+      line-height: 1.6;
+      margin-top: .5rem;
+    }
+    .section-title {
+      margin-top: 1.3rem;
+      font-weight: bold;
+      color: #90e0cf;
+      font-size: 1.1rem;
+    }
+    .quality-tag {
+      margin-top: .8rem;
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: .9rem;
+      background: #15333f;
+      color: #e9fff8;
+      border: 1.5px solid rgba(144,238,209,0.6);
+    }
+
+    /* Quick buttons */
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: .8rem;
+    }
+    .quick-buttons .btn-ghost {
+      font-size: .9rem;
+      padding: .5rem .9rem;
+    }
+
+    /* Info card */
+    .info-card {
+      margin-top: 1.2rem;
+      background: #1b313e;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      font-size: .96rem;
+      color: #c9f4ff;
+      line-height: 1.6;
+      border: 1px solid #2aa2cd;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .95rem;
+      margin-top: .8rem;
+    }
+    th, td {
+      padding: .6rem .5rem;
+      border-bottom: 1px dashed rgba(188,230,245,0.3);
+      text-align: left;
+    }
+    th {
+      color: #90e0cf;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    td { color: #e1fbff; }
+    tr.highlight { background: rgba(81,218,247,0.15); }
+
+    .tips-list {
+      margin: .6rem 0 0 1.2rem;
+      padding: 0;
+      list-style: disc;
+      color: #ccefff;
+      font-size: .96rem;
+    }
+    .tips-list li { margin-bottom: .35rem; line-height: 1.5; }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .sidebar {
+        width: var(--sidebar-narrow) !important;
+        min-width: var(--sidebar-narrow);
+        max-width: var(--sidebar-narrow);
+      }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.1rem; }
+      .sidebar nav .nav-link {
+        font-size: 0;
+        padding: .9rem .3rem;
+        justify-content: center;
+      }
+      .sidebar nav .nav-link .label { display: none; }
+      .sidebar-handle { pointer-events: none; }
+      .main-wrap {
+        margin-left: var(--sidebar-narrow);
+        padding: 2vw 2.5vw 3vw 2.5vw;
+      }
+      .page-title { font-size: 1.8rem; margin-top: 3rem; }
+    }
+    @media (max-width: 640px) {
+      .lang-wrap { right: .7rem; top: .7rem; }
+      .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
+      .page-title { font-size: 1.5rem; }
+      .controls { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-img" aria-hidden="true">🌊</span>
+      <span class="logo-text">Water<br>Index</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link">
+        <span aria-hidden="true">🏠</span>
+        <span class="label" data-i18n="nav_home">Home</span>
+      </a>
+      <a href="measure.html" class="nav-link">
+        <span aria-hidden="true">🧪</span>
+        <span class="label" data-i18n="nav_measure">Measure</span>
+      </a>
+      <a href="map.html" class="nav-link">
+        <span aria-hidden="true">🗺️</span>
+        <span class="label" data-i18n="nav_map">Map</span>
+      </a>
+      <a href="care.html" class="nav-link">
+        <span aria-hidden="true">💧</span>
+        <span class="label" data-i18n="nav_care">Care</span>
+      </a>
+      <a href="farmers.html" class="nav-link">
+        <span aria-hidden="true">🌾</span>
+        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+      </a>
+      <a href="chart.html" class="nav-link active">
+        <span aria-hidden="true">📊</span>
+        <span class="label" data-i18n="nav_chart">Chart</span>
+      </a>
+      <a href="learn.html" class="nav-link">
+        <span aria-hidden="true">📚</span>
+        <span class="label" data-i18n="nav_learn">Learn</span>
+      </a>
+      <a href="buykit.html" class="nav-link">
+        <span aria-hidden="true">🛒</span>
+        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+      </a>
+      <a href="about.html" class="nav-link">
+        <span aria-hidden="true">ℹ️</span>
+        <span class="label" data-i18n="nav_about">About</span>
+      </a>
+    </nav>
+    <footer class="sidebar-footer">
+      &copy; 2025 Water Health Index · Regional project
+    </footer>
+    <div class="sidebar-handle" id="sidebarHandle"></div>
+  </aside>
+
+  <!-- Lang pill -->
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">&#x25BC;</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+      <button class="lang-opt" data-lang="ta">Tamil</button>
+      <button class="lang-opt" data-lang="mr">Marathi</button>
+      <button class="lang-opt" data-lang="gu">Gujarati</button>
+      <button class="lang-opt" data-lang="pa">Punjabi</button>
+      <button class="lang-opt" data-lang="te">Telugu</button>
+      <button class="lang-opt" data-lang="kn">Kannada</button>
+      <button class="lang-opt" data-lang="ur">Urdu</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-wrap">
+    <h1 class="page-title" data-i18n="page_title">Interactive pH Chart</h1>
+    <p class="page-intro" data-i18n="page_intro">
+      Drag the pin on the gradient, type a pH, or use the quick examples to see what each pH range means and get practical guidance. Use "Open in Measure" to send this pH back to the measure page.
+    </p>
+
+    <div class="layout">
+      <!-- LEFT PANEL -->
+      <section class="panel">
+        <h2 data-i18n="left_heading">pH Gradient & Advice</h2>
+
+        <div class="gradient-wrapper">
+          <div class="gradient-label" data-i18n="grad_label">pH Gradient</div>
+          <div id="phGradient">
+            <div id="pin" class="pin"></div>
+          </div>
+          <div class="ticks">
+            <span>0</span><span>2</span><span>4</span><span>6</span><span>7</span>
+            <span>8</span><span>10</span><span>12</span><span>14</span>
+          </div>
+          <div class="hint" data-i18n="drag_hint">
+            Drag the pin (or click on the bar) to choose a pH between 0 and 14.
+          </div>
+        </div>
+
+        <div class="controls">
+          <label for="phVal" data-i18n="ph_label">pH</label>
+          <input id="phVal" type="number" step="0.01" min="0" max="14" placeholder="7.00">
+          <button id="checkBtn" class="btn-main" data-i18n="check_btn">Check</button>
+          <button id="openMeasure" class="btn-ghost" data-i18n="open_measure_btn">Open in Measure</button>
+          <div id="catBadge"></div>
+        </div>
+        <div class="hint" id="openHint" data-i18n="open_hint">
+          Will open Measure with pH 7.00 pre-filled.
+        </div>
+
+        <div id="resultBox">
+          <div class="result-row">
+            <div id="bigPH">pH 7.00</div>
+            <div id="category" class="badge cat-neutral">Neutral / Healthy</div>
+          </div>
+          <div id="phAdvice" class="result-text"></div>
+          <div class="section-title" data-i18n="impact_title">Practical impact</div>
+          <div id="impact" class="result-text"></div>
+          <div class="section-title" data-i18n="details_title">Details for this pH</div>
+          <div id="detailList" class="result-text"></div>
+          <div id="qualityTag" class="quality-tag">
+            Overall water quality (from pH alone): Good
+          </div>
+        </div>
+
+        <div class="section-title" data-i18n="quick_title">Quick examples</div>
+        <div class="quick-buttons">
+          <button class="btn-ghost ex" data-ph="4.5" data-i18n="ex_45">pH 4.5 (Acidic)</button>
+          <button class="btn-ghost ex" data-ph="6.0" data-i18n="ex_60">pH 6.0 (Slightly acidic)</button>
+          <button class="btn-ghost ex" data-ph="7.0" data-i18n="ex_70">pH 7.0 (Neutral)</button>
+          <button class="btn-ghost ex" data-ph="8.4" data-i18n="ex_84">pH 8.4 (Slight alkaline)</button>
+          <button class="btn-ghost ex" data-ph="10.0" data-i18n="ex_100">pH 10.0 (Alkaline)</button>
+        </div>
+
+        <div class="info-card" data-i18n="how_text">
+          Drag the pin anywhere on the bar: its position is mapped to the pH scale 0–14. For best accuracy when using strips, compare under bright neutral white light.
+        </div>
+      </section>
+
+      <!-- RIGHT PANEL -->
+      <aside class="panel">
+        <h2 data-i18n="ranges_title">pH ranges & guidance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="th_range">Range</th>
+              <th data-i18n="th_label">Label</th>
+              <th data-i18n="th_guide">Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-range="very-acid">
+              <td>0–3</td>
+              <td data-i18n="lbl_very_acid">Very acidic</td>
+              <td data-i18n="txt_very_acid">Corrosive; toxic to most aquatic life. Avoid contact.</td>
+            </tr>
+            <tr data-range="acid">
+              <td>4–5</td>
+              <td data-i18n="lbl_acid">Acidic</td>
+              <td data-i18n="txt_acid">Harmful to sensitive species; test for metal leaching.</td>
+            </tr>
+            <tr data-range="slight-acid">
+              <td>5.5–6.4</td>
+              <td data-i18n="lbl_slight_acid">Slightly acidic</td>
+              <td data-i18n="txt_slight_acid">Some stress for sensitive species; monitor trends.</td>
+            </tr>
+            <tr data-range="neutral">
+              <td>6.5–8.5</td>
+              <td data-i18n="lbl_neutral">Neutral / Healthy</td>
+              <td data-i18n="txt_neutral">Suitable for most aquatic life and normal recreation.</td>
+            </tr>
+            <tr data-range="slight-alk">
+              <td>8.6–9.5</td>
+              <td data-i18n="lbl_slight_alk">Slightly alkaline</td>
+              <td data-i18n="txt_slight_alk">Watch for ammonia toxicity in warm water.</td>
+            </tr>
+            <tr data-range="alk">
+              <td>9.6–11</td>
+              <td data-i18n="lbl_alk">Alkaline</td>
+              <td data-i18n="txt_alk">May harm some fish; consider filtration/dilution.</td>
+            </tr>
+            <tr data-range="very-alk">
+              <td>11–14</td>
+              <td data-i18n="lbl_very_alk">Very alkaline</td>
+              <td data-i18n="txt_very_alk">Corrosive and hazardous. Avoid use and seek expert help.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="section-title" data-i18n="tips_title">Measurement tips</div>
+        <ul class="tips-list" id="tipsList">
+          <li data-i18n="tip_1">Use a calibrated meter or fresh strips for accuracy.</li>
+          <li data-i18n="tip_2">Measure at a consistent temperature; pH changes with temperature.</li>
+          <li data-i18n="tip_3">Compare strip color under neutral white light.</li>
+          <li data-i18n="tip_4">When unsure, take multiple readings and average them.</li>
+        </ul>
+        <div class="hint" data-i18n="cam_hint">
+          Want to use the camera reader? Go to the Measure page and open the camera tool.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="chart.translations.js"></script>
+  <script>
+    // Language dropdown
+    const langBtn = document.getElementById('langCurrentBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+
+    function applyChartLanguage(langCode) {
+      if (typeof getChartStrings !== "function") return;
+      const t = getChartStrings(langCode);
+      i18nNodes.forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+      // Update open hint with current pH
+      const phText = document.getElementById('phVal').value || "7.00";
+      if (t.open_hint) {
+        document.getElementById('openHint').textContent = t.open_hint.replace('{ph}', phText);
+      }
+    }
+
+    langBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    document.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        const langCode = this.dataset.lang || 'en';
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+        applyChartLanguage(langCode);
+      });
+    });
+
+    // Sidebar drag-to-resize
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.querySelector('.main-wrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const minWidth = 210;
+      const maxWidth = 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return;
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // pH Chart Logic
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function round(v, d = 2) { return Number(v.toFixed(d)); }
+
+    const gradEl = document.getElementById('phGradient');
+    const pin = document.getElementById('pin');
+    const phInput = document.getElementById('phVal');
+    const checkBtn = document.getElementById('checkBtn');
+    const resultBox = document.getElementById('resultBox');
+    const bigPH = document.getElementById('bigPH');
+    const category = document.getElementById('category');
+    const phAdvice = document.getElementById('phAdvice');
+    const impact = document.getElementById('impact');
+    const catBadge = document.getElementById('catBadge');
+    const qualityTag = document.getElementById('qualityTag');
+    const detailList = document.getElementById('detailList');
+    let currentPH = 7.0;
+
+    function classifyPH(pH) {
+      pH = clamp(Number(pH), 0, 14);
+      if (pH < 3) return {
+        label: "Very acidic", cls: "cat-acid", cat: "poor", rangeKey: "very-acid",
+        short: "Strong mineral acid range.",
+        impact: "Rapid corrosion, extreme stress to all aquatic life.",
+        bullets: [
+          "Likely to dissolve metals from pipes and rocks.",
+          "Severe skin and eye irritation on contact.",
+          "Fish kills expected; only extremophile microbes survive."
+        ]
+      };
+      if (pH < 4.5) return {
+        label: "Very acidic", cls: "cat-acid", cat: "poor", rangeKey: "very-acid",
+        short: "Highly acidic water.",
+        impact: "Corrosive to metals and concrete; dangerous for contact.",
+        bullets: [
+          "Can strip protective slime from fish and damage gills.",
+          "Increases solubility of heavy metals like lead and copper.",
+          "Unsuitable for irrigation; damages roots and soil life."
+        ]
+      };
+      if (pH < 5.5) return {
+        label: "Acidic", cls: "cat-acid", cat: "caution", rangeKey: "acid",
+        short: "Clearly acidic conditions.",
+        impact: "Stressful for many freshwater species and crops.",
+        bullets: [
+          "Sensitive fish (trout, fry) may stop reproducing.",
+          "Corrodes metal plumbing over time; metallic taste possible.",
+          "Can stunt growth of many crops and reduce nutrient uptake."
+        ]
+      };
+      if (pH < 6.5) return {
+        label: "Slightly acidic", cls: "cat-acid", cat: "caution", rangeKey: "slight-acid",
+        short: "Mildly acidic but often still usable.",
+        impact: "Borderline for drinking and aquaculture if stable.",
+        bullets: [
+          "May dissolve small amounts of metals from old pipes.",
+          "Some aquatic plants become stressed and lose leaves.",
+          "Soils may slowly acidify; lime treatment often recommended."
+        ]
+      };
+      if (pH <= 7.5) return {
+        label: "Neutral / Healthy", cls: "cat-neutral", cat: "excellent", rangeKey: "neutral",
+        short: "Near‑ideal pH.",
+        impact: "Comfortable zone for most aquatic life and crops.",
+        bullets: [
+          "Good taste and low corrosion / scaling in plumbing.",
+          "Supports balanced microbial activity in ponds and soil.",
+          "Best range for most vegetables, grains and ornamentals."
+        ]
+      };
+      if (pH <= 8.5) return {
+        label: "Neutral / Healthy", cls: "cat-neutral", cat: "good", rangeKey: "neutral",
+        short: "Slightly on the alkaline side.",
+        impact: "Usually fine, but monitor if fertiliser use is high.",
+        bullets: [
+          "Can reduce availability of iron and some micronutrients.",
+          "Favors certain algae species in warm, nutrient‑rich water.",
+          "Still acceptable for swimming and many crops with care."
+        ]
+      };
+      if (pH <= 9.5) return {
+        label: "Slightly alkaline", cls: "cat-alk", cat: "caution", rangeKey: "slight-alk",
+        short: "Mild alkaline stress zone.",
+        impact: "Some species and seedlings become sensitive.",
+        bullets: [
+          "Ammonia in water becomes more toxic at higher pH.",
+          "Can cause scale build‑up in pipes and tanks.",
+          "Leaf chlorosis (yellowing) may appear on iron‑sensitive plants."
+        ]
+      };
+      if (pH <= 11) return {
+        label: "Alkaline", cls: "cat-alk", cat: "poor", rangeKey: "alk",
+        short: "Strong alkalinity.",
+        impact: "Irritating to skin and gills; aggressive scaling.",
+        bullets: [
+          "Most freshwater fish cannot survive long‑term.",
+          "Makes many nutrients insoluble to plants, causing deficiencies.",
+          "High risk of soap scum and mineral deposits in equipment."
+        ]
+      };
+      return {
+        label: "Very alkaline", cls: "cat-alk", cat: "poor", rangeKey: "very-alk",
+        short: "Extreme alkaline environment.",
+        impact: "Dangerous for almost all normal uses.",
+        bullets: [
+          "Can burn skin and eyes; protective gear required.",
+          "Rapidly kills aquatic life and beneficial microbes.",
+          "Requires professional neutralisation before any discharge."
+        ]
+      };
+    }
+
+    function updateTableHighlight(rangeKey) {
+      document.querySelectorAll('tbody tr').forEach(tr => {
+        if (tr.getAttribute('data-range') === rangeKey) tr.classList.add('highlight');
+        else tr.classList.remove('highlight');
+      });
+    }
+
+    function updateQualityTag(ph) {
+      const c = classifyPH(ph);
+      const catMap = {
+        excellent: "Overall water quality (from pH alone): Excellent",
+        good: "Overall water quality (from pH alone): Good",
+        caution: "Overall water quality (from pH alone): Caution",
+        poor: "Overall water quality (from pH alone): Poor"
+      };
+      qualityTag.textContent = catMap[c.cat] || catMap.poor;
+    }
+
+    function updateDetailList(ph) {
+      const c = classifyPH(ph);
+      const lines = [c.short, c.impact].concat(c.bullets);
+      detailList.innerHTML = "";
+      lines.forEach((line, idx) => {
+        const div = document.createElement('div');
+        div.style.marginBottom = ".2rem";
+        div.textContent = (idx < 2 ? "• " : "– ") + line;
+        detailList.appendChild(div);
+      });
+    }
+
+    function movePinToPH(p) {
+      const rect = gradEl.getBoundingClientRect();
+      const frac = clamp(p / 14, 0, 1);
+      const x = frac * rect.width;
+      pin.style.left = x + "px";
+    }
+
+    function showPH(val) {
+      const p = clamp(parseFloat(val), 0, 14);
+      currentPH = p;
+      const c = classifyPH(p);
+      const rounded = round(p, 2).toFixed(2);
+
+      resultBox.style.display = "block";
+      bigPH.textContent = "pH " + rounded;
+      category.textContent = c.label;
+      category.className = "badge " + c.cls;
+      phAdvice.textContent = c.impact;
+      impact.textContent = c.short;
+      catBadge.innerHTML = `<span class="badge ${c.cls}" style="font-size:.9rem">${c.label}</span>`;
+      updateTableHighlight(c.rangeKey);
+      updateQualityTag(p);
+      updateDetailList(p);
+
+      movePinToPH(p);
+      document.getElementById('openHint').textContent = "Will open Measure with pH " + rounded + " pre-filled.";
+    }
+
+    function phFromX(clientX) {
+      const rect = gradEl.getBoundingClientRect();
+      const x = clamp(clientX - rect.left, 0, rect.width);
+      return (x / rect.width) * 14;
+    }
+
+    let dragging = false;
+
+    function startDragFromClientX(clientX) {
+      dragging = true;
+      const ph = phFromX(clientX);
+      phInput.value = round(ph, 2).toFixed(2);
+      showPH(ph);
+    }
+
+    function moveDragFromClientX(clientX) {
+      if (!dragging) return;
+      const ph = phFromX(clientX);
+      phInput.value = round(ph, 2).toFixed(2);
+      showPH(ph);
+    }
+
+    gradEl.addEventListener('mousedown', e => {
+      e.preventDefault();
+      startDragFromClientX(e.clientX);
+    });
+
+    window.addEventListener('mousemove', e => {
+      moveDragFromClientX(e.clientX);
+    });
+
+    window.addEventListener('mouseup', () => {
+      dragging = false;
+    });
+
+    gradEl.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const t = e.touches[0];
+      if (!t) return;
+      startDragFromClientX(t.clientX);
+    }, { passive: false });
+
+    window.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      if (!t) return;
+      moveDragFromClientX(t.clientX);
+    }, { passive: false });
+
+    window.addEventListener('touchend', () => {
+      dragging = false;
+    });
+
+    pin.addEventListener('mousedown', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      dragging = true;
+    });
+
+    pin.addEventListener('touchstart', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      dragging = true;
+    }, { passive: false });
+
+    gradEl.addEventListener('click', e => {
+      const ph = phFromX(e.clientX);
+      phInput.value = round(ph, 2).toFixed(2);
+      showPH(ph);
+    });
+
+    checkBtn.addEventListener('click', () => {
+      const v = parseFloat(phInput.value);
+      if (isNaN(v) || v < 0 || v > 14) {
+        alert("Please enter a valid pH between 0 and 14");
+        phInput.focus();
+        return;
+      }
+      showPH(v);
+    });
+
+    document.querySelectorAll('.ex').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = parseFloat(btn.dataset.ph);
+        phInput.value = v.toFixed(2);
+        showPH(v);
+      });
+    });
+
+    document.getElementById('openMeasure').addEventListener('click', () => {
+      const v = parseFloat(phInput.value);
+      if (isNaN(v) || v < 0 || v > 14) {
+        alert("Enter a valid pH first");
+        phInput.focus();
+        return;
+      }
+      const url = "measure.html?ph=" + encodeURIComponent(round(v, 2).toFixed(2));
+      window.location.href = url;
+    });
+
+    // Initialize
+    applyChartLanguage('en');
+    phInput.value = "7.00";
+    movePinToPH(7.0);
+    showPH(7.0);
+  </script>
+</body>
+</html>
