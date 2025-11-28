@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - Learn</title>
+  <style>
+    :root {
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
+      --accent: #51daf7;
+      --active: #48e8c2;
+      --card-bg: #1d334b;
+      --shadow: 0 8px 32px #17487d40;
+    }
+    html, body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body { position: relative; }
+
+    /* Sidebar (same as home) */
+    .sidebar {
+      width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
+      background: rgba(16,38,54,0.98);
+      box-shadow: 3px 0 20px #143d5344;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 2000;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2.1rem 0 2.3rem 0;
+    }
+    .logo-img {
+      font-size: 2.7rem;
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 2px 19px #51daf7a0);
+    }
+    .logo-text {
+      color: var(--accent);
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.16;
+    }
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin-bottom: auto;
+    }
+    .nav-link {
+      color: #e3fbfa;
+      text-decoration: none;
+      padding: 0.7rem 1.15rem;
+      font-size: 1.09rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border-radius: 13px;
+      margin: 0 .4rem;
+      transition: background .12s, color .12s;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--active);
+      color: #154b68;
+    }
+    .sidebar-footer {
+      color: #9ee8ff;
+      font-size: .95rem;
+      font-style: italic;
+      padding: 1.1rem .8rem 1rem .8rem;
+      text-align: center;
+    }
+    .sidebar-handle {
+      position: absolute;
+      top: 0; right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+      pointer-events: auto;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
+    /* Main wrapper */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 2rem 3rem 3rem 3rem;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Language pill */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #2183a235;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 2.7rem;
+      right: 0;
+      background: #184c6cfa;
+      border-radius: 14px;
+      box-shadow: 0 7px 26px #155070ad;
+      padding: .4rem .55rem;
+      border: 1.4px solid #39bbe9;
+      overflow-y: auto;
+      max-height: 50vh;
+      min-width: 170px;
+      box-sizing: border-box;
+    }
+    .lang-dropdown.open { display: flex; }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: .22rem;
+      cursor: pointer;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+      font-weight: 600;
+    }
+    .lang-opt:hover,
+    .lang-opt.selected {
+      background: #51daf7;
+      color: #143d53;
+      border-color: #48e8c2;
+    }
+
+    /* Page header */
+    .page-header {
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+    }
+    .page-title {
+      font-size: 2.5rem;
+      color: #55ebca;
+      font-weight: bold;
+      margin: 0 0 .5rem 0;
+      text-shadow: 0 2px 16px #51daf784;
+    }
+    .page-subtitle {
+      font-size: 1.15rem;
+      color: #90e0cf;
+      font-style: italic;
+      margin: 0;
+    }
+
+    /* Learn sections container */
+    .learn-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Intro card */
+    .intro-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1.2px solid #107dac;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .intro-card p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #d9fbff;
+      margin: 0;
+    }
+
+    /* Category section */
+    .category-section {
+      margin-bottom: 2.5rem;
+    }
+    .category-title {
+      font-size: 1.6rem;
+      color: #48e8c2;
+      margin: 0 0 1rem 0;
+      font-weight: bold;
+    }
+
+    /* Accordion cards */
+    .accordion-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1.2px solid #107dac;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: border-color .2s;
+    }
+    .accordion-card:hover {
+      border-color: #51daf7;
+    }
+    .accordion-header {
+      padding: 1.3rem 1.8rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .accordion-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .accordion-icon {
+      font-size: 1.8rem;
+      filter: drop-shadow(0 1px 8px #51daf754);
+    }
+    .accordion-title {
+      font-size: 1.25rem;
+      color: #55ebca;
+      font-weight: bold;
+      margin: 0;
+    }
+    .accordion-arrow {
+      font-size: 1.4rem;
+      transition: transform .3s;
+      color: #51daf7;
+    }
+    .accordion-card.open .accordion-arrow {
+      transform: rotate(180deg);
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .accordion-content-inner {
+      padding: 0 1.8rem 1.5rem 1.8rem;
+      color: #d9fbff;
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+    .accordion-content-inner h4 {
+      color: #90e0cf;
+      font-size: 1.1rem;
+      margin: 1rem 0 .5rem 0;
+    }
+    .accordion-content-inner ul {
+      margin: .5rem 0 .8rem 1.5rem;
+      padding: 0;
+    }
+    .accordion-content-inner li {
+      margin-bottom: .4rem;
+    }
+    .highlight-box {
+      background: rgba(81,218,247,0.12);
+      border-left: 3px solid #48e8c2;
+      padding: .8rem 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: var(--sidebar-narrow) !important;
+        min-width: var(--sidebar-narrow);
+        max-width: var(--sidebar-narrow);
+      }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.1rem; }
+      .sidebar nav .nav-link {
+        font-size: 0;
+        padding: .9rem .3rem;
+        justify-content: center;
+      }
+      .sidebar nav .nav-link .label { display:none; }
+      .sidebar-handle { pointer-events: none; }
+
+      .main-wrap {
+        margin-left: var(--sidebar-narrow);
+        padding: 1.5rem 1.2rem 2rem 1.2rem;
+      }
+      .page-header { margin-top: 1.5rem; }
+      .page-title { font-size: 1.8rem; }
+      .page-subtitle { font-size: 1rem; }
+      .category-title { font-size: 1.35rem; }
+      .accordion-title { font-size: 1.1rem; }
+      .accordion-header { padding: 1rem 1.2rem; }
+      .accordion-content-inner { padding: 0 1.2rem 1.2rem 1.2rem; }
+    }
+    @media (max-width: 520px) {
+      .lang-wrap { right: .7rem; top: .7rem; }
+      .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
+      .page-title { font-size: 1.5rem; }
+      .accordion-icon { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-img" aria-hidden="true">🌊</span>
+      <span class="logo-text">Water<br>Index</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link">
+        <span aria-hidden="true">🏠</span>
+        <span class="label" data-i18n="nav_home">Home</span>
+      </a>
+      <a href="measure.html" class="nav-link">
+        <span aria-hidden="true">🧪</span>
+        <span class="label" data-i18n="nav_measure">Measure</span>
+      </a>
+      <a href="map.html" class="nav-link">
+        <span aria-hidden="true">🗺️</span>
+        <span class="label" data-i18n="nav_map">Map</span>
+      </a>
+      <a href="care.html" class="nav-link">
+        <span aria-hidden="true">💧</span>
+        <span class="label" data-i18n="nav_care">Care</span>
+      </a>
+      <a href="farmers.html" class="nav-link">
+        <span aria-hidden="true">🌾</span>
+        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+      </a>
+      <a href="chart.html" class="nav-link">
+        <span aria-hidden="true">📊</span>
+        <span class="label" data-i18n="nav_chart">Chart</span>
+      </a>
+      <a href="learn.html" class="nav-link active">
+        <span aria-hidden="true">📚</span>
+        <span class="label" data-i18n="nav_learn">Learn</span>
+      </a>
+      <a href="buykit.html" class="nav-link">
+        <span aria-hidden="true">🛒</span>
+        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+      </a>
+      <a href="about.html" class="nav-link">
+        <span aria-hidden="true">ℹ️</span>
+        <span class="label" data-i18n="nav_about">About</span>
+      </a>
+    </nav>
+    <footer class="sidebar-footer">
+      &copy; 2025 Water Health Index · Regional project
+    </footer>
+    <div class="sidebar-handle" id="sidebarHandle"></div>
+  </aside>
+
+  <!-- Lang pill -->
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">&#x25BC;</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+      <button class="lang-opt" data-lang="ta">Tamil</button>
+      <button class="lang-opt" data-lang="mr">Marathi</button>
+      <button class="lang-opt" data-lang="gu">Gujarati</button>
+      <button class="lang-opt" data-lang="pa">Punjabi</button>
+      <button class="lang-opt" data-lang="te">Telugu</button>
+      <button class="lang-opt" data-lang="kn">Kannada</button>
+      <button class="lang-opt" data-lang="ur">Urdu</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-wrap" id="mainWrap">
+    <header class="page-header">
+      <h1 class="page-title" data-i18n="page_title">Learn About Water Quality</h1>
+      <p class="page-subtitle" data-i18n="page_subtitle">Understanding water parameters and safe standards</p>
+    </header>
+
+    <div class="learn-container">
+      <!-- Introduction -->
+      <div class="intro-card">
+        <p data-i18n="intro_text">
+          Clean water is essential for health. Learn about the key parameters we measure, what they mean, and how to keep your water safe for drinking and farming.
+        </p>
+      </div>
+
+      <!-- Section 1: Water Parameters -->
+      <section class="category-section">
+        <h2 class="category-title" data-i18n="section1_title">Water Quality Parameters</h2>
+
+        <!-- pH Card -->
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🧪</span>
+              <h3 class="accordion-title" data-i18n="param_ph_title">pH Level</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="param_ph_desc">
+                pH measures how acidic or alkaline water is on a scale of 0 to 14. Pure water has a pH of 7 (neutral).
+              </p>
+              <div class="highlight-box">
+                <strong data-i18n="param_ph_safe">Safe Range: 6.5 - 8.5</strong>
+              </div>
+              <h4 data-i18n="param_ph_effects_title">Effects:</h4>
+              <ul>
+                <li data-i18n="param_ph_effect1">Low pH (acidic): Can corrode pipes, taste sour, cause stomach issues</li>
+                <li data-i18n="param_ph_effect2">High pH (alkaline): Bitter taste, skin irritation, scaling in pipes</li>
+                <li data-i18n="param_ph_effect3">Balanced pH: Safe for drinking and supports healthy crops</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- TDS Card -->
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">💎</span>
+              <h3 class="accordion-title" data-i18n="param_tds_title">TDS (Total Dissolved Solids)</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="param_tds_desc">
+                TDS measures all minerals, salts, and metals dissolved in water, measured in mg/L or ppm.
+              </p>
+              <div class="highlight-box">
+                <strong data-i18n="param_tds_safe">Safe Range: Below 500 mg/L (excellent), 500-1000 mg/L (acceptable)</strong>
+              </div>
+              <h4 data-i18n="param_tds_levels_title">TDS Levels:</h4>
+              <ul>
+                <li data-i18n="param_tds_level1">0-300 mg/L: Excellent for drinking</li>
+                <li data-i18n="param_tds_level2">300-600 mg/L: Good quality</li>
+                <li data-i18n="param_tds_level3">600-1000 mg/L: Fair, may need treatment</li>
+                <li data-i18n="param_tds_level4">Above 1000 mg/L: Poor, unsuitable for drinking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Turbidity Card -->
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🌫️</span>
+              <h3 class="accordion-title" data-i18n="param_turbidity_title">Turbidity</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="param_turbidity_desc">
+                Turbidity measures water clarity - how cloudy or hazy it appears due to suspended particles.
+              </p>
+              <div class="highlight-box">
+                <strong data-i18n="param_turbidity_safe">Safe Range: Below 5 NTU for drinking</strong>
+              </div>
+              <h4 data-i18n="param_turbidity_problems_title">High Turbidity Problems:</h4>
+              <ul>
+                <li data-i18n="param_turbidity_problem1">Harbors bacteria, viruses, and parasites</li>
+                <li data-i18n="param_turbidity_problem2">Makes water treatment difficult</li>
+                <li data-i18n="param_turbidity_problem3">Reduces oxygen levels for aquatic life</li>
+                <li data-i18n="param_turbidity_problem4">Can contain heavy metals</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Temperature Card -->
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🌡️</span>
+              <h3 class="accordion-title" data-i18n="param_temp_title">Temperature</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="param_temp_desc">
+                Water temperature affects chemical reactions, oxygen levels, and biological activity in water.
+              </p>
+              <div class="highlight-box">
+                <strong data-i18n="param_temp_safe">Ideal Range: 15-25°C for drinking water</strong>
+              </div>
+              <h4 data-i18n="param_temp_impacts_title">Temperature Impacts:</h4>
+              <ul>
+                <li data-i18n="param_temp_impact1">Higher temperature reduces dissolved oxygen</li>
+                <li data-i18n="param_temp_impact2">Affects taste and increases bacterial growth</li>
+                <li data-i18n="param_temp_impact3">Influences effectiveness of water treatment</li>
+                <li data-i18n="param_temp_impact4">Cold water holds more oxygen (better quality)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Health & Safety -->
+      <section class="category-section">
+        <h2 class="category-title" data-i18n="section2_title">Health & Safety</h2>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🏥</span>
+              <h3 class="accordion-title" data-i18n="health_diseases_title">Waterborne Diseases</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="health_diseases_desc">
+                Contaminated water can cause serious illnesses. Common waterborne diseases include:
+              </p>
+              <ul>
+                <li data-i18n="health_disease1">Diarrhea and dysentery (from bacteria)</li>
+                <li data-i18n="health_disease2">Cholera (from contaminated drinking water)</li>
+                <li data-i18n="health_disease3">Typhoid fever (from poor sanitation)</li>
+                <li data-i18n="health_disease4">Hepatitis A (from fecal contamination)</li>
+                <li data-i18n="health_disease5">Skin and eye infections</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">⚠️</span>
+              <h3 class="accordion-title" data-i18n="health_warning_title">Warning Signs</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="health_warning_desc">
+                Do not use water if you notice:
+              </p>
+              <ul>
+                <li data-i18n="health_warning1">Unusual color (brown, yellow, or green)</li>
+                <li data-i18n="health_warning2">Strange smell or taste</li>
+                <li data-i18n="health_warning3">Cloudy or murky appearance</li>
+                <li data-i18n="health_warning4">Visible particles or sediment</li>
+                <li data-i18n="health_warning5">Oily film on surface</li>
+              </ul>
+              <div class="highlight-box">
+                <strong data-i18n="health_warning_action">Action: Use our Measure tool to test the water and see Care tips for treatment options.</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Improvement Tips -->
+      <section class="category-section">
+        <h2 class="category-title" data-i18n="section3_title">Improving Water Quality</h2>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🔥</span>
+              <h3 class="accordion-title" data-i18n="improve_boiling_title">Boiling Water</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="improve_boiling_desc">
+                Boiling is the most effective way to kill bacteria, viruses, and parasites.
+              </p>
+              <ul>
+                <li data-i18n="improve_boiling_step1">Bring water to a rolling boil for 1 minute</li>
+                <li data-i18n="improve_boiling_step2">At high altitudes (above 2000m), boil for 3 minutes</li>
+                <li data-i18n="improve_boiling_step3">Let it cool naturally</li>
+                <li data-i18n="improve_boiling_step4">Store in clean, covered containers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🧹</span>
+              <h3 class="accordion-title" data-i18n="improve_filtration_title">Filtration Methods</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="improve_filtration_desc">
+                Simple filtration can remove particles and improve clarity:
+              </p>
+              <ul>
+                <li data-i18n="improve_filtration_method1">Cloth filter: Fold clean cloth 4-6 times</li>
+                <li data-i18n="improve_filtration_method2">Sand filter: Layers of sand, gravel, and charcoal</li>
+                <li data-i18n="improve_filtration_method3">Ceramic filters: Remove bacteria and sediment</li>
+                <li data-i18n="improve_filtration_method4">RO (Reverse Osmosis): Removes TDS and most contaminants</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">☀️</span>
+              <h3 class="accordion-title" data-i18n="improve_solar_title">Solar Disinfection (SODIS)</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="improve_solar_desc">
+                Use sunlight to purify water naturally:
+              </p>
+              <ul>
+                <li data-i18n="improve_solar_step1">Fill clear plastic bottles (PET) with water</li>
+                <li data-i18n="improve_solar_step2">Place in direct sunlight for 6 hours</li>
+                <li data-i18n="improve_solar_step3">On cloudy days, expose for 2 days</li>
+                <li data-i18n="improve_solar_step4">UV rays kill most harmful organisms</li>
+              </ul>
+              <div class="highlight-box">
+                <strong data-i18n="improve_solar_note">Note: Works best when turbidity is low (water is relatively clear)</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <div class="accordion-header">
+            <div class="accordion-title-wrap">
+              <span class="accordion-icon">🏪</span>
+              <h3 class="accordion-title" data-i18n="improve_storage_title">Safe Storage</h3>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p data-i18n="improve_storage_desc">
+                Keep treated water safe from recontamination:
+              </p>
+              <ul>
+                <li data-i18n="improve_storage_tip1">Use clean, covered containers with narrow openings</li>
+                <li data-i18n="improve_storage_tip2">Keep containers away from animals and dirt</li>
+                <li data-i18n="improve_storage_tip3">Use a clean cup or ladle to pour (don't dip hands)</li>
+                <li data-i18n="improve_storage_tip4">Clean storage containers weekly with soap</li>
+                <li data-i18n="improve_storage_tip5">Store in cool, dark place</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="learn.translations.js"></script>
+  <script>
+    // Language system
+    const langBtn = document.getElementById('langCurrentBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+
+    function applyLearnLanguage(langCode) {
+      if (typeof getLearnStrings !== "function") return;
+      const t = getLearnStrings(langCode);
+      i18nNodes.forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+    }
+
+    langBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e){
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    document.querySelectorAll('.lang-opt').forEach(btn=>{
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('selected'));
+        this.classList.add('selected');
+
+        const langCode = this.dataset.lang || 'en';
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+
+        applyLearnLanguage(langCode);
+      });
+    });
+
+    // Accordion functionality
+    document.querySelectorAll('.accordion-card').forEach(card => {
+      const header = card.querySelector('.accordion-header');
+      const content = card.querySelector('.accordion-content');
+      
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+        
+        if (isOpen) {
+          content.style.maxHeight = null;
+          card.classList.remove('open');
+        } else {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          card.classList.add('open');
+        }
+      });
+    });
+
+    // Sidebar drag functionality
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.getElementById('mainWrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return;
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // Apply default language
+    applyLearnLanguage('en');
+  </script>
+</body>
+</html>
