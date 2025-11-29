@@ -1,5 +1,4 @@
-function getLearnStrings(lang) {
-  const translations = {
+const translations = {
     en: {
       // Navigation
       nav_home: "Home",
