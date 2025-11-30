@@ -448,13 +448,7 @@
     // about.translations.js
 // Translations for Water Health Index - About page
 // Languages: en, hi, bn, ta, mr, gu, pa, te, kn, ur
-
-(function () {
-  const ABOUT_STRINGS = {
-    /* ---- existing en, hi, bn, ta, mr blocks stay exactly as before ---- */
-
-    // ---------------- GUJARATI ----------------
-    gu: {
+ gu: {
       nav_home: "હોમ",
       nav_measure: "માપો",
       nav_map: "નકશો",
