@@ -589,6 +589,15 @@
       .about-title { font-size: 1.6rem; }
     }
   </style>
+
+  <!-- EmailJS SDK and init -->
+  <script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
+  <script>
+    (function () {
+      // replace with your real public key from EmailJS dashboard
+      emailjs.init("HCIItAbrysqWp2zKw");
+    })();
+  </script>
 </head>
 <body>
   <!-- Sidebar -->
@@ -684,7 +693,6 @@
         <div class="screenshots-grid">
           <div class="shot-box">
             <span class="shot-label" data-i18n="shots_new_label">New design</span>
-            <!-- replace src paths with your real screenshots -->
             <img src="assets/new-site.png" alt="Current Water Health Index layout">
             <div data-i18n="shots_new_text">
               Modern sidebar layout with separate pages for Measure, Map, Care, Farmers Assistant, Learn and more.
@@ -967,7 +975,6 @@
       recent.forEach((item, idx) => {
         const wrap = document.createElement('div');
         wrap.className = 'bubble-item';
-        // small variation in animation
         wrap.style.animationDelay = (idx * 0.6) + 's';
 
         const meta = document.createElement('div');
@@ -995,6 +1002,19 @@
       return time;
     }
 
+    // ---- EmailJS helper ----
+    function sendSuggestionToEmailJS(payload) {
+      const params = {
+        from_name: payload.name || "Anonymous",
+        message:   payload.text
+      };
+      return emailjs.send(
+        "service_0hx6far",   // your EmailJS service ID
+        "template_3sahaak",  // your EmailJS template ID
+        params
+      );
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       const text = textInput.value.trim();
@@ -1007,23 +1027,33 @@
       const place = placeInput.value.trim();
 
       const list = loadSuggestions();
-      list.push({
+      const entry = {
         id: Date.now(),
         name,
         place,
         text,
         meta: buildMeta(name, place)
-      });
+      };
+      list.push(entry);
       saveSuggestions(list);
       renderBubbles();
 
-      // TODO: connect to EmailJS or backend later
-      // sendSuggestionToEmailJS({ name, place, text });
-
-      form.reset();
-      statusEl.textContent = 'Thank you – your suggestion has been saved.';
+      statusEl.textContent = 'Sending...';
       statusEl.style.color = '#aef6d8';
-      setTimeout(() => { statusEl.textContent = ''; }, 4000);
+
+      // send email through EmailJS
+      sendSuggestionToEmailJS(entry)
+        .then(() => {
+          form.reset();
+          statusEl.textContent = 'Thank you – your suggestion was sent and saved.';
+          statusEl.style.color = '#aef6d8';
+          setTimeout(() => { statusEl.textContent = ''; }, 5000);
+        })
+        .catch(() => {
+          statusEl.textContent =
+            'Saved locally, but email could not be sent right now. Please check your internet later.';
+          statusEl.style.color = '#ffd2a3';
+        });
     });
 
     // Initial render
