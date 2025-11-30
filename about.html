@@ -515,11 +515,11 @@
   min-height: 140px;
   max-height: 260px;
   overflow-y: auto;
-  padding: 10px 0.4rem 0 0.4rem; /* extra top padding */
+  padding: 8px 0.4rem 0 0.4rem;
 }
     .bubble-item {
   position: relative;
-  margin-bottom: .65rem;
+  margin: 8px 0 6px 0;          /* extra top margin so it's not glued to the top */
   display: inline-block;
   max-width: 100%;
   padding: .55rem .95rem .6rem .9rem;
@@ -537,17 +537,13 @@
     transform: translate3d(0, 10px, 0) scale(0.95);
     opacity: 0;
   }
-  20% {
+  40% {
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
   }
-  70% {
-    transform: translate3d(0, -8px, 0) scale(1.02);
-    opacity: 1;
-  }
   100% {
-    transform: translate3d(0, -12px, 0) scale(1);
-    opacity: 0.9;
+    transform: translate3d(0, 0, 0) scale(1);  /* no upward offset at end */
+    opacity: 1;
   }
   /* Responsive */
     @media (max-width: 900px) {
