@@ -1005,16 +1005,17 @@
 
     // ---- EmailJS helper ----
     function sendSuggestionToEmailJS(payload) {
-      const params = {
-        from_name: payload.name || "Anonymous",
-        message:   payload.text
-      };
-      return emailjs.send(
-        "service_0hx6far",   // your EmailJS service ID
-        "template_3sahaak",  // your EmailJS template ID
-        params
-      );
-    }
+  const params = {
+    from_name: payload.name || "Anonymous",
+    message:   payload.text
+  };
+
+  return emailjs.send(
+    "service_0hx6far",   // your service ID
+    "template_3sahaak",  // your template ID
+    params
+  );
+}
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
