@@ -961,35 +961,46 @@
     function saveSuggestions(list) {
       localStorage.setItem(SUGGEST_KEY, JSON.stringify(list));
     }
-
     function renderBubbles() {
-      const list = loadSuggestions();
-      bubblesList.innerHTML = '';
-      if (!list.length) {
-        bubblesEmpty.style.display = 'block';
-        return;
-      }
-      bubblesEmpty.style.display = 'none';
+  const list = loadSuggestions();
+  bubblesList.innerHTML = '';
 
-      // show newest first, limit to last 10
-      const recent = list.slice(-10).reverse();
-      recent.forEach((item, idx) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'bubble-item';
-        wrap.style.animationDelay = (idx * 0.6) + 's';
+  if (!list.length) {
+    bubblesEmpty.style.display = 'block';
+    return;
+  }
 
-        const meta = document.createElement('div');
-        meta.className = 'bubble-meta';
-        meta.textContent = item.meta;
-        const text = document.createElement('div');
-        text.className = 'bubble-text';
-        text.textContent = item.text;
+  // hard-limit what is stored
+  const MAX_SAVED = 20;
+  if (list.length > MAX_SAVED) {
+    list.splice(0, list.length - MAX_SAVED); // remove oldest
+    saveSuggestions(list);                   // write back to localStorage
+  }
 
-        wrap.appendChild(meta);
-        wrap.appendChild(text);
-        bubblesList.appendChild(wrap);
-      });
-    }
+  bubblesEmpty.style.display = 'none';
+
+  // show only latest 5 in UI (change if you want)
+  const MAX_VISIBLE = 5;
+  const recent = list.slice(-MAX_VISIBLE).reverse();
+
+  recent.forEach((item, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'bubble-item';
+    wrap.style.animationDelay = (idx * 0.6) + 's';
+
+    const meta = document.createElement('div');
+    meta.className = 'bubble-meta';
+    meta.textContent = item.meta;
+
+    const text = document.createElement('div');
+    text.className = 'bubble-text';
+    text.textContent = item.text;
+
+    wrap.appendChild(meta);
+    wrap.appendChild(text);
+    bubblesList.appendChild(wrap);
+  });
+}
 
     function buildMeta(name, place) {
       const parts = [];
