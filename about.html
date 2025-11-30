@@ -1044,23 +1044,25 @@
       statusEl.style.color = '#aef6d8';
 
       // send email through EmailJS
-   sendSuggestionToEmailJS(entry)
-  .then(() => {
-    form.reset();
-    statusEl.textContent = 'Thank you – your suggestion was sent and saved.';
-    statusEl.style.color = '#aef6d8';
-    setTimeout(() => { statusEl.textContent = ''; }, 5000);
-  })
-  .catch((err) => {
-    console.log('EMAILJS ERROR', err);
-    statusEl.textContent =
-      'Saved locally, but email could not be sent right now. Please check your internet later.';
-    statusEl.style.color = '#ffd2a3';
-  });
+            sendSuggestionToEmailJS(entry)
+        .then(() => {
+          form.reset();
+          statusEl.textContent = 'Thank you – your suggestion was sent and saved.';
+          statusEl.style.color = '#aef6d8';
+          setTimeout(() => { statusEl.textContent = ''; }, 5000);
+        })
+        .catch((err) => {
+          console.log('EMAILJS ERROR', err.status, err.text);
+          statusEl.textContent =
+            'Saved locally, but email could not be sent right now. Please check your internet later.';
+          statusEl.style.color = '#ffd2a3';
+        });
+    });
 
-    // Initial render
     applyAboutLanguage('en');
     renderBubbles();
   </script>
 </body>
 </html>
+
+  
