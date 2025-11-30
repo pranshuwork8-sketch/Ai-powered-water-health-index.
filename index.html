@@ -6,10 +6,10 @@
   <title>Water Health Index - Home</title>
   <style>
     :root {
-      --sidebar-wide: 225px;        /* default desktop width */
-      --sidebar-narrow: 64px;       /* mobile width */
-      --sidebar-min: 210px;         /* min drag width */
-      --sidebar-max: 380px;         /* max drag width */
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
       --accent: #51daf7;
       --active: #48e8c2;
       --card-bg: #1d334b;
@@ -28,9 +28,8 @@
       min-height: 100vh;
       box-sizing: border-box;
     }
-    body {
-      position: relative;
-    }
+    body { position: relative; }
+
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
@@ -42,7 +41,7 @@
       left: 0; top: 0; bottom: 0;
       display: flex;
       flex-direction: column;
-      z-index: 2000;                 /* ensure always above content */
+      z-index: 2000;
       box-sizing: border-box;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -102,7 +101,6 @@
       padding: 1.1rem .8rem 1rem .8rem;
       text-align: center;
     }
-    /* draggable handle on right edge */
     .sidebar-handle {
       position: absolute;
       top: 0;
@@ -111,7 +109,7 @@
       height: 100%;
       cursor: ew-resize;
       background: transparent;
-      pointer-events: auto;          /* desktop only; disabled in media query below */
+      pointer-events: auto;
     }
     .sidebar-handle:hover {
       background: rgba(81,218,247,0.45);
@@ -128,10 +126,11 @@
       align-items: stretch;
       justify-content: space-between;
       position: relative;
-      z-index: 1;                     /* keep under sidebar */
+      z-index: 1;
+      gap: 2rem;
     }
 
-    /* Language pill top-right */
+    /* Language pill */
     .lang-wrap {
       position: fixed;
       top: 1.3rem;
@@ -190,18 +189,22 @@
       border-color: #48e8c2;
     }
 
-    /* Welcome box (upper-left of content area) */
+    /* Welcome + suggestions row */
+    .home-top-row {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.4fr) minmax(250px, 1fr);
+      gap: 2rem;
+      align-items: flex-start;
+      margin-top: 4vw;
+    }
+
     .welcome-box {
-      max-width: 520px;
       background: var(--card-bg);
       border-radius: 26px;
       box-shadow: var(--shadow);
       border: 1.2px solid #107dac;
       padding: 2rem 2.4rem 2.1rem 2.2rem;
       box-sizing: border-box;
-      align-self: flex-start;
-      margin-top: 4vw;
-      margin-left: 1vw;
     }
     .welcome-title {
       font-size: 2.1rem;
@@ -249,11 +252,81 @@
     .welcome-btn:hover { background: #17487d; color: #b7fff6; }
     .welcome-btn.alt:hover { background: #223e5b; color: #48e8c2; }
 
-    /* Credits box (bottom-right of content area, slightly larger) */
+    /* Home suggestions card */
+    .home-suggestions {
+      background: rgba(14,34,52,0.9);
+      border-radius: 22px;
+      padding: 1.4rem 1.7rem 1.8rem 1.7rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: 0 8px 26px #050f1b8f;
+      box-sizing: border-box;
+    }
+    .home-suggestions-title {
+      font-size: 1.3rem;
+      color: #55ebca;
+      margin-bottom: .5rem;
+    }
+    .home-suggestions-note {
+      font-size: .9rem;
+      color: #a9e0ff;
+      margin-bottom: .7rem;
+    }
+    .bubbles-list {
+      position: relative;
+      min-height: 80px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 8px 0.4rem 0 0.4rem;
+    }
+    .bubble-item {
+      position: relative;
+      margin: 8px 0 6px 0;
+      display: inline-block;
+      max-width: 100%;
+      padding: .55rem .95rem .6rem .9rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.22), rgba(72,232,194,0.9));
+      color: #05222b;
+      font-size: .92rem;
+      box-shadow: 0 6px 18px #00000063;
+      transform-origin: center;
+      animation: riseBubble 6s ease-out forwards;
+    }
+    .bubble-meta {
+      font-size: .8rem;
+      opacity: .85;
+      margin-bottom: .12rem;
+    }
+    .bubble-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+    @keyframes riseBubble {
+      0% {
+        transform: translate3d(0, 10px, 0) scale(0.95);
+        opacity: 0;
+      }
+      40% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+      }
+    }
+    .empty-note {
+      font-size: .9rem;
+      color: #9ed8ff;
+      opacity: .85;
+      margin-top: .6rem;
+    }
+
+    /* Credits */
     .credits-main {
       align-self: flex-end;
       margin-bottom: 3.2vw;
-      margin-top: 3vw;
+      margin-top: 1.5rem;
       margin-right: 1.3vw;
     }
     .credits-box {
@@ -289,7 +362,7 @@
       font-size: .95rem;
     }
 
-    /* Responsive fixes */
+    /* Responsive */
     @media (max-width: 900px) {
       .sidebar {
         width: var(--sidebar-narrow) !important;
@@ -305,18 +378,15 @@
         justify-content: center;
       }
       .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle {
-        pointer-events: none;  /* IMPORTANT: let taps hit nav links on mobile */
-      }
+      .sidebar-handle { pointer-events: none; }
 
       .main-wrap {
         margin-left: var(--sidebar-narrow);
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
-      .welcome-box {
+      .home-top-row {
+        grid-template-columns: 1fr;
         margin-top: 18vw;
-        margin-left: .3rem;
-        width: calc(100% - .6rem);
       }
       .credits-main {
         align-self: center;
@@ -334,10 +404,8 @@
       .lang-wrap { right: .7rem; top: .7rem; }
       .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
       .welcome-title { font-size: 1.35rem; }
-      .welcome-box { margin-top: 22vw; }
     }
   </style>
-  
 </head>
 <body>
   <!-- Sidebar -->
@@ -411,33 +479,49 @@
 
   <!-- Main layout -->
   <div class="main-wrap" id="mainWrap">
-    <!-- Upper-left welcome box -->
-    <section class="welcome-box">
-      <h1 class="welcome-title" data-i18n="welcome_title">
-        Welcome to Water Health Index
-      </h1>
-      <p class="welcome-quote" data-i18n="welcome_quote">
-        "Protecting water today, empowering communities tomorrow."
-      </p>
-      <p class="welcome-text">
-        <span data-i18n="welcome_text_line1">
-          Use your device and simple tools to measure water quality.
-        </span><br/>
-        <span data-i18n="welcome_text_line2">
-          Save readings, view on the map, and follow up with care steps for families and farmers.
-        </span>
-      </p>
-      <div class="welcome-buttons">
-        <a href="measure.html" class="welcome-btn" data-i18n="btn_go_measure">
-          Go to Measure
-        </a>
-        <a href="care.html" class="welcome-btn alt" data-i18n="btn_see_care">
-          See care tips
-        </a>
-      </div>
+    <section class="home-top-row">
+      <!-- Welcome -->
+      <article class="welcome-box">
+        <h1 class="welcome-title" data-i18n="welcome_title">
+          Welcome to Water Health Index
+        </h1>
+        <p class="welcome-quote" data-i18n="welcome_quote">
+          "Protecting water today, empowering communities tomorrow."
+        </p>
+        <p class="welcome-text">
+          <span data-i18n="welcome_text_line1">
+            Use your device and simple tools to measure water quality.
+          </span><br/>
+          <span data-i18n="welcome_text_line2">
+            Save readings, view on the map, and follow up with care steps for families and farmers.
+          </span>
+        </p>
+        <div class="welcome-buttons">
+          <a href="measure.html" class="welcome-btn" data-i18n="btn_go_measure">
+            Go to Measure
+          </a>
+          <a href="care.html" class="welcome-btn alt" data-i18n="btn_see_care">
+            See care tips
+          </a>
+        </div>
+      </article>
+
+      <!-- Latest suggestions -->
+      <article class="home-suggestions">
+        <h2 class="home-suggestions-title" data-i18n="home_suggest_title">
+          Latest suggestions
+        </h2>
+        <p class="home-suggestions-note" data-i18n="home_suggest_note">
+          Ideas from students, families and farmers who tried the tool recently.
+        </p>
+        <div class="bubbles-list" id="homeBubblesList"></div>
+        <div class="empty-note" id="homeBubblesEmpty" data-i18n="home_suggest_empty">
+          No suggestions yet – they will appear here after someone shares an idea.
+        </div>
+      </article>
     </section>
 
-    <!-- Bottom-right credits box -->
+    <!-- Credits -->
     <section class="credits-main">
       <div class="credits-box">
         <div class="credits-title">
@@ -457,7 +541,7 @@
 
   <script src="index.translations.js"></script>
   <script>
-    // Language dropdown behaviour + i18n hook
+    // Language handling
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
     const i18nNodes = document.querySelectorAll('[data-i18n]');
@@ -497,7 +581,7 @@
       });
     });
 
-    // Sidebar drag-to-resize (desktop only)
+    // Sidebar drag
     (function() {
       const sidebar = document.getElementById('sidebar');
       const mainWrap = document.getElementById('mainWrap');
@@ -513,7 +597,7 @@
       const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
 
       handle.addEventListener('mousedown', (e) => {
-        if (window.innerWidth <= 900) return; // disable on mobile
+        if (window.innerWidth <= 900) return;
         isDragging = true;
         startX = e.clientX;
         startWidth = sidebar.offsetWidth;
@@ -544,8 +628,66 @@
       });
     })();
 
-    // Apply default language on first load
+    // Suggestions preview from localStorage
+    const SUGGEST_KEY = 'whi_suggestions_v1';
+    const homeBubblesList = document.getElementById('homeBubblesList');
+    const homeBubblesEmpty = document.getElementById('homeBubblesEmpty');
+
+    function loadSuggestions() {
+      try {
+        const raw = localStorage.getItem(SUGGEST_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function renderHomeBubbles() {
+      if (!homeBubblesList || !homeBubblesEmpty) return;
+
+      let list = loadSuggestions();
+      homeBubblesList.innerHTML = '';
+
+      if (!list.length) {
+        homeBubblesEmpty.style.display = 'block';
+        return;
+      }
+
+      // hard limit stored suggestions
+      const MAX_SAVED = 20;
+      if (list.length > MAX_SAVED) {
+        list.splice(0, list.length - MAX_SAVED);
+        localStorage.setItem(SUGGEST_KEY, JSON.stringify(list));
+      }
+
+      homeBubblesEmpty.style.display = 'none';
+
+      const MAX_VISIBLE = 3;
+      const recent = list.slice(-MAX_VISIBLE).reverse();
+
+      recent.forEach((item, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'bubble-item';
+        wrap.style.animationDelay = (idx * 0.5) + 's';
+
+        const meta = document.createElement('div');
+        meta.className = 'bubble-meta';
+        meta.textContent = item.meta;
+
+        const text = document.createElement('div');
+        text.className = 'bubble-text';
+        text.textContent = item.text;
+
+        wrap.appendChild(meta);
+        wrap.appendChild(text);
+        homeBubblesList.appendChild(wrap);
+      });
+    }
+
     applyIndexLanguage('en');
+    renderHomeBubbles();
   </script>
 </body>
 </html>
