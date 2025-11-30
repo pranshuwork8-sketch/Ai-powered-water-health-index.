@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - About</title>
+  <style>
+    :root {
+      --sidebar-wide: 225px;
+      --sidebar-narrow: 64px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
+      --accent: #51daf7;
+      --active: #48e8c2;
+      --card-bg: #1d334b;
+      --shadow: 0 8px 32px #17487d40;
+    }
+    html, body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body { position: relative; }
+
+    /* Sidebar (same as Home) */
+    .sidebar {
+      width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
+      background: rgba(16,38,54,0.98);
+      box-shadow: 3px 0 20px #143d5344;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 2000;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2.1rem 0 2.3rem 0;
+    }
+    .logo-img {
+      font-size: 2.7rem;
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 2px 19px #51daf7a0);
+    }
+    .logo-text {
+      color: var(--accent);
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.16;
+    }
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin-bottom: auto;
+    }
+    .nav-link {
+      color: #e3fbfa;
+      text-decoration: none;
+      padding: 0.7rem 1.15rem;
+      font-size: 1.09rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border-radius: 13px;
+      margin: 0 .4rem;
+      transition: background .12s, color .12s;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--active);
+      color: #154b68;
+    }
+    .sidebar-footer {
+      color: #9ee8ff;
+      font-size: .95rem;
+      font-style: italic;
+      padding: 1.1rem .8rem 1rem .8rem;
+      text-align: center;
+    }
+    .sidebar-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+      pointer-events: auto;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
+    /* Main layout */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 4vw 4vw 3vw 4vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Language pill */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #2183a235;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 2.7rem;
+      right: 0;
+      background: #184c6cfa;
+      border-radius: 14px;
+      box-shadow: 0 7px 26px #155070ad;
+      padding: .4rem .55rem;
+      border: 1.4px solid #39bbe9;
+      overflow-y: auto;
+      max-height: 50vh;
+      min-width: 170px;
+      box-sizing: border-box;
+    }
+    .lang-dropdown.open { display: flex; }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: .22rem;
+      cursor: pointer;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+      font-weight: 600;
+    }
+    .lang-opt:hover,
+    .lang-opt.selected {
+      background: #51daf7;
+      color: #143d53;
+      border-color: #48e8c2;
+    }
+
+    /* Top hero section */
+    .about-hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: stretch;
+      justify-content: space-between;
+    }
+    .about-summary {
+      flex: 1 1 320px;
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 2rem 2.3rem;
+      box-shadow: var(--shadow);
+      border: 1.2px solid #107dac;
+      box-sizing: border-box;
+    }
+    .about-title {
+      font-size: 2.1rem;
+      color: #55ebca;
+      margin: 0 0 .4rem 0;
+      text-shadow: 0 2px 16px #51daf784;
+    }
+    .about-subtitle {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: #9be6d2;
+      margin: 0 0 1.2rem 0;
+    }
+    .about-text {
+      font-size: 1.02rem;
+      line-height: 1.6;
+      color: #e3fbfa;
+    }
+
+    .screenshots-card {
+      flex: 1 1 280px;
+      background: #173144;
+      border-radius: 22px;
+      padding: 1.4rem 1.6rem 1.6rem 1.6rem;
+      box-shadow: 0 6px 26px #0b18254d;
+      border: 1.4px solid #2aa2cd;
+      box-sizing: border-box;
+    }
+    .screenshots-title {
+      font-size: 1.25rem;
+      color: #55ebca;
+      margin-bottom: .8rem;
+    }
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+    }
+    .shot-box {
+      background: #102233;
+      border-radius: 14px;
+      padding: .6rem;
+      border: 1px solid #246d96;
+      font-size: .9rem;
+      color: #d7f9ff;
+    }
+    .shot-box img {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      margin-bottom: .4rem;
+      object-fit: cover;
+    }
+    .shot-label {
+      font-weight: bold;
+      color: #55ebca;
+      margin-bottom: .15rem;
+      display: block;
+    }
+
+    /* Creator + story row */
+    .creator-story-row {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(260px, 1fr);
+      gap: 2rem;
+      align-items: start;
+    }
+    .creator-card {
+      background: #162b3d;
+      border-radius: 22px;
+      padding: 1.6rem 1.8rem;
+      box-shadow: var(--shadow);
+      border: 1.4px solid #2aa2cd;
+      text-align: center;
+    }
+    .creator-avatar {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #73e4ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      margin: 0 auto .8rem auto;
+      box-shadow: 0 0 0 3px #104766, 0 8px 20px #06121d;
+      color: #104766;
+    }
+    .creator-name {
+      font-size: 1.35rem;
+      color: #55ebca;
+      font-weight: bold;
+      margin-bottom: .25rem;
+    }
+    .creator-role {
+      font-size: 1rem;
+      color: #a9e8ff;
+      margin-bottom: .9rem;
+    }
+    .creator-text {
+      font-size: .98rem;
+      line-height: 1.55;
+      color: #e3fbfa;
+      text-align: left;
+    }
+
+    .story-timeline {
+      background: #173144;
+      border-radius: 22px;
+      padding: 1.7rem 1.9rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: 0 6px 26px #06121d82;
+      position: relative;
+      overflow: hidden;
+    }
+    .story-title {
+      font-size: 1.4rem;
+      color: #55ebca;
+      margin-bottom: .8rem;
+    }
+    .story-steps {
+      margin: 0;
+      padding-left: 1rem;
+      list-style: none;
+      border-left: 2px dashed #3ca7dd;
+    }
+    .story-step {
+      margin: 0 0 1.1rem 0;
+      padding-left: .9rem;
+      position: relative;
+    }
+    .story-step::before {
+      content: "";
+      position: absolute;
+      left: -1.08rem;
+      top: .28rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #55ebca;
+      box-shadow: 0 0 0 4px #1b3f57;
+    }
+    .story-step-title {
+      font-weight: bold;
+      color: #e9fffb;
+      margin-bottom: .18rem;
+    }
+    .story-step-text {
+      font-size: .98rem;
+      color: #d3f7ff;
+      line-height: 1.55;
+    }
+
+    /* Features + future row */
+    .features-future-row {
+      display: grid;
+      grid-template-columns: minmax(270px, 1.4fr) minmax(250px, 1fr);
+      gap: 2rem;
+      align-items: start;
+    }
+    .features-card {
+      background: #162b3d;
+      border-radius: 22px;
+      padding: 1.6rem 1.9rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: var(--shadow);
+    }
+    .features-title,
+    .future-title {
+      font-size: 1.4rem;
+      color: #55ebca;
+      margin-bottom: .7rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: .85rem .9rem;
+    }
+    .feature-pill {
+      background: #102233;
+      border-radius: 16px;
+      padding: .7rem .85rem;
+      border: 1px solid #2b7aa2;
+      font-size: .96rem;
+      color: #e3fbfa;
+    }
+    .feature-pill strong {
+      color: #9ef3d7;
+    }
+
+    .future-card {
+      background: #173144;
+      border-radius: 22px;
+      padding: 1.5rem 1.8rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: 0 6px 26px #06121d82;
+    }
+    .future-list {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: .99rem;
+      color: #e3fbfa;
+    }
+    .future-list li {
+      margin-bottom: .6rem;
+    }
+
+    /* Suggestions board */
+    .suggestions-section {
+      display: grid;
+      grid-template-columns: minmax(270px, 340px) minmax(260px, 1.4fr);
+      gap: 2rem;
+      align-items: stretch;
+      margin-bottom: 2.5rem;
+    }
+    .suggest-form-card {
+      background: #162b3d;
+      border-radius: 22px;
+      padding: 1.6rem 1.8rem 1.9rem 1.8rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: var(--shadow);
+    }
+    .suggest-title {
+      font-size: 1.35rem;
+      color: #55ebca;
+      margin-bottom: .4rem;
+    }
+    .suggest-note {
+      font-size: .93rem;
+      color: #b5f2ff;
+      margin-bottom: 1.1rem;
+    }
+    .field-label {
+      display: block;
+      font-size: .92rem;
+      color: #b8f1ff;
+      margin-bottom: .22rem;
+    }
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 12px;
+      border: 1.2px solid #2c8bb5;
+      background: #0f2333;
+      color: #eafcff;
+      padding: .55rem .7rem;
+      font-family: inherit;
+      font-size: .95rem;
+      margin-bottom: .7rem;
+    }
+    .field-textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .suggest-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      padding: .6rem 1.3rem;
+      border-radius: 999px;
+      background: #48e8c2;
+      border: 1.2px solid #51daf7;
+      color: #153349;
+      font-weight: bold;
+      font-size: .98rem;
+      cursor: pointer;
+      box-shadow: 0 3px 14px #0000004d;
+      margin-top: .4rem;
+    }
+    .suggest-btn:hover {
+      background: #17487d;
+      color: #c6fff6;
+    }
+    .suggest-status {
+      font-size: .9rem;
+      margin-top: .6rem;
+      color: #aef6d8;
+      min-height: 1.1rem;
+    }
+
+    .suggest-bubbles-card {
+      background: rgba(14,34,52,0.9);
+      border-radius: 22px;
+      padding: 1.6rem 1.8rem 1.9rem 1.8rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: 0 8px 30px #050f1b8f;
+      position: relative;
+      overflow: hidden;
+    }
+    .bubbles-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .6rem;
+      gap: .7rem;
+    }
+    .bubbles-title {
+      font-size: 1.25rem;
+      color: #55ebca;
+    }
+    .bubbles-hint {
+      font-size: .86rem;
+      color: #a9e0ff;
+    }
+    .bubbles-list {
+      position: relative;
+      min-height: 140px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: .4rem;
+    }
+    .bubble-item {
+      position: relative;
+      margin-bottom: .65rem;
+      display: inline-block;
+      max-width: 100%;
+      padding: .55rem .95rem .6rem .9rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.22), rgba(72,232,194,0.9));
+      color: #05222b;
+      font-size: .92rem;
+      box-shadow: 0 6px 18px #00000063;
+      animation: floatBubble 8s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .bubble-meta {
+      font-size: .8rem;
+      opacity: .85;
+      margin-bottom: .12rem;
+    }
+    .bubble-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+    @keyframes floatBubble {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(4px,-6px,0) scale(1.03); }
+      100% { transform: translate3d(0,0,0) scale(1); }
+    }
+    .empty-note {
+      font-size: .9rem;
+      color: #9ed8ff;
+      opacity: .85;
+      margin-top: .6rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: var(--sidebar-narrow) !important;
+        min-width: var(--sidebar-narrow);
+        max-width: var(--sidebar-narrow);
+      }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.1rem; }
+      .sidebar nav .nav-link {
+        font-size: 0;
+        padding: .9rem .3rem;
+        justify-content: center;
+      }
+      .sidebar nav .nav-link .label { display:none; }
+      .sidebar-handle { pointer-events: none; }
+
+      .main-wrap {
+        margin-left: var(--sidebar-narrow);
+        padding: 4vw 2.2vw 3vw 2.2vw;
+      }
+      .about-hero {
+        flex-direction: column;
+      }
+      .creator-story-row,
+      .features-future-row,
+      .suggestions-section {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 520px) {
+      .lang-wrap { right: .7rem; top: .7rem; }
+      .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
+      .about-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-img" aria-hidden="true">🌊</span>
+      <span class="logo-text">Water<br>Index</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link">
+        <span aria-hidden="true">🏠</span>
+        <span class="label" data-i18n="nav_home">Home</span>
+      </a>
+      <a href="measure.html" class="nav-link">
+        <span aria-hidden="true">🧪</span>
+        <span class="label" data-i18n="nav_measure">Measure</span>
+      </a>
+      <a href="map.html" class="nav-link">
+        <span aria-hidden="true">🗺️</span>
+        <span class="label" data-i18n="nav_map">Map</span>
+      </a>
+      <a href="care.html" class="nav-link">
+        <span aria-hidden="true">💧</span>
+        <span class="label" data-i18n="nav_care">Care</span>
+      </a>
+      <a href="farmers.html" class="nav-link">
+        <span aria-hidden="true">🌾</span>
+        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+      </a>
+      <a href="chart.html" class="nav-link">
+        <span aria-hidden="true">📊</span>
+        <span class="label" data-i18n="nav_chart">Chart</span>
+      </a>
+      <a href="learn.html" class="nav-link">
+        <span aria-hidden="true">📚</span>
+        <span class="label" data-i18n="nav_learn">Learn</span>
+      </a>
+      <a href="buykit.html" class="nav-link">
+        <span aria-hidden="true">🛒</span>
+        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+      </a>
+      <a href="about.html" class="nav-link active">
+        <span aria-hidden="true">ℹ️</span>
+        <span class="label" data-i18n="nav_about">About</span>
+      </a>
+    </nav>
+    <footer class="sidebar-footer">
+      &copy; 2025 Water Health Index · Regional project
+    </footer>
+    <div class="sidebar-handle" id="sidebarHandle"></div>
+  </aside>
+
+  <!-- Language pill -->
+  <div class="lang-wrap">
+    <button class="lang-current" id="langCurrentBtn">
+      English <span style="font-size:1rem;">&#x25BC;</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="hi">Hindi</button>
+      <button class="lang-opt" data-lang="bn">Bengali</button>
+      <button class="lang-opt" data-lang="ta">Tamil</button>
+      <button class="lang-opt" data-lang="mr">Marathi</button>
+      <button class="lang-opt" data-lang="gu">Gujarati</button>
+      <button class="lang-opt" data-lang="pa">Punjabi</button>
+      <button class="lang-opt" data-lang="te">Telugu</button>
+      <button class="lang-opt" data-lang="kn">Kannada</button>
+      <button class="lang-opt" data-lang="ur">Urdu</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="main-wrap" id="mainWrap">
+    <!-- Hero + screenshots -->
+    <section class="about-hero">
+      <article class="about-summary">
+        <h1 class="about-title" data-i18n="about_title">About Water Health Index</h1>
+        <p class="about-subtitle" data-i18n="about_subtitle">
+          Because every drop deserves balance – this project turns simple readings into clear health scores and care steps.
+        </p>
+        <p class="about-text">
+          <span data-i18n="about_intro_1">
+            Water Health Index is a student-built tool that helps families, students, and farmers quickly check if their water is safe to drink or use on crops.
+          </span><br><br>
+          <span data-i18n="about_intro_2">
+            Using only simple test strips or a small kit, the site converts pH, turbidity, temperature and TDS into a 0–100 score, shows it on a map, and explains what to do next in friendly language.
+          </span>
+        </p>
+      </article>
+
+      <aside class="screenshots-card">
+        <h2 class="screenshots-title" data-i18n="shots_title">From first idea to full app</h2>
+        <div class="screenshots-grid">
+          <div class="shot-box">
+            <span class="shot-label" data-i18n="shots_new_label">New design</span>
+            <!-- replace src paths with your real screenshots -->
+            <img src="assets/new-site.png" alt="Current Water Health Index layout">
+            <div data-i18n="shots_new_text">
+              Modern sidebar layout with separate pages for Measure, Map, Care, Farmers Assistant, Learn and more.
+            </div>
+          </div>
+          <div class="shot-box">
+            <span class="shot-label" data-i18n="shots_old_label">First prototype</span>
+            <img src="assets/old-site.png" alt="Old Water Index prototype">
+            <div data-i18n="shots_old_text">
+              The original single-page version that proved students in small towns could also track water health.
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Creator + story -->
+    <section class="creator-story-row">
+      <article class="creator-card">
+        <div class="creator-avatar" aria-hidden="true">👤</div>
+        <div class="creator-name" data-i18n="creator_name">Pranshu</div>
+        <div class="creator-role" data-i18n="creator_role">
+          Student developer · Water & AI enthusiast
+        </div>
+        <p class="creator-text" data-i18n="creator_text">
+          This project started as a school science idea and grew into a regional web app to help villages understand what is inside their water, not just how clear it looks. At 15, the goal was to build something that even non-technical families could open on a shared phone and follow step by step.
+        </p>
+      </article>
+
+      <article class="story-timeline">
+        <h2 class="story-title" data-i18n="story_title">How this project grew</h2>
+        <ul class="story-steps">
+          <li class="story-step">
+            <div class="story-step-title" data-i18n="story_step1_title">Idea: one simple score</div>
+            <div class="story-step-text" data-i18n="story_step1_text">
+              The first goal was to turn confusing lab-style readings into one Water Health Index number between 0 and 100 with Good / Moderate / Poor bands.
+            </div>
+          </li>
+          <li class="story-step">
+            <div class="story-step-title" data-i18n="story_step2_title">Prototype for school & fair</div>
+            <div class="story-step-text" data-i18n="story_step2_text">
+              A basic website was built and tested in school, then improved for regional project competitions with clearer UI and more safety tips.
+            </div>
+          </li>
+          <li class="story-step">
+            <div class="story-step-title" data-i18n="story_step3_title">Farmers & village focus</div>
+            <div class="story-step-text" data-i18n="story_step3_text">
+              New pages added a farmers assistant, crop-friendly tips and a map so readings from different wells and ponds can be compared across a region.
+            </div>
+          </li>
+          <li class="story-step">
+            <div class="story-step-title" data-i18n="story_step4_title">AI guidance and future app</div>
+            <div class="story-step-text" data-i18n="story_step4_text">
+              The next step is an offline-ready app with smarter AI that explains results in local languages, suggests actions, and connects to testers online.
+            </div>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Features + future -->
+    <section class="features-future-row">
+      <article class="features-card">
+        <h2 class="features-title" data-i18n="features_title">What this website offers</h2>
+        <div class="features-grid">
+          <div class="feature-pill" data-i18n="feature_measure">
+            <strong>Measure:</strong> Enter basic readings or use camera help to calculate a 0–100 water score.
+          </div>
+          <div class="feature-pill" data-i18n="feature_map">
+            <strong>Map:</strong> See all saved wells, taps and ponds on a live map with coloured health bands.
+          </div>
+          <div class="feature-pill" data-i18n="feature_care">
+            <strong>Care:</strong> Get step-by-step actions, boiling or filtration advice, and reminders for follow-up tests.
+          </div>
+          <div class="feature-pill" data-i18n="feature_farmers">
+            <strong>Farmers Assistant:</strong> Connect water quality to crop choices, soil health and irrigation tips.
+          </div>
+          <div class="feature-pill" data-i18n="feature_chart">
+            <strong>Chart:</strong> Explore an interactive pH gradient and understand what different values mean.
+          </div>
+          <div class="feature-pill" data-i18n="feature_learn">
+            <strong>Learn:</strong> Browse an in-depth guide to water parameters, health impacts and safe standards.
+          </div>
+          <div class="feature-pill" data-i18n="feature_buykit">
+            <strong>Buy Kit:</strong> See simple test kits and ideas for low-cost community water testing corners.
+          </div>
+        </div>
+      </article>
+
+      <article class="future-card">
+        <h2 class="future-title" data-i18n="future_title">Future plans</h2>
+        <ul class="future-list">
+          <li data-i18n="future_item_1">
+            Turn this site into an offline-friendly app so readings and advice work even with weak or no internet.
+          </li>
+          <li data-i18n="future_item_2">
+            Improve the AI helper so it can answer questions in multiple Indian languages using local examples.
+          </li>
+          <li data-i18n="future_item_3">
+            Invite real testers through Reddit, Twitter, and student communities to share feedback and ideas.
+          </li>
+          <li data-i18n="future_item_4">
+            Open the project to contributors on GitHub so more students can help improve maps, crops and care tips.
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Suggestions -->
+    <section class="suggestions-section" id="suggestionsSection">
+      <article class="suggest-form-card">
+        <h2 class="suggest-title" data-i18n="suggest_title">Share a suggestion</h2>
+        <p class="suggest-note" data-i18n="suggest_note">
+          Your feedback helps improve this tool for students, families and farmers. You can write in simple English or any local language.
+        </p>
+
+        <form id="suggestForm">
+          <label class="field-label" for="suggestName" data-i18n="suggest_name_label">Name (optional)</label>
+          <input id="suggestName" class="field-input" type="text" autocomplete="name"/>
+
+          <label class="field-label" for="suggestPlace" data-i18n="suggest_place_label">
+            School / village / town (optional)
+          </label>
+          <input id="suggestPlace" class="field-input" type="text"/>
+
+          <label class="field-label" for="suggestText" data-i18n="suggest_text_label">
+            Your suggestion or idea
+          </label>
+          <textarea id="suggestText" class="field-textarea" required></textarea>
+
+          <button type="submit" class="suggest-btn" id="suggestBtn">
+            <span aria-hidden="true">📨</span>
+            <span data-i18n="suggest_btn_text">Send suggestion</span>
+          </button>
+          <div class="suggest-status" id="suggestStatus"></div>
+        </form>
+      </article>
+
+      <aside class="suggest-bubbles-card">
+        <div class="bubbles-title-row">
+          <h2 class="bubbles-title" data-i18n="bubbles_title">Suggestions board</h2>
+          <div class="bubbles-hint" data-i18n="bubbles_hint">
+            Recent ideas appear here as floating bubbles. A summary will also show on the Home page.
+          </div>
+        </div>
+        <div class="bubbles-list" id="bubblesList">
+          <!-- bubbles inserted by JS -->
+        </div>
+        <div class="empty-note" id="bubblesEmpty" data-i18n="bubbles_empty">
+          No suggestions yet – be the first to share an idea.
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- translations + scripts -->
+  <script src="about.translations.js"></script>
+  <script>
+    // ---- Language handling (same pattern as Home) ----
+    const langBtn = document.getElementById('langCurrentBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+    let currentLang = 'en';
+
+    function applyAboutLanguage(langCode) {
+      if (typeof getAboutStrings !== 'function') return;
+      const t = getAboutStrings(langCode);
+      i18nNodes.forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+      currentLang = langCode;
+    }
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+    document.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        const langCode = this.dataset.lang || 'en';
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+        applyAboutLanguage(langCode);
+      });
+    });
+
+    // ---- Sidebar drag (desktop) ----
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.getElementById('mainWrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return;
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // ---- Suggestions: localStorage + bubbles ----
+    const SUGGEST_KEY = 'whi_suggestions_v1'; // shared key with Home page
+    const form = document.getElementById('suggestForm');
+    const nameInput = document.getElementById('suggestName');
+    const placeInput = document.getElementById('suggestPlace');
+    const textInput = document.getElementById('suggestText');
+    const statusEl = document.getElementById('suggestStatus');
+    const bubblesList = document.getElementById('bubblesList');
+    const bubblesEmpty = document.getElementById('bubblesEmpty');
+
+    function loadSuggestions() {
+      try {
+        const raw = localStorage.getItem(SUGGEST_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveSuggestions(list) {
+      localStorage.setItem(SUGGEST_KEY, JSON.stringify(list));
+    }
+
+    function renderBubbles() {
+      const list = loadSuggestions();
+      bubblesList.innerHTML = '';
+      if (!list.length) {
+        bubblesEmpty.style.display = 'block';
+        return;
+      }
+      bubblesEmpty.style.display = 'none';
+
+      // show newest first, limit to last 10
+      const recent = list.slice(-10).reverse();
+      recent.forEach((item, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'bubble-item';
+        // small variation in animation
+        wrap.style.animationDelay = (idx * 0.6) + 's';
+
+        const meta = document.createElement('div');
+        meta.className = 'bubble-meta';
+        meta.textContent = item.meta;
+        const text = document.createElement('div');
+        text.className = 'bubble-text';
+        text.textContent = item.text;
+
+        wrap.appendChild(meta);
+        wrap.appendChild(text);
+        bubblesList.appendChild(wrap);
+      });
+    }
+
+    function buildMeta(name, place) {
+      const parts = [];
+      if (name) parts.push(name);
+      if (place) parts.push(place);
+      const now = new Date();
+      const time = now.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      if (parts.length) {
+        return parts.join(' · ') + ' — ' + time;
+      }
+      return time;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const text = textInput.value.trim();
+      if (!text) {
+        statusEl.textContent = 'Please write a suggestion before sending.';
+        statusEl.style.color = '#ffd2a3';
+        return;
+      }
+      const name = nameInput.value.trim();
+      const place = placeInput.value.trim();
+
+      const list = loadSuggestions();
+      list.push({
+        id: Date.now(),
+        name,
+        place,
+        text,
+        meta: buildMeta(name, place)
+      });
+      saveSuggestions(list);
+      renderBubbles();
+
+      // TODO: connect to EmailJS or backend later
+      // sendSuggestionToEmailJS({ name, place, text });
+
+      form.reset();
+      statusEl.textContent = 'Thank you – your suggestion has been saved.';
+      statusEl.style.color = '#aef6d8';
+      setTimeout(() => { statusEl.textContent = ''; }, 4000);
+    });
+
+    // Initial render
+    applyAboutLanguage('en');
+    renderBubbles();
+  </script>
+</body>
+</html>
