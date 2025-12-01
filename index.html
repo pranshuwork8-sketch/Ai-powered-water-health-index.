@@ -937,17 +937,23 @@
         homeBubblesList.appendChild(wrap);
       });
     }
-    // Intro overlay timing (fade while ripples grow)
-    (function(){
-      const overlay = document.getElementById('introOverlay');
-      const suggCard = document.getElementById('homeSuggestionsCard');
-      if (!overlay) return;
+    // Intro overlay timing (faster fade + still visible ripples)
+(function(){
+  const overlay = document.getElementById('introOverlay');
+  const suggCard = document.getElementById('homeSuggestionsCard');
+  if (!overlay) return;
 
-      // start fading after outer rings are already growing
-      setTimeout(() => {
-        overlay.classList.add('hide');
-      }, 3200);
+  // start fade a bit earlier
+  setTimeout(() => {
+    overlay.classList.add('hide');
+  }, 2200);   // 2.2s after load
 
+  // remove after fade completes
+  setTimeout(() => {
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    if (suggCard) suggCard.classList.add('float-active');
+  }, 3000);   // 3.0s total
+})();
       // remove from DOM after fade completes
       setTimeout(() => {
         if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
