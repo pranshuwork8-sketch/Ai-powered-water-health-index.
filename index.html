@@ -86,14 +86,19 @@
       pointer-events: none;
       animation: logoSplash 0.7s ease-out 1.4s forwards;
     }
-    .intro-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 2px solid rgba(173,236,255,0.95);
-      box-shadow: 0 0 24px rgba(81,218,247,0.9);
-      opacity: 0;
-      pointer-events: none;
-    }
+     .intro-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(173,236,255,0.95);
+  box-shadow: 0 0 24px rgba(81,218,247,0.9);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+  pointer-events: none;
+}
     /* 10 inner ripples */
     .intro-ring.r1  { animation: introRingMedium 1.4s ease-out 1.45s forwards; }
     .intro-ring.r2  { animation: introRingMedium 1.45s ease-out 1.52s forwards; }
@@ -634,26 +639,26 @@
     </div>
     <div class="intro-splash"></div>
     <!-- 20 ripples from center -->
-    <div class="intro-ring r1"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r2"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r3"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r4"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r5"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r6"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r7"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r8"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r9"  style="top:50%;left:50%;"></div>
-    <div class="intro-ring r10" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r11" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r12" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r13" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r14" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r15" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r16" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r17" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r18" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r19" style="top:50%;left:50%;"></div>
-    <div class="intro-ring r20" style="top:50%;left:50%;"></div>
+    <div class="intro-ring r1"></div>
+    <div class="intro-ring r2"></div>
+    <div class="intro-ring r3"></div>
+    <div class="intro-ring r4"></div>
+    <div class="intro-ring r5"></div>
+    <div class="intro-ring r6"></div>
+    <div class="intro-ring r7"></div>
+    <div class="intro-ring r8"></div>
+    <div class="intro-ring r9"></div>
+    <div class="intro-ring r10"></div>
+    <div class="intro-ring r11"></div>
+    <div class="intro-ring r12"></div>
+    <div class="intro-ring r13"></div>
+    <div class="intro-ring r14"></div>
+    <div class="intro-ring r1>"></div>
+    <div class="intro-ring r16"></div>
+    <div class="intro-ring r17"></div>
+    <div class="intro-ring r18"></div>
+    <div class="intro-ring r19"></div>
+    <div class="intro-ring r20"></div>
   </div>
 
   <!-- Mobile top bar -->
@@ -932,21 +937,22 @@
         homeBubblesList.appendChild(wrap);
       });
     }
-
     // Intro overlay timing (fade while ripples grow)
     (function(){
       const overlay = document.getElementById('introOverlay');
       const suggCard = document.getElementById('homeSuggestionsCard');
       if (!overlay) return;
 
+      // start fading after outer rings are already growing
       setTimeout(() => {
         overlay.classList.add('hide');
-      }, 2900);
+      }, 3200);
 
+      // remove from DOM after fade completes
       setTimeout(() => {
         if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
         if (suggCard) suggCard.classList.add('float-active');
-      }, 3900);
+      }, 4300);
     })();
 
     // mobile menu toggle
