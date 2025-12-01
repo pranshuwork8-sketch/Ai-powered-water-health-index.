@@ -7,7 +7,6 @@
   <style>
     :root {
       --sidebar-wide: 225px;
-      --sidebar-narrow: 64px;
       --sidebar-min: 210px;
       --sidebar-max: 380px;
       --accent: #51daf7;
@@ -29,7 +28,12 @@
       box-sizing: border-box;
     }
     body { position: relative; }
-    
+
+    .layout-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
@@ -114,6 +118,9 @@
       background: rgba(81,218,247,0.45);
     }
 
+    /* Mobile top bar (hidden on desktop) */
+    .mobile-topbar { display: none; }
+
     /* Main wrapper */
     .main-wrap {
       margin-left: var(--sidebar-wide);
@@ -122,6 +129,9 @@
       box-sizing: border-box;
       position: relative;
       z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Language pill */
@@ -446,30 +456,72 @@
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
     }
+
     @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
+      .mobile-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(10,30,46,0.98);
+        display: flex;
+        align-items: center;
+        padding: 0 .8rem;
+        z-index: 2100;
+        box-shadow: 0 2px 12px #00000055;
       }
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #51daf7;
+        background: #153044;
+        color: #e3fbfa;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: .7rem;
+      }
+      .mobile-topbar-title {
+        color: #9ee8ff;
+        font-weight: bold;
+        font-size: 1.05rem;
+      }
+
+      .sidebar {
+        top: 52px;
+        bottom: 0;
+        width: 220px;
+        max-width: 80vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease-out;
+        position: fixed;
+      }
+      .sidebar.open { transform: translateX(0); }
       .sidebar-header { margin: 1rem 0; }
       .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
+      .logo-text { font-size: 1.3rem; }
       .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
+        font-size: 1rem;
+        padding: .7rem .9rem;
+        justify-content: flex-start;
       }
-      .sidebar nav .nav-link .label { display: none; }
-      .sidebar-handle { pointer-events: none; }
+      .sidebar nav .nav-link .label { display: inline; }
+      .sidebar-handle { display: none; }
+
+      .layout-wrap { margin-top: 52px; }
       .main-wrap {
-        margin-left: var(--sidebar-narrow);
+        margin-left: 0;
         padding: 2vw 2.5vw 3vw 2.5vw;
       }
-      .page-title { font-size: 1.8rem; margin-top: 3rem; }
+      .page-title { font-size: 1.8rem; margin-top: 2.2rem; }
+      .lang-wrap { right: .8rem; top: 60px; }
     }
+
     @media (max-width: 640px) {
-      .lang-wrap { right: .7rem; top: .7rem; }
       .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
       .page-title { font-size: 1.5rem; }
       .controls { flex-direction: column; align-items: flex-start; }
@@ -477,202 +529,210 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="logo-img" aria-hidden="true">🌊</span>
-      <span class="logo-text">Water<br>Index</span>
-    </div>
-    <nav>
-      <a href="index.html" class="nav-link">
-        <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
-      </a>
-      <a href="measure.html" class="nav-link">
-        <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
-      </a>
-      <a href="map.html" class="nav-link">
-        <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
-      </a>
-      <a href="care.html" class="nav-link">
-        <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
-      </a>
-      <a href="farmers.html" class="nav-link">
-        <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
-      </a>
-      <a href="chart.html" class="nav-link active">
-        <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
-      </a>
-      <a href="learn.html" class="nav-link">
-        <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
-      </a>
-      <a href="buykit.html" class="nav-link">
-        <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
-      </a>
-      <a href="about.html" class="nav-link">
-        <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
-      </a>
-    </nav>
-    <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · Regional project
-    </footer>
-    <div class="sidebar-handle" id="sidebarHandle"></div>
-  </aside>
+  <!-- Mobile top bar -->
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-topbar-title">Water Index</div>
+  </header>
 
-  <!-- Lang pill -->
-  <div class="lang-wrap">
-    <button class="lang-current" id="langCurrentBtn">
-      English <span style="font-size:1rem;">&#x25BC;</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt" data-lang="en">English</button>
-      <button class="lang-opt" data-lang="hi">Hindi</button>
-      <button class="lang-opt" data-lang="bn">Bengali</button>
-      <button class="lang-opt" data-lang="ta">Tamil</button>
-      <button class="lang-opt" data-lang="mr">Marathi</button>
-      <button class="lang-opt" data-lang="gu">Gujarati</button>
-      <button class="lang-opt" data-lang="pa">Punjabi</button>
-      <button class="lang-opt" data-lang="te">Telugu</button>
-      <button class="lang-opt" data-lang="kn">Kannada</button>
-      <button class="lang-opt" data-lang="ur">Urdu</button>
-    </div>
-  </div>
+  <div class="layout-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-img" aria-hidden="true">🌊</span>
+        <span class="logo-text">Water<br>Index</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">
+          <span aria-hidden="true">🏠</span>
+          <span class="label" data-i18n="nav_home">Home</span>
+        </a>
+        <a href="measure.html" class="nav-link">
+          <span aria-hidden="true">🧪</span>
+          <span class="label" data-i18n="nav_measure">Measure</span>
+        </a>
+        <a href="map.html" class="nav-link">
+          <span aria-hidden="true">🗺️</span>
+          <span class="label" data-i18n="nav_map">Map</span>
+        </a>
+        <a href="care.html" class="nav-link">
+          <span aria-hidden="true">💧</span>
+          <span class="label" data-i18n="nav_care">Care</span>
+        </a>
+        <a href="farmers.html" class="nav-link">
+          <span aria-hidden="true">🌾</span>
+          <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        </a>
+        <a href="chart.html" class="nav-link active">
+          <span aria-hidden="true">📊</span>
+          <span class="label" data-i18n="nav_chart">Chart</span>
+        </a>
+        <a href="learn.html" class="nav-link">
+          <span aria-hidden="true">📚</span>
+          <span class="label" data-i18n="nav_learn">Learn</span>
+        </a>
+        <a href="buykit.html" class="nav-link">
+          <span aria-hidden="true">🛒</span>
+          <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        </a>
+        <a href="about.html" class="nav-link">
+          <span aria-hidden="true">ℹ️</span>
+          <span class="label" data-i18n="nav_about">About</span>
+        </a>
+      </nav>
+      <footer class="sidebar-footer">
+        &copy; 2025 Water Health Index · Regional project
+      </footer>
+      <div class="sidebar-handle" id="sidebarHandle"></div>
+    </aside>
 
-  <!-- Main content -->
-  <div class="main-wrap">
-    <h1 class="page-title" data-i18n="page_title">Interactive pH Chart</h1>
-    <p class="page-intro" data-i18n="page_intro">
-      Drag the pin on the gradient, type a pH, or use the quick examples to see what each pH range means and get practical guidance. Use "Open in Measure" to send this pH back to the measure page.
-    </p>
+    <!-- Main content -->
+    <div class="main-wrap" id="mainWrap">
+      <!-- Lang pill -->
+      <div class="lang-wrap">
+        <button class="lang-current" id="langCurrentBtn">
+          English <span style="font-size:1rem;">&#x25BC;</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-opt" data-lang="en">English</button>
+          <button class="lang-opt" data-lang="hi">Hindi</button>
+          <button class="lang-opt" data-lang="bn">Bengali</button>
+          <button class="lang-opt" data-lang="ta">Tamil</button>
+          <button class="lang-opt" data-lang="mr">Marathi</button>
+          <button class="lang-opt" data-lang="gu">Gujarati</button>
+          <button class="lang-opt" data-lang="pa">Punjabi</button>
+          <button class="lang-opt" data-lang="te">Telugu</button>
+          <button class="lang-opt" data-lang="kn">Kannada</button>
+          <button class="lang-opt" data-lang="ur">Urdu</button>
+        </div>
+      </div>
 
-    <div class="layout">
-      <!-- LEFT PANEL -->
-      <section class="panel">
-        <h2 data-i18n="left_heading">pH Gradient & Advice</h2>
+      <h1 class="page-title" data-i18n="page_title">Interactive pH Chart</h1>
+      <p class="page-intro" data-i18n="page_intro">
+        Drag the pin on the gradient, type a pH, or use the quick examples to see what each pH range means and get practical guidance. Use "Open in Measure" to send this pH back to the measure page.
+      </p>
 
-        <div class="gradient-wrapper">
-          <div class="gradient-label" data-i18n="grad_label">pH Gradient</div>
-          <div id="phGradient">
-            <div id="pin" class="pin"></div>
+      <div class="layout">
+        <!-- LEFT PANEL -->
+        <section class="panel">
+          <h2 data-i18n="left_heading">pH Gradient & Advice</h2>
+
+          <div class="gradient-wrapper">
+            <div class="gradient-label" data-i18n="grad_label">pH Gradient</div>
+            <div id="phGradient">
+              <div id="pin" class="pin"></div>
+            </div>
+            <div class="ticks">
+              <span>0</span><span>2</span><span>4</span><span>6</span><span>7</span>
+              <span>8</span><span>10</span><span>12</span><span>14</span>
+            </div>
+            <div class="hint" data-i18n="drag_hint">
+              Drag the pin (or click on the bar) to choose a pH between 0 and 14.
+            </div>
           </div>
-          <div class="ticks">
-            <span>0</span><span>2</span><span>4</span><span>6</span><span>7</span>
-            <span>8</span><span>10</span><span>12</span><span>14</span>
+
+          <div class="controls">
+            <label for="phVal" data-i18n="ph_label">pH</label>
+            <input id="phVal" type="number" step="0.01" min="0" max="14" placeholder="7.00">
+            <button id="checkBtn" class="btn-main" data-i18n="check_btn">Check</button>
+            <button id="openMeasure" class="btn-ghost" data-i18n="open_measure_btn">Open in Measure</button>
+            <div id="catBadge"></div>
           </div>
-          <div class="hint" data-i18n="drag_hint">
-            Drag the pin (or click on the bar) to choose a pH between 0 and 14.
+          <div class="hint" id="openHint" data-i18n="open_hint">
+            Will open Measure with pH 7.00 pre-filled.
           </div>
-        </div>
 
-        <div class="controls">
-          <label for="phVal" data-i18n="ph_label">pH</label>
-          <input id="phVal" type="number" step="0.01" min="0" max="14" placeholder="7.00">
-          <button id="checkBtn" class="btn-main" data-i18n="check_btn">Check</button>
-          <button id="openMeasure" class="btn-ghost" data-i18n="open_measure_btn">Open in Measure</button>
-          <div id="catBadge"></div>
-        </div>
-        <div class="hint" id="openHint" data-i18n="open_hint">
-          Will open Measure with pH 7.00 pre-filled.
-        </div>
-
-        <div id="resultBox">
-          <div class="result-row">
-            <div id="bigPH">pH 7.00</div>
-            <div id="category" class="badge cat-neutral">Neutral / Healthy</div>
+          <div id="resultBox">
+            <div class="result-row">
+              <div id="bigPH">pH 7.00</div>
+              <div id="category" class="badge cat-neutral">Neutral / Healthy</div>
+            </div>
+            <div id="phAdvice" class="result-text"></div>
+            <div class="section-title" data-i18n="impact_title">Practical impact</div>
+            <div id="impact" class="result-text"></div>
+            <div class="section-title" data-i18n="details_title">Details for this pH</div>
+            <div id="detailList" class="result-text"></div>
+            <div id="qualityTag" class="quality-tag">
+              Overall water quality (from pH alone): Good
+            </div>
           </div>
-          <div id="phAdvice" class="result-text"></div>
-          <div class="section-title" data-i18n="impact_title">Practical impact</div>
-          <div id="impact" class="result-text"></div>
-          <div class="section-title" data-i18n="details_title">Details for this pH</div>
-          <div id="detailList" class="result-text"></div>
-          <div id="qualityTag" class="quality-tag">
-            Overall water quality (from pH alone): Good
+
+          <div class="section-title" data-i18n="quick_title">Quick examples</div>
+          <div class="quick-buttons">
+            <button class="btn-ghost ex" data-ph="4.5" data-i18n="ex_45">pH 4.5 (Acidic)</button>
+            <button class="btn-ghost ex" data-ph="6.0" data-i18n="ex_60">pH 6.0 (Slightly acidic)</button>
+            <button class="btn-ghost ex" data-ph="7.0" data-i18n="ex_70">pH 7.0 (Neutral)</button>
+            <button class="btn-ghost ex" data-ph="8.4" data-i18n="ex_84">pH 8.4 (Slight alkaline)</button>
+            <button class="btn-ghost ex" data-ph="10.0" data-i18n="ex_100">pH 10.0 (Alkaline)</button>
           </div>
-        </div>
 
-        <div class="section-title" data-i18n="quick_title">Quick examples</div>
-        <div class="quick-buttons">
-          <button class="btn-ghost ex" data-ph="4.5" data-i18n="ex_45">pH 4.5 (Acidic)</button>
-          <button class="btn-ghost ex" data-ph="6.0" data-i18n="ex_60">pH 6.0 (Slightly acidic)</button>
-          <button class="btn-ghost ex" data-ph="7.0" data-i18n="ex_70">pH 7.0 (Neutral)</button>
-          <button class="btn-ghost ex" data-ph="8.4" data-i18n="ex_84">pH 8.4 (Slight alkaline)</button>
-          <button class="btn-ghost ex" data-ph="10.0" data-i18n="ex_100">pH 10.0 (Alkaline)</button>
-        </div>
+          <div class="info-card" data-i18n="how_text">
+            Drag the pin anywhere on the bar: its position is mapped to the pH scale 0–14. For best accuracy when using strips, compare under bright neutral white light.
+          </div>
+        </section>
 
-        <div class="info-card" data-i18n="how_text">
-          Drag the pin anywhere on the bar: its position is mapped to the pH scale 0–14. For best accuracy when using strips, compare under bright neutral white light.
-        </div>
-      </section>
+        <!-- RIGHT PANEL -->
+        <aside class="panel">
+          <h2 data-i18n="ranges_title">pH ranges & guidance</h2>
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_range">Range</th>
+                <th data-i18n="th_label">Label</th>
+                <th data-i18n="th_guide">Guidance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-range="very-acid">
+                <td>0–3</td>
+                <td data-i18n="lbl_very_acid">Very acidic</td>
+                <td data-i18n="txt_very_acid">Corrosive; toxic to most aquatic life. Avoid contact.</td>
+              </tr>
+              <tr data-range="acid">
+                <td>4–5</td>
+                <td data-i18n="lbl_acid">Acidic</td>
+                <td data-i18n="txt_acid">Harmful to sensitive species; test for metal leaching.</td>
+              </tr>
+              <tr data-range="slight-acid">
+                <td>5.5–6.4</td>
+                <td data-i18n="lbl_slight_acid">Slightly acidic</td>
+                <td data-i18n="txt_slight_acid">Some stress for sensitive species; monitor trends.</td>
+              </tr>
+              <tr data-range="neutral">
+                <td>6.5–8.5</td>
+                <td data-i18n="lbl_neutral">Neutral / Healthy</td>
+                <td data-i18n="txt_neutral">Suitable for most aquatic life and normal recreation.</td>
+              </tr>
+              <tr data-range="slight-alk">
+                <td>8.6–9.5</td>
+                <td data-i18n="lbl_slight_alk">Slightly alkaline</td>
+                <td data-i18n="txt_slight_alk">Watch for ammonia toxicity in warm water.</td>
+              </tr>
+              <tr data-range="alk">
+                <td>9.6–11</td>
+                <td data-i18n="lbl_alk">Alkaline</td>
+                <td data-i18n="txt_alk">May harm some fish; consider filtration/dilution.</td>
+              </tr>
+              <tr data-range="very-alk">
+                <td>11–14</td>
+                <td data-i18n="lbl_very_alk">Very alkaline</td>
+                <td data-i18n="txt_very_alk">Corrosive and hazardous. Avoid use and seek expert help.</td>
+              </tr>
+            </tbody>
+          </table>
 
-      <!-- RIGHT PANEL -->
-      <aside class="panel">
-        <h2 data-i18n="ranges_title">pH ranges & guidance</h2>
-        <table>
-          <thead>
-            <tr>
-              <th data-i18n="th_range">Range</th>
-              <th data-i18n="th_label">Label</th>
-              <th data-i18n="th_guide">Guidance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-range="very-acid">
-              <td>0–3</td>
-              <td data-i18n="lbl_very_acid">Very acidic</td>
-              <td data-i18n="txt_very_acid">Corrosive; toxic to most aquatic life. Avoid contact.</td>
-            </tr>
-            <tr data-range="acid">
-              <td>4–5</td>
-              <td data-i18n="lbl_acid">Acidic</td>
-              <td data-i18n="txt_acid">Harmful to sensitive species; test for metal leaching.</td>
-            </tr>
-            <tr data-range="slight-acid">
-              <td>5.5–6.4</td>
-              <td data-i18n="lbl_slight_acid">Slightly acidic</td>
-              <td data-i18n="txt_slight_acid">Some stress for sensitive species; monitor trends.</td>
-            </tr>
-            <tr data-range="neutral">
-              <td>6.5–8.5</td>
-              <td data-i18n="lbl_neutral">Neutral / Healthy</td>
-              <td data-i18n="txt_neutral">Suitable for most aquatic life and normal recreation.</td>
-            </tr>
-            <tr data-range="slight-alk">
-              <td>8.6–9.5</td>
-              <td data-i18n="lbl_slight_alk">Slightly alkaline</td>
-              <td data-i18n="txt_slight_alk">Watch for ammonia toxicity in warm water.</td>
-            </tr>
-            <tr data-range="alk">
-              <td>9.6–11</td>
-              <td data-i18n="lbl_alk">Alkaline</td>
-              <td data-i18n="txt_alk">May harm some fish; consider filtration/dilution.</td>
-            </tr>
-            <tr data-range="very-alk">
-              <td>11–14</td>
-              <td data-i18n="lbl_very_alk">Very alkaline</td>
-              <td data-i18n="txt_very_alk">Corrosive and hazardous. Avoid use and seek expert help.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="section-title" data-i18n="tips_title">Measurement tips</div>
-        <ul class="tips-list" id="tipsList">
-          <li data-i18n="tip_1">Use a calibrated meter or fresh strips for accuracy.</li>
-          <li data-i18n="tip_2">Measure at a consistent temperature; pH changes with temperature.</li>
-          <li data-i18n="tip_3">Compare strip color under neutral white light.</li>
-          <li data-i18n="tip_4">When unsure, take multiple readings and average them.</li>
-        </ul>
-        <div class="hint" data-i18n="cam_hint">
-          Want to use the camera reader? Go to the Measure page and open the camera tool.
-        </div>
-      </aside>
+          <div class="section-title" data-i18n="tips_title">Measurement tips</div>
+          <ul class="tips-list" id="tipsList">
+            <li data-i18n="tip_1">Use a calibrated meter or fresh strips for accuracy.</li>
+            <li data-i18n="tip_2">Measure at a consistent temperature; pH changes with temperature.</li>
+            <li data-i18n="tip_3">Compare strip color under neutral white light.</li>
+            <li data-i18n="tip_4">When unsure, take multiple readings and average them.</li>
+          </ul>
+          <div class="hint" data-i18n="cam_hint">
+            Want to use the camera reader? Go to the Measure page and open the camera tool.
+          </div>
+        </aside>
+      </div>
     </div>
   </div>
 
@@ -692,7 +752,6 @@
           el.textContent = t[key];
         }
       });
-      // Update open hint with current pH
       const phText = document.getElementById('phVal').value || "7.00";
       if (t.open_hint) {
         document.getElementById('openHint').textContent = t.open_hint.replace('{ph}', phText);
@@ -721,10 +780,10 @@
       });
     });
 
-    // Sidebar drag-to-resize
+    // Sidebar drag-to-resize (desktop)
     (function() {
       const sidebar = document.getElementById('sidebar');
-      const mainWrap = document.querySelector('.main-wrap');
+      const mainWrap = document.getElementById('mainWrap');
       const handle = document.getElementById('sidebarHandle');
       if (!sidebar || !handle || !mainWrap) return;
 
@@ -732,8 +791,9 @@
       let startX = 0;
       let startWidth = 0;
 
-      const minWidth = 210;
-      const maxWidth = 380;
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
 
       handle.addEventListener('mousedown', (e) => {
         if (window.innerWidth <= 900) return;
@@ -763,6 +823,24 @@
         if (window.innerWidth <= 900) {
           sidebar.style.width = '';
           mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.classList.contains('open')) return;
+        if (!sidebar.contains(e.target) && e.target !== btn) {
+          sidebar.classList.remove('open');
         }
       });
     })();
@@ -1036,7 +1114,7 @@
       window.location.href = url;
     });
 
-    // Initialize
+    // Mobile drawer toggle already defined above; now init language + pH
     applyChartLanguage('en');
     phInput.value = "7.00";
     movePinToPH(7.0);
