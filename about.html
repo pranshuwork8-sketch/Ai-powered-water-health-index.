@@ -30,6 +30,11 @@
     }
     body { position: relative; }
 
+    .layout-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
@@ -115,6 +120,9 @@
       background: rgba(81,218,247,0.45);
     }
 
+    /* Mobile top bar */
+    .mobile-topbar { display: none; }
+
     /* Main layout */
     .main-wrap {
       margin-left: var(--sidebar-wide);
@@ -126,6 +134,7 @@
       gap: 2.2rem;
       position: relative;
       z-index: 1;
+      flex: 1;
     }
 
     /* Language pill */
@@ -562,24 +571,63 @@
 
     /* Responsive */
     @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
+      .mobile-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(10,30,46,0.98);
+        display: flex;
+        align-items: center;
+        padding: 0 .8rem;
+        z-index: 2100;
+        box-shadow: 0 2px 12px #00000055;
       }
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #51daf7;
+        background: #153044;
+        color: #e3fbfa;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: .7rem;
+      }
+      .mobile-topbar-title {
+        color: #9ee8ff;
+        font-weight: bold;
+        font-size: 1.05rem;
+      }
+
+      .sidebar {
+        top: 52px;
+        bottom: 0;
+        width: 220px;
+        max-width: 80vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease-out;
+        position: fixed;
+      }
+      .sidebar.open { transform: translateX(0); }
       .sidebar-header { margin: 1rem 0; }
       .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
+      .logo-text { font-size: 1.3rem; }
       .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
+        font-size: 1rem;
+        padding: .7rem .9rem;
+        justify-content: flex-start;
       }
-      .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle { pointer-events: none; }
+      .sidebar nav .nav-link .label { display: inline; }
+      .sidebar-handle { display: none; }
 
+      .layout-wrap { margin-top: 52px; }
       .main-wrap {
-        margin-left: var(--sidebar-narrow);
+        margin-left: 0;
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
       .about-hero {
@@ -590,9 +638,10 @@
       .suggestions-section {
         grid-template-columns: 1fr;
       }
+      .lang-wrap { right: .8rem; top: 60px; }
     }
+
     @media (max-width: 520px) {
-      .lang-wrap { right: .7rem; top: .7rem; }
       .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
       .about-title { font-size: 1.6rem; }
     }
@@ -607,257 +656,263 @@
   </script>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="logo-img" aria-hidden="true">🌊</span>
-      <span class="logo-text">Water<br>Index</span>
-    </div>
-    <nav>
-      <a href="index.html" class="nav-link">
-        <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
-      </a>
-      <a href="measure.html" class="nav-link">
-        <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
-      </a>
-      <a href="map.html" class="nav-link">
-        <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
-      </a>
-      <a href="care.html" class="nav-link">
-        <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
-      </a>
-      <a href="farmers.html" class="nav-link">
-        <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
-      </a>
-      <a href="chart.html" class="nav-link">
-        <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
-      </a>
-      <a href="learn.html" class="nav-link">
-        <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
-      </a>
-      <a href="buykit.html" class="nav-link">
-        <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
-      </a>
-      <a href="about.html" class="nav-link active">
-        <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
-      </a>
-    </nav>
-    <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · Regional project
-    </footer>
-    <div class="sidebar-handle" id="sidebarHandle"></div>
-  </aside>
+  <!-- Mobile top bar -->
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-topbar-title">Water Index</div>
+  </header>
 
-  <!-- Language pill -->
-  <div class="lang-wrap">
-    <button class="lang-current" id="langCurrentBtn">
-      English <span style="font-size:1rem;">&#x25BC;</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt" data-lang="en">English</button>
-      <button class="lang-opt" data-lang="hi">Hindi</button>
-      <button class="lang-opt" data-lang="bn">Bengali</button>
-      <button class="lang-opt" data-lang="ta">Tamil</button>
-      <button class="lang-opt" data-lang="mr">Marathi</button>
-      <button class="lang-opt" data-lang="gu">Gujarati</button>
-      <button class="lang-opt" data-lang="pa">Punjabi</button>
-      <button class="lang-opt" data-lang="te">Telugu</button>
-      <button class="lang-opt" data-lang="kn">Kannada</button>
-      <button class="lang-opt" data-lang="ur">Urdu</button>
-    </div>
+  <div class="layout-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-img" aria-hidden="true">🌊</span>
+        <span class="logo-text">Water<br>Index</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">
+          <span aria-hidden="true">🏠</span>
+          <span class="label" data-i18n="nav_home">Home</span>
+        </a>
+        <a href="measure.html" class="nav-link">
+          <span aria-hidden="true">🧪</span>
+          <span class="label" data-i18n="nav_measure">Measure</span>
+        </a>
+        <a href="map.html" class="nav-link">
+          <span aria-hidden="true">🗺️</span>
+          <span class="label" data-i18n="nav_map">Map</span>
+        </a>
+        <a href="care.html" class="nav-link">
+          <span aria-hidden="true">💧</span>
+          <span class="label" data-i18n="nav_care">Care</span>
+        </a>
+        <a href="farmers.html" class="nav-link">
+          <span aria-hidden="true">🌾</span>
+          <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        </a>
+        <a href="chart.html" class="nav-link">
+          <span aria-hidden="true">📊</span>
+          <span class="label" data-i18n="nav_chart">Chart</span>
+        </a>
+        <a href="learn.html" class="nav-link">
+          <span aria-hidden="true">📚</span>
+          <span class="label" data-i18n="nav_learn">Learn</span>
+        </a>
+        <a href="buykit.html" class="nav-link">
+          <span aria-hidden="true">🛒</span>
+          <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        </a>
+        <a href="about.html" class="nav-link active">
+          <span aria-hidden="true">ℹ️</span>
+          <span class="label" data-i18n="nav_about">About</span>
+        </a>
+      </nav>
+      <footer class="sidebar-footer">
+        &copy; 2025 Water Health Index · Regional project
+      </footer>
+      <div class="sidebar-handle" id="sidebarHandle"></div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-wrap" id="mainWrap">
+      <!-- Language pill -->
+      <div class="lang-wrap">
+        <button class="lang-current" id="langCurrentBtn">
+          English <span style="font-size:1rem;">&#x25BC;</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-opt" data-lang="en">English</button>
+          <button class="lang-opt" data-lang="hi">Hindi</button>
+          <button class="lang-opt" data-lang="bn">Bengali</button>
+          <button class="lang-opt" data-lang="ta">Tamil</button>
+          <button class="lang-opt" data-lang="mr">Marathi</button>
+          <button class="lang-opt" data-lang="gu">Gujarati</button>
+          <button class="lang-opt" data-lang="pa">Punjabi</button>
+          <button class="lang-opt" data-lang="te">Telugu</button>
+          <button class="lang-opt" data-lang="kn">Kannada</button>
+          <button class="lang-opt" data-lang="ur">Urdu</button>
+        </div>
+      </div>
+
+      <!-- Hero + screenshots -->
+      <section class="about-hero">
+        <article class="about-summary">
+          <h1 class="about-title" data-i18n="about_title">About Water Health Index</h1>
+          <p class="about-subtitle" data-i18n="about_subtitle">
+            Because every drop deserves balance – this project turns simple readings into clear health scores and care steps.
+          </p>
+          <p class="about-text">
+            <span data-i18n="about_intro_1">
+              Water Health Index is a student-built tool that helps families, students, and farmers quickly check if their water is safe to drink or use on crops.
+            </span><br><br>
+            <span data-i18n="about_intro_2">
+              Using only simple test strips or a small kit, the site converts pH, turbidity, temperature and TDS into a 0–100 score, shows it on a map, and explains what to do next in friendly language.
+            </span>
+          </p>
+        </article>
+
+        <aside class="screenshots-card">
+          <h2 class="screenshots-title" data-i18n="shots_title">From an idea to a site</h2>
+          <div class="screenshots-grid">
+            <div class="shot-box">
+              <span class="shot-label" data-i18n="shots_new_title">New design</span>
+              <img src="my-folder/Screenshot 2025-12-01 093618.png"
+                   alt="Current Water Health Index layout">
+              <div data-i18n="shots_new_caption">
+                Modern sidebar layout with separate pages for Measure, Map, Care,
+                Farmers Assistant, Learn and more. Making it accessible to different types of users around the globe.
+              </div>
+            </div>
+            <div class="shot-box">
+              <span class="shot-label" data-i18n="shots_old_title">First prototype</span>
+              <img src="my-folder/Screenshot 2025-12-01 094544.png"
+                   alt="Old Water Health Index prototype">
+              <div data-i18n="shots_old_caption">
+                The original single-page version that proved students in small towns
+                could also track water health.
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- Creator + story -->
+      <section class="creator-story-row">
+        <article class="creator-card">
+          <div class="creator-avatar" aria-hidden="true">👤</div>
+          <div class="creator-name" data-i18n="creator_name">Pranshu</div>
+          <div class="creator-role" data-i18n="creator_role">
+            Student developer · Water & AI enthusiast
+          </div>
+          <p class="creator-text" data-i18n="creator_text">
+            This project started as a school science idea and grew into a regional web app to help villages understand what is inside their water, not just how clear it looks. At 15, the goal was to build something that even non-technical families could open on a shared phone and follow step by step.
+          </p>
+        </article>
+
+        <article class="story-timeline">
+          <h2 class="story-title" data-i18n="story_title">How this project grew</h2>
+          <ul class="story-steps">
+            <li class="story-step">
+              <div class="story-step-title" data-i18n="story_step1_title">Idea: one simple score</div>
+              <div class="story-step-text" data-i18n="story_step1_text">
+                The first goal was to turn confusing lab-style readings into one Water Health Index number between 0 and 100 with Good / Moderate / Poor bands.
+              </div>
+            </li>
+            <li class="story-step">
+              <div class="story-step-title" data-i18n="story_step2_title">Prototype for school & fair</div>
+              <div class="story-step-text" data-i18n="story_step2_text">
+                A basic website was built and tested in school, then improved for regional project competitions with clearer UI and more safety tips.
+              </div>
+            </li>
+            <li class="story-step">
+              <div class="story-step-title" data-i18n="story_step3_title">Farmers & village focus</div>
+              <div class="story-step-text" data-i18n="story_step3_text">
+                New pages added a farmers assistant, crop-friendly tips and a map so readings from different wells and ponds can be compared across a region.
+              </div>
+            </li>
+            <li class="story-step">
+              <div class="story-step-title" data-i18n="story_step4_title">AI guidance and future app</div>
+              <div class="story-step-text" data-i18n="story_step4_text">
+                The next step is an offline-ready app with smarter AI that explains results in local languages, suggests actions, and connects to testers online.
+              </div>
+            </li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- Features + future -->
+      <section class="features-future-row">
+        <article class="features-card">
+          <h2 class="features-title" data-i18n="features_title">What this website offers</h2>
+          <div class="features-grid">
+            <div class="feature-pill" data-i18n="feature_measure">
+              <strong>Measure:</strong> Enter basic readings or use camera help to calculate a 0–100 water score.
+            </div>
+            <div class="feature-pill" data-i18n="feature_map">
+              <strong>Map:</strong> See all saved wells, taps and ponds on a live map with coloured health bands.
+            </div>
+            <div class="feature-pill" data-i18n="feature_care">
+              <strong>Care:</strong> Get step-by-step actions, boiling or filtration advice, and reminders for follow-up tests.
+            </div>
+            <div class="feature-pill" data-i18n="feature_farmers">
+              <strong>Farmers Assistant:</strong> Connect water quality to crop choices, soil health and irrigation tips.
+            </div>
+            <div class="feature-pill" data-i18n="feature_chart">
+              <strong>Chart:</strong> Explore an interactive pH gradient and understand what different values mean.
+            </div>
+            <div class="feature-pill" data-i18n="feature_learn">
+              <strong>Learn:</strong> Browse an in-depth guide to water parameters, health impacts and safe standards.
+            </div>
+            <div class="feature-pill" data-i18n="feature_buykit">
+              <strong>Buy Kit:</strong> See simple test kits and ideas for low-cost community water testing corners.
+            </div>
+          </div>
+        </article>
+
+        <article class="future-card">
+          <h2 class="future-title" data-i18n="future_title">Future plans</h2>
+          <ul class="future-list">
+            <li data-i18n="future_item_1">
+              Turn this site into an offline-friendly app so readings and advice work even with weak or no internet.
+            </li>
+            <li data-i18n="future_item_2">
+              Improve the AI helper so it can answer questions in multiple Indian languages using local examples.
+            </li>
+            <li data-i18n="future_item_3">
+              Invite real testers through Reddit, Twitter, and student communities to share feedback and ideas.
+            </li>
+            <li data-i18n="future_item_4">
+              Open the project to contributors on GitHub so more students can help improve maps, crops and care tips.
+            </li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- Suggestions -->
+      <section class="suggestions-section" id="suggestionsSection">
+        <article class="suggest-form-card">
+          <h2 class="suggest-title" data-i18n="suggest_title">Share a suggestion</h2>
+          <p class="suggest-note" data-i18n="suggest_note">
+            Your feedback helps improve this tool for students, families and farmers. You can write in simple English or any local language.
+          </p>
+
+          <form id="suggestForm">
+            <label class="field-label" for="suggestName" data-i18n="suggest_name_label">Name (optional)</label>
+            <input id="suggestName" class="field-input" type="text" autocomplete="name"/>
+
+            <label class="field-label" for="suggestPlace" data-i18n="suggest_place_label">
+              School / village / town (optional)
+            </label>
+            <input id="suggestPlace" class="field-input" type="text"/>
+
+            <label class="field-label" for="suggestText" data-i18n="suggest_text_label">
+              Your suggestion or idea
+            </label>
+            <textarea id="suggestText" class="field-textarea" required></textarea>
+
+            <button type="submit" class="suggest-btn" id="suggestBtn">
+              <span aria-hidden="true">📨</span>
+              <span data-i18n="suggest_btn_text">Send suggestion</span>
+            </button>
+            <div class="suggest-status" id="suggestStatus"></div>
+          </form>
+        </article>
+
+        <aside class="suggest-bubbles-card">
+          <div class="bubbles-title-row">
+            <h2 class="bubbles-title" data-i18n="bubbles_title">Suggestions board</h2>
+            <div class="bubbles-hint" data-i18n="bubbles_hint">
+              Recent ideas appear here as floating bubbles. A summary will also show on the Home page.
+            </div>
+          </div>
+          <div class="bubbles-list" id="bubblesList"></div>
+          <div class="empty-note" id="bubblesEmpty" data-i18n="bubbles_empty">
+            No suggestions yet – be the first to share an idea.
+          </div>
+        </aside>
+      </section>
+    </main>
   </div>
-
-  <!-- Main content -->
-  <main class="main-wrap" id="mainWrap">
-    <!-- Hero + screenshots -->
-    <section class="about-hero">
-      <article class="about-summary">
-        <h1 class="about-title" data-i18n="about_title">About Water Health Index</h1>
-        <p class="about-subtitle" data-i18n="about_subtitle">
-          Because every drop deserves balance – this project turns simple readings into clear health scores and care steps.
-        </p>
-        <p class="about-text">
-          <span data-i18n="about_intro_1">
-            Water Health Index is a student-built tool that helps families, students, and farmers quickly check if their water is safe to drink or use on crops.
-          </span><br><br>
-          <span data-i18n="about_intro_2">
-            Using only simple test strips or a small kit, the site converts pH, turbidity, temperature and TDS into a 0–100 score, shows it on a map, and explains what to do next in friendly language.
-          </span>
-        </p>
-      </article>
-
-      <aside class="screenshots-card">
-        <h2 class="screenshots-title" data-i18n="shots_title">From a idea to a site</h2>
-        <div class="screenshots-grid">
-          <!-- New design (second-last image) -->
-          <div class="shot-box">
-            <span class="shot-label" data-i18n="shots_new_title">New design</span>
-            <img src="my-folder/Screenshot 2025-12-01 093618.png"
-                 alt="Current Water Health Index layout">
-            <div data-i18n="shots_new_caption">
-              Modern sidebar layout with separate pages for Measure, Map, Care,
-              Farmers Assistant, Learn and more. Making it assesable to all of the diffrent types of user around the globe.
-            </div>
-          </div>
-          <!-- Old design (last image) -->
-          <div class="shot-box">
-            <span class="shot-label" data-i18n="shots_old_title">First prototype</span>
-            <img src="my-folder/Screenshot 2025-12-01 094544.png"
-                 alt="Old Water Health Index prototype">
-            <div data-i18n="shots_old_caption">
-              The original single-page version that proved students in small towns
-              could also track water health.
-            </div>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <!-- Creator + story -->
-    <section class="creator-story-row">
-      <article class="creator-card">
-        <div class="creator-avatar" aria-hidden="true">👤</div>
-        <div class="creator-name" data-i18n="creator_name">Pranshu</div>
-        <div class="creator-role" data-i18n="creator_role">
-          Student developer · Water & AI enthusiast
-        </div>
-        <p class="creator-text" data-i18n="creator_text">
-          This project started as a school science idea and grew into a regional web app to help villages understand what is inside their water, not just how clear it looks. At 15, the goal was to build something that even non-technical families could open on a shared phone and follow step by step.
-        </p>
-      </article>
-
-      <article class="story-timeline">
-        <h2 class="story-title" data-i18n="story_title">How this project grew</h2>
-        <ul class="story-steps">
-          <li class="story-step">
-            <div class="story-step-title" data-i18n="story_step1_title">Idea: one simple score</div>
-            <div class="story-step-text" data-i18n="story_step1_text">
-              The first goal was to turn confusing lab-style readings into one Water Health Index number between 0 and 100 with Good / Moderate / Poor bands.
-            </div>
-          </li>
-          <li class="story-step">
-            <div class="story-step-title" data-i18n="story_step2_title">Prototype for school & fair</div>
-            <div class="story-step-text" data-i18n="story_step2_text">
-              A basic website was built and tested in school, then improved for regional project competitions with clearer UI and more safety tips.
-            </div>
-          </li>
-          <li class="story-step">
-            <div class="story-step-title" data-i18n="story_step3_title">Farmers & village focus</div>
-            <div class="story-step-text" data-i18n="story_step3_text">
-              New pages added a farmers assistant, crop-friendly tips and a map so readings from different wells and ponds can be compared across a region.
-            </div>
-          </li>
-          <li class="story-step">
-            <div class="story-step-title" data-i18n="story_step4_title">AI guidance and future app</div>
-            <div class="story-step-text" data-i18n="story_step4_text">
-              The next step is an offline-ready app with smarter AI that explains results in local languages, suggests actions, and connects to testers online.
-            </div>
-          </li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- Features + future -->
-    <section class="features-future-row">
-      <article class="features-card">
-        <h2 class="features-title" data-i18n="features_title">What this website offers</h2>
-        <div class="features-grid">
-          <div class="feature-pill" data-i18n="feature_measure">
-            <strong>Measure:</strong> Enter basic readings or use camera help to calculate a 0–100 water score.
-          </div>
-          <div class="feature-pill" data-i18n="feature_map">
-            <strong>Map:</strong> See all saved wells, taps and ponds on a live map with coloured health bands.
-          </div>
-          <div class="feature-pill" data-i18n="feature_care">
-            <strong>Care:</strong> Get step-by-step actions, boiling or filtration advice, and reminders for follow-up tests.
-          </div>
-          <div class="feature-pill" data-i18n="feature_farmers">
-            <strong>Farmers Assistant:</strong> Connect water quality to crop choices, soil health and irrigation tips.
-          </div>
-          <div class="feature-pill" data-i18n="feature_chart">
-            <strong>Chart:</strong> Explore an interactive pH gradient and understand what different values mean.
-          </div>
-          <div class="feature-pill" data-i18n="feature_learn">
-            <strong>Learn:</strong> Browse an in-depth guide to water parameters, health impacts and safe standards.
-          </div>
-          <div class="feature-pill" data-i18n="feature_buykit">
-            <strong>Buy Kit:</strong> See simple test kits and ideas for low-cost community water testing corners.
-          </div>
-        </div>
-      </article>
-
-      <article class="future-card">
-        <h2 class="future-title" data-i18n="future_title">Future plans</h2>
-        <ul class="future-list">
-          <li data-i18n="future_item_1">
-            Turn this site into an offline-friendly app so readings and advice work even with weak or no internet.
-          </li>
-          <li data-i18n="future_item_2">
-            Improve the AI helper so it can answer questions in multiple Indian languages using local examples.
-          </li>
-          <li data-i18n="future_item_3">
-            Invite real testers through Reddit, Twitter, and student communities to share feedback and ideas.
-          </li>
-          <li data-i18n="future_item_4">
-            Open the project to contributors on GitHub so more students can help improve maps, crops and care tips.
-          </li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- Suggestions -->
-    <section class="suggestions-section" id="suggestionsSection">
-      <article class="suggest-form-card">
-        <h2 class="suggest-title" data-i18n="suggest_title">Share a suggestion</h2>
-        <p class="suggest-note" data-i18n="suggest_note">
-          Your feedback helps improve this tool for students, families and farmers. You can write in simple English or any local language.
-        </p>
-
-        <form id="suggestForm">
-          <label class="field-label" for="suggestName" data-i18n="suggest_name_label">Name (optional)</label>
-          <input id="suggestName" class="field-input" type="text" autocomplete="name"/>
-
-          <label class="field-label" for="suggestPlace" data-i18n="suggest_place_label">
-            School / village / town (optional)
-          </label>
-          <input id="suggestPlace" class="field-input" type="text"/>
-
-          <label class="field-label" for="suggestText" data-i18n="suggest_text_label">
-            Your suggestion or idea
-          </label>
-          <textarea id="suggestText" class="field-textarea" required></textarea>
-
-          <button type="submit" class="suggest-btn" id="suggestBtn">
-            <span aria-hidden="true">📨</span>
-            <span data-i18n="suggest_btn_text">Send suggestion</span>
-          </button>
-          <div class="suggest-status" id="suggestStatus"></div>
-        </form>
-      </article>
-
-      <aside class="suggest-bubbles-card">
-        <div class="bubbles-title-row">
-          <h2 class="bubbles-title" data-i18n="bubbles_title">Suggestions board</h2>
-          <div class="bubbles-hint" data-i18n="bubbles_hint">
-            Recent ideas appear here as floating bubbles. A summary will also show on the Home page.
-          </div>
-        </div>
-        <div class="bubbles-list" id="bubblesList"></div>
-        <div class="empty-note" id="bubblesEmpty" data-i18n="bubbles_empty">
-          No suggestions yet – be the first to share an idea.
-        </div>
-      </aside>
-    </section>
-  </main>
 
   <script src="about.translations.js"></script>
   <script>
@@ -897,7 +952,7 @@
       });
     });
 
-    // Sidebar drag
+    // Sidebar drag (desktop)
     (function () {
       const sidebar = document.getElementById('sidebar');
       const mainWrap = document.getElementById('mainWrap');
@@ -940,6 +995,24 @@
         if (window.innerWidth <= 900) {
           sidebar.style.width = '';
           mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.classList.contains('open')) return;
+        if (!sidebar.contains(e.target) && e.target !== btn) {
+          sidebar.classList.remove('open');
         }
       });
     })();
