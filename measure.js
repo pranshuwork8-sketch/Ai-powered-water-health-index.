@@ -1,11 +1,5 @@
 // measure.js
 // Logic for the Water Health Index "Measure" page.
-// Features:
-//  - Camera pH reader (RGB -> pH using reference table)
-//  - Index calculation from pH, temperature, turbidity
-//  - Detailed TDS-based drinking safety
-//  - Geolocation + Nominatim reverse geocoding + Leaflet map markers
-//  - LocalStorage history that other pages can reuse
 
 document.addEventListener('DOMContentLoaded', () => {
   // ------- DOM references -------
@@ -38,8 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tdsFlagText   = document.getElementById('tdsFlagText');
   const tdsNoteText   = document.getElementById('tdsNoteText');
 
-  // ------- State -------
-  const STORAGE_KEY = 'whReadings';
+  const STORAGE_KEY   = 'whReadings';
 
   let currentLat   = null;
   let currentLng   = null;
@@ -51,12 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const map = L.map('map', {
     zoomControl: true,
     scrollWheelZoom: false
-  }).setView([23, 80], 4.5);                           // India-centered default [web:117]
+  }).setView([23, 80], 4.5);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 13,
     attribution: '© OpenStreetMap'
-  }).addTo(map);                                      // standard Leaflet tiles [web:117]
+  }).addTo(map);
 
   const markersLayer = L.layerGroup().addTo(map);
 
@@ -79,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       color,
       fillColor: color,
       fillOpacity: 0.9
-    }).addTo(markersLayer).bindPopup(popupHtml);      // typical Leaflet marker pattern [web:117][web:123]
+    }).addTo(markersLayer).bindPopup(popupHtml);
   }
 
   // =========================================================
@@ -87,10 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   function formatLocation(address) {
     if (!address) return 'Unknown location';
-    const detail  = address.road || address.neighbourhood || address.suburb || address.town || address.village || '';
-    const city    = address.city || address.town || address.village || address.suburb || '';
-    const state   = address.state || address.region || '';
-    const country = address.country || '';
+    const detail   = address.road || address.neighbourhood || address.suburb || address.town || address.village || '';
+    const city     = address.city || address.town || address.village || address.suburb || '';
+    const state    = address.state || address.region || '';
+    const country  = address.country || '';
     const postcode = address.postcode || '';
 
     const pieces = [];
@@ -104,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function reverseGeocode(lat, lng) {
     try {
-      // Public Nominatim endpoint for reverse geocoding [web:75][web:76][web:124]
       const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
       const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
@@ -115,64 +107,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  btnLocation.addEventListener('click', () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation not supported by this browser.');
-      return;
-    }
+  if (btnLocation) {
+    btnLocation.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation not supported by this browser.');
+        return;
+      }
 
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      const label = await reverseGeocode(lat, lng);
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const label = await reverseGeocode(lat, lng);
 
-      currentLat = lat;
-      currentLng = lng;
-      currentPlace = label;
-      locationMain.textContent = label;
+        currentLat = lat;
+        currentLng = lng;
+        currentPlace = label;
+        if (locationMain) locationMain.textContent = label;
 
-      map.setView([lat, lng], 16);
-      addReadingMarker({
-        ph: phInput.value || '–',
-        temp: tempInput.value || '–',
-        turb: turbSelect.value || '–',
-        tds: tdsInput.value ? Number(tdsInput.value) : null,
-        index: 0,
-        drinkableFlag: '',
-        lat,
-        lng,
-        place: label
+        map.setView([lat, lng], 16);
+        addReadingMarker({
+          ph: phInput.value || '–',
+          temp: tempInput.value || '–',
+          turb: turbSelect.value || '–',
+          tds: tdsInput.value ? Number(tdsInput.value) : null,
+          index: 0,
+          drinkableFlag: '',
+          lat,
+          lng,
+          place: label
+        });
+      }, () => {
+        alert('Could not get location.');
+      }, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000
       });
-    }, () => {
-      alert('Could not get location.');
-    }, {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 30000
     });
-  });
+  }
 
   // =========================================================
-  //  Camera pH reader (getUserMedia + canvas)
+  //  Camera pH reader (getUserMedia + canvas) – SAFE INIT
   // =========================================================
   const video  = document.getElementById('cameraView');
   const canvas = document.getElementById('phCanvas');
-  const ctx    = canvas.getContext && (canvas.getContext('2d', { willReadFrequently: true }) || canvas.getContext('2d')); // performance hint [web:86]
+  const ctx    = canvas ? canvas.getContext('2d', { willReadFrequently: true }) : null;
+
   let stream   = null;
-  let facing   = 'environment';                       // back camera on phones where available [web:80][web:89][web:92][web:94]
+  let facing   = 'environment';
 
   async function openCamera() {
+    if (!video || !canvas) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Camera API not supported in this browser.');
+      return;
+    }
+    if (stream) return;
+
     try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('Camera API not supported in this browser.');
-        return;
-      }
-      if (stream) return; // already open
-
       stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing }
-      });                                                   // standard WebRTC getUserMedia usage [web:86][web:94]
-
+        video: { facingMode: facing },
+        audio: false
+      });
       video.srcObject = stream;
       video.style.display = 'block';
       canvas.style.display = 'none';
@@ -188,19 +184,68 @@ document.addEventListener('DOMContentLoaded', () => {
       stream.getTracks().forEach(t => t.stop());
       stream = null;
     }
-    video.style.display = 'none';
-    canvas.style.display = 'none';
+    if (video) {
+      video.srcObject = null;
+      video.style.display = 'none';
+    }
+    if (canvas) {
+      canvas.style.display = 'none';
+    }
   }
 
-  btnCamera.addEventListener('click', openCamera);
-  btnCloseCam.addEventListener('click', closeCamera);
-  btnSwitch.addEventListener('click', () => {
-    facing = (facing === 'environment') ? 'user' : 'environment';  // flip camera [web:80][web:89][web:122]
+  function switchCamera() {
+    facing = (facing === 'environment') ? 'user' : 'environment';
     closeCamera();
     openCamera();
-  });
+  }
 
-  // Approximate RGB reference table for pH colour strips
+  function captureColor() {
+    if (!video || !canvas || !ctx) {
+      alert('Camera canvas not available.');
+      return;
+    }
+    if (!video.videoWidth) {
+      alert('Open the camera and wait a moment, then tap Capture again.');
+      return;
+    }
+
+    const w = video.videoWidth;
+    const h = video.videoHeight;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(video, 0, 0, w, h);
+
+    const box = 20;
+    const sx = Math.max(0, Math.floor(w / 2 - box / 2));
+    const sy = Math.max(0, Math.floor(h / 2 - box / 2));
+    const img = ctx.getImageData(sx, sy, box, box);
+    const data = img.data;
+
+    let r = 0, g = 0, b = 0;
+    const px = data.length / 4;
+    for (let i = 0; i < data.length; i += 4) {
+      r += data[i];
+      g += data[i + 1];
+      b += data[i + 2];
+    }
+    r /= px;
+    g /= px;
+    b /= px;
+
+    const ph = rgbToPh(r, g, b);
+    if (phInput) phInput.value = ph.toFixed(2);
+    if (camInfo) {
+      camInfo.textContent =
+        `Captured color (avg): R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)} → pH ≈ ${ph.toFixed(2)}`;
+    }
+  }
+
+  if (btnCamera)   btnCamera.addEventListener('click', openCamera);
+  if (btnCloseCam) btnCloseCam.addEventListener('click', closeCamera);
+  if (btnSwitch)   btnSwitch.addEventListener('click', switchCamera);
+  if (btnDetect)   btnDetect.addEventListener('click', captureColor);
+
+  // pH reference table
   const phReference = [
     { pH: 1,  rgb: [235,  90, 120] },
     { pH: 2,  rgb: [240, 120, 105] },
@@ -253,47 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return bestPh;
   }
-
-  function captureColor() {
-    if (!ctx) {
-      alert('Canvas not available.');
-      return;
-    }
-    if (!video.videoWidth) {
-      alert('Open the camera and wait, then try again.');
-      return;
-    }
-
-    const w = video.videoWidth;
-    const h = video.videoHeight;
-    canvas.width = w;
-    canvas.height = h;
-    ctx.drawImage(video, 0, 0, w, h);                       // common canvas usage for video frames [web:114]
-
-    const box = 20;
-    const sx = Math.max(0, Math.floor(w / 2 - box / 2));
-    const sy = Math.max(0, Math.floor(h / 2 - box / 2));
-    const img = ctx.getImageData(sx, sy, box, box);
-    const data = img.data;
-
-    let r = 0, g = 0, b = 0;
-    const px = data.length / 4;
-    for (let i = 0; i < data.length; i += 4) {
-      r += data[i];
-      g += data[i + 1];
-      b += data[i + 2];
-    }
-    r /= px;
-    g /= px;
-    b /= px;
-
-    const ph = rgbToPh(r, g, b);
-    phInput.value = ph.toFixed(2);                          // this keeps 7.00 style like the old page
-    camInfo.textContent =
-      `Captured color (avg): R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)} → pH ≈ ${ph.toFixed(2)}`;
-  }
-
-  btnDetect.addEventListener('click', captureColor);
 
   // =========================================================
   //  Index scoring (pH + temp + turbidity)
@@ -400,7 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Short summary based on badge, plus detailed message.
     let summary = '';
     if (badge === 'EXCELLENT') {
       summary = 'Excellent water quality – good for drinking, cooking and crops.';
@@ -423,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return { ph, temp, turb, index: idx };
   }
 
-  btnAnalyze.addEventListener('click', analyze);
+  if (btnAnalyze) btnAnalyze.addEventListener('click', analyze);
 
   // =========================================================
   //  TDS + drinking safety
@@ -518,23 +521,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  btnCheckTds.addEventListener('click', () => {
-    const ph  = parseFloat(phInput.value);
-    const tds = parseFloat(tdsInput.value);
-    if (isNaN(ph)) {
-      alert('Enter or measure pH first.');
-      return;
-    }
-    const result = classifyDrinkability(ph, tds);
-    updateTdsUI(result);
-  });
+  if (btnCheckTds) {
+    btnCheckTds.addEventListener('click', () => {
+      const ph  = parseFloat(phInput.value);
+      const tds = parseFloat(tdsInput.value);
+      if (isNaN(ph)) {
+        alert('Enter or measure pH first.');
+        return;
+      }
+      const result = classifyDrinkability(ph, tds);
+      updateTdsUI(result);
+    });
+  }
 
   // =========================================================
-  //  History in localStorage (for Map / Chart / Farmers pages)
+  //  History in localStorage
   // =========================================================
   function loadHistory() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);           // standard localStorage usage [web:81][web:84][web:87][web:93]
+      const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return [];
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return [];
@@ -611,14 +616,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
   }
 
-  btnSave.addEventListener('click', saveReading);
+  if (btnSave) btnSave.addEventListener('click', saveReading);
 
-  btnClear.addEventListener('click', () => {
-    if (confirm('Clear all saved readings?')) {
-      localStorage.removeItem(STORAGE_KEY);
-      renderHistory();
-    }
-  });
+  if (btnClear) {
+    btnClear.addEventListener('click', () => {
+      if (confirm('Clear all saved readings?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderHistory();
+      }
+    });
+  }
 
   // Initial render
   renderHistory();
