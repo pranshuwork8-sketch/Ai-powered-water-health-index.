@@ -467,42 +467,50 @@
 
     /* Responsive */
     @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
-      }
-      .sidebar-header { margin: 1rem 0; }
-      .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
-      .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
-      }
-      .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle { pointer-events: none; }
+  .sidebar {
+    width: 190px !important;      /* a bit narrower than desktop, but wide enough */
+    min-width: 170px;
+    max-width: 220px;
+  }
 
-      .main-wrap {
-        margin-left: var(--sidebar-narrow);
-        padding: 4vw 2.2vw 3vw 2.2vw;
-      }
-      .home-top-row {
-        grid-template-columns: 1fr;
-        margin-top: 18vw;
-      }
-      .credits-main {
-        align-self: center;
-        margin-right: 0;
-        margin-top: 1.5rem;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      .credits-box {
-        width: calc(100% - 1.4rem);
-      }
-    }
+  .sidebar-header { margin: 1rem 0; }
+  .logo-img { font-size: 2.1rem; }
+  .logo-text { font-size: 1.3rem; }
+
+  .sidebar nav .nav-link {
+    font-size: 1rem;              /* show text */
+    padding: .7rem .8rem;
+    justify-content: flex-start;  /* icon + text, like desktop */
+  }
+
+  .sidebar nav .nav-link .label {
+    display: inline;              /* IMPORTANT: show labels */
+  }
+
+  .sidebar-handle { pointer-events: none; }
+
+  .main-wrap {
+    margin-left: 190px;           /* match sidebar width */
+    padding: 4vw 2.2vw 3vw 2.2vw;
+  }
+
+  .home-top-row {
+    grid-template-columns: 1fr;
+    margin-top: 18vw;
+  }
+
+  .credits-main {
+    align-self: center;
+    margin-right: 0;
+    margin-top: 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .credits-box {
+    width: calc(100% - 1.4rem);
+  }
+}
     @media (max-width: 520px) {
       .lang-wrap { right: .7rem; top: .7rem; }
       .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
