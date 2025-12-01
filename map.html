@@ -10,7 +10,6 @@
   <style>
     :root {
       --sidebar-wide: 225px;
-      --sidebar-narrow: 64px;
       --sidebar-min: 210px;
       --sidebar-max: 380px;
       --accent: #51daf7;
@@ -38,7 +37,12 @@
     }
     body { position: relative; }
 
-    /* Sidebar (same pattern as index/measure) */
+    .layout-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar (desktop) */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -129,6 +133,7 @@
       padding: 4vw 4vw 3vw 4vw;
       min-height: 100vh;
       box-sizing: border-box;
+      flex: 1;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -427,7 +432,6 @@
       color: #9ec7dc;
     }
 
-    /* Footer note */
     .map-footer {
       margin-top: 1.2rem;
       margin-left: 1vw;
@@ -436,30 +440,71 @@
       opacity: .9;
     }
 
-    /* Responsive tweaks */
+    /* Mobile top bar + drawer */
+    .mobile-topbar { display: none; }
+
     @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
+      .mobile-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(10,30,46,0.98);
+        display: flex;
+        align-items: center;
+        padding: 0 0.8rem;
+        z-index: 2100;
+        box-shadow: 0 2px 12px #00000055;
       }
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #51daf7;
+        background: #153044;
+        color: #e3fbfa;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.7rem;
+      }
+      .mobile-topbar-title {
+        color: #9ee8ff;
+        font-weight: bold;
+        font-size: 1.05rem;
+      }
+
+      .sidebar {
+        top: 52px;
+        bottom: 0;
+        width: 220px;
+        max-width: 80vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease-out;
+        position: fixed;
+      }
+      .sidebar.open { transform: translateX(0); }
       .sidebar-header { margin: 1rem 0; }
       .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
+      .logo-text { font-size: 1.3rem; }
       .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
+        font-size: 1rem;
+        padding: .7rem .9rem;
+        justify-content: flex-start;
       }
-      .sidebar nav .nav-link .label { display:none; }
-      .sidebar-handle { pointer-events: none; }
+      .sidebar nav .nav-link .label { display: inline; }
+      .sidebar-handle { display: none; }
 
+      .layout-wrap { margin-top: 52px; }
       .main-wrap {
-        margin-left: var(--sidebar-narrow) !important;
+        margin-left: 0;
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
       .map-header {
-        margin-top: 18vw;
+        margin-top: 4vw;
         margin-left: .3rem;
       }
       .map-layout {
@@ -467,22 +512,19 @@
         margin-right: .3rem;
         flex-direction: column;
       }
+      .lang-wrap {
+        top: 60px;
+        right: .8rem;
+      }
     }
 
     @media (max-width: 520px) {
-      .lang-wrap {
-        right: .7rem;
-        top: .7rem;
-      }
       .lang-current {
         font-size: 1rem;
         padding: .5rem 1.3rem .5rem .8rem;
       }
       .map-title {
         font-size: 1.45rem;
-      }
-      .map-header {
-        margin-top: 22vw;
       }
       #mapAll {
         height: 360px;
@@ -492,166 +534,173 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="logo-img" aria-hidden="true">🌊</span>
-      <span class="logo-text">Water<br>Index</span>
-    </div>
-    <nav>
-      <a href="index.html" class="nav-link">
-        <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
-      </a>
-      <a href="measure.html" class="nav-link">
-        <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
-      </a>
-      <a href="map.html" class="nav-link active">
-        <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
-      </a>
-      <a href="care.html" class="nav-link">
-        <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
-      </a>
-      <a href="farmers.html" class="nav-link">
-        <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
-      </a>
-      <a href="chart.html" class="nav-link">
-        <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
-      </a>
-      <a href="learn.html" class="nav-link">
-        <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
-      </a>
-      <a href="buykit.html" class="nav-link">
-        <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
-      </a>
-      <a href="about.html" class="nav-link">
-        <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
-      </a>
-    </nav>
-    <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · Regional project
-    </footer>
-    <div class="sidebar-handle" id="sidebarHandle"></div>
-  </aside>
+  <!-- Mobile top bar -->
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-topbar-title">Water Index</div>
+  </header>
 
-  <!-- Language pill -->
-  <div class="lang-wrap">
-    <button class="lang-current" id="langCurrentBtn">
-      English <span style="font-size:1rem;">&#x25BC;</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt" data-lang="en">English</button>
-      <button class="lang-opt" data-lang="hi">Hindi</button>
-      <button class="lang-opt" data-lang="bn">Bengali</button>
-      <button class="lang-opt" data-lang="ta">Tamil</button>
-      <button class="lang-opt" data-lang="mr">Marathi</button>
-      <button class="lang-opt" data-lang="gu">Gujarati</button>
-      <button class="lang-opt" data-lang="pa">Punjabi</button>
-      <button class="lang-opt" data-lang="te">Telugu</button>
-      <button class="lang-opt" data-lang="kn">Kannada</button>
-      <button class="lang-opt" data-lang="ur">Urdu</button>
-    </div>
-  </div>
+  <div class="layout-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-img" aria-hidden="true">🌊</span>
+        <span class="logo-text">Water<br>Index</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">
+          <span aria-hidden="true">🏠</span>
+          <span class="label" data-i18n="nav_home">Home</span>
+        </a>
+        <a href="measure.html" class="nav-link">
+          <span aria-hidden="true">🧪</span>
+          <span class="label" data-i18n="nav_measure">Measure</span>
+        </a>
+        <a href="map.html" class="nav-link active">
+          <span aria-hidden="true">🗺️</span>
+          <span class="label" data-i18n="nav_map">Map</span>
+        </a>
+        <a href="care.html" class="nav-link">
+          <span aria-hidden="true">💧</span>
+          <span class="label" data-i18n="nav_care">Care</span>
+        </a>
+        <a href="farmers.html" class="nav-link">
+          <span aria-hidden="true">🌾</span>
+          <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        </a>
+        <a href="chart.html" class="nav-link">
+          <span aria-hidden="true">📊</span>
+          <span class="label" data-i18n="nav_chart">Chart</span>
+        </a>
+        <a href="learn.html" class="nav-link">
+          <span aria-hidden="true">📚</span>
+          <span class="label" data-i18n="nav_learn">Learn</span>
+        </a>
+        <a href="buykit.html" class="nav-link">
+          <span aria-hidden="true">🛒</span>
+          <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        </a>
+        <a href="about.html" class="nav-link">
+          <span aria-hidden="true">ℹ️</span>
+          <span class="label" data-i18n="nav_about">About</span>
+        </a>
+      </nav>
+      <footer class="sidebar-footer">
+        &copy; 2025 Water Health Index · Regional project
+      </footer>
+      <div class="sidebar-handle" id="sidebarHandle"></div>
+    </aside>
 
-  <!-- Main content -->
-  <div class="main-wrap" id="mainWrap">
+    <!-- Main content -->
+    <div class="main-wrap" id="mainWrap">
+      <!-- Language pill -->
+      <div class="lang-wrap">
+        <button class="lang-current" id="langCurrentBtn">
+          English <span style="font-size:1rem;">&#x25BC;</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-opt" data-lang="en">English</button>
+          <button class="lang-opt" data-lang="hi">Hindi</button>
+          <button class="lang-opt" data-lang="bn">Bengali</button>
+          <button class="lang-opt" data-lang="ta">Tamil</button>
+          <button class="lang-opt" data-lang="mr">Marathi</button>
+          <button class="lang-opt" data-lang="gu">Gujarati</button>
+          <button class="lang-opt" data-lang="pa">Punjabi</button>
+          <button class="lang-opt" data-lang="te">Telugu</button>
+          <button class="lang-opt" data-lang="kn">Kannada</button>
+          <button class="lang-opt" data-lang="ur">Urdu</button>
+        </div>
+      </div>
 
-    <header class="map-header">
-      <h1 class="map-title" data-i18n="map_title">Water quality map</h1>
-      <p class="map-subtitle" data-i18n="map_subtitle">
-        Explore your saved readings on an interactive map. Tap a point to see details and jump to care or farmer advice.
+      <header class="map-header">
+        <h1 class="map-title" data-i18n="map_title">Water quality map</h1>
+        <p class="map-subtitle" data-i18n="map_subtitle">
+          Explore your saved readings on an interactive map. Tap a point to see details and jump to care or farmer advice.
+        </p>
+      </header>
+
+      <section class="map-layout">
+        <!-- LEFT: Map -->
+        <div class="map-left">
+          <div class="map-card">
+            <div class="filters">
+              <div class="filters-left">
+                <label for="bandFilter" data-i18n="map_filter_label">Show band</label>
+                <select id="bandFilter">
+                  <option value="all" data-i18n="map_filter_all">All readings</option>
+                  <option value="good" data-i18n="map_filter_good">Good (≥ 70)</option>
+                  <option value="med" data-i18n="map_filter_med">Moderate (40–69)</option>
+                  <option value="poor" data-i18n="map_filter_poor">Poor (&lt; 40)</option>
+                </select>
+              </div>
+              <button class="ghost-btn" id="locateBtn" data-i18n="map_btn_locate">
+                My location
+              </button>
+            </div>
+
+            <div class="map-wrapper">
+              <div id="mapAll"></div>
+              <div class="legend">
+                <div class="legend-row">
+                  <span class="dot good"></span>
+                  <span data-i18n="map_legend_good">Good (index ≥ 70)</span>
+                </div>
+                <div class="legend-row">
+                  <span class="dot med"></span>
+                  <span data-i18n="map_legend_med">Moderate (40–69)</span>
+                </div>
+                <div class="legend-row">
+                  <span class="dot poor"></span>
+                  <span data-i18n="map_legend_poor">Poor (&lt; 40)</span>
+                </div>
+                <div class="legend-row">
+                  <span class="dot none"></span>
+                  <span data-i18n="map_legend_noloc">Saved without location</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Details + recent -->
+        <div class="map-right">
+          <div class="map-card">
+            <div class="section-title" data-i18n="map_details_title">Reading details</div>
+            <div class="details-box">
+              <div class="details-main" id="detailsMain" data-i18n="map_details_empty">
+                Tap a marker or pick a reading from the list to see its details here.
+              </div>
+              <div class="details-sub" id="detailsSub"></div>
+              <div class="details-note" id="detailsNote"></div>
+              <div class="details-actions">
+                <button class="ghost-btn" id="openCareBtn" data-i18n="map_btn_care">
+                  Open care advice
+                </button>
+                <button class="ghost-btn" id="openFarmBtn" data-i18n="map_btn_farm">
+                  Open farmer tips
+                </button>
+              </div>
+            </div>
+
+            <div class="recent">
+              <div class="recent-header">
+                <div class="section-title" data-i18n="map_recent_title">Recent readings</div>
+                <div class="recent-count" id="recentCount"></div>
+              </div>
+              <div class="recent-list" id="recentList">
+                <div class="recent-empty" data-i18n="map_recent_empty">
+                  No readings saved yet. Use the Measure page to add some, then come back here.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="map-footer" data-i18n="map_footer_note">
+        Tip: Tap a saved reading to zoom the map, then go to Care or Farmers Assistant for next steps.
       </p>
-    </header>
-
-    <section class="map-layout">
-      <!-- LEFT: Map -->
-      <div class="map-left">
-        <div class="map-card">
-          <div class="filters">
-            <div class="filters-left">
-              <label for="bandFilter" data-i18n="map_filter_label">Show band</label>
-              <select id="bandFilter">
-                <option value="all" data-i18n="map_filter_all">All readings</option>
-                <option value="good" data-i18n="map_filter_good">Good (≥ 70)</option>
-                <option value="med" data-i18n="map_filter_med">Moderate (40–69)</option>
-                <option value="poor" data-i18n="map_filter_poor">Poor (&lt; 40)</option>
-              </select>
-            </div>
-            <button class="ghost-btn" id="locateBtn" data-i18n="map_btn_locate">
-              My location
-            </button>
-          </div>
-
-          <div class="map-wrapper">
-            <div id="mapAll"></div>
-            <div class="legend">
-              <div class="legend-row">
-                <span class="dot good"></span>
-                <span data-i18n="map_legend_good">Good (index ≥ 70)</span>
-              </div>
-              <div class="legend-row">
-                <span class="dot med"></span>
-                <span data-i18n="map_legend_med">Moderate (40–69)</span>
-              </div>
-              <div class="legend-row">
-                <span class="dot poor"></span>
-                <span data-i18n="map_legend_poor">Poor (&lt; 40)</span>
-              </div>
-              <div class="legend-row">
-                <span class="dot none"></span>
-                <span data-i18n="map_legend_noloc">Saved without location</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Details + recent -->
-      <div class="map-right">
-        <div class="map-card">
-          <div class="section-title" data-i18n="map_details_title">Reading details</div>
-          <div class="details-box">
-            <div class="details-main" id="detailsMain" data-i18n="map_details_empty">
-              Tap a marker or pick a reading from the list to see its details here.
-            </div>
-            <div class="details-sub" id="detailsSub"></div>
-            <div class="details-note" id="detailsNote"></div>
-            <div class="details-actions">
-              <button class="ghost-btn" id="openCareBtn" data-i18n="map_btn_care">
-                Open care advice
-              </button>
-              <button class="ghost-btn" id="openFarmBtn" data-i18n="map_btn_farm">
-                Open farmer tips
-              </button>
-            </div>
-          </div>
-
-          <div class="recent">
-            <div class="recent-header">
-              <div class="section-title" data-i18n="map_recent_title">Recent readings</div>
-              <div class="recent-count" id="recentCount"></div>
-            </div>
-            <div class="recent-list" id="recentList">
-              <div class="recent-empty" data-i18n="map_recent_empty">
-                No readings saved yet. Use the Measure page to add some, then come back here.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <p class="map-footer" data-i18n="map_footer_note">
-      Tip: Tap a saved reading to zoom the map, then go to Care or Farmers Assistant for next steps.
-    </p>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -659,7 +708,7 @@
   <script src="map.translations.js"></script>
 
   <script>
-    // ---------- Language + i18n ----------
+    // Language + i18n
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
 
@@ -668,14 +717,11 @@
       const t = getMapStrings(langCode);
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (t[key]) {
-          el.textContent = t[key];
-        }
+        if (t[key]) el.textContent = t[key];
       });
       localStorage.setItem('whilang', langCode);
     }
 
-    // Initialise language from storage
     let currentLang = localStorage.getItem('whilang') || 'en';
     const initialOpt = Array.from(document.querySelectorAll('.lang-opt'))
       .find(btn => btn.dataset.lang === currentLang);
@@ -689,13 +735,11 @@
       e.stopPropagation();
       langDropdown.classList.toggle('open');
     });
-
     document.addEventListener('click', (e) => {
       if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
         langDropdown.classList.remove('open');
       }
     });
-
     document.querySelectorAll('.lang-opt').forEach(btn => {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('selected'));
@@ -710,7 +754,7 @@
       });
     });
 
-    // ---------- Sidebar drag-to-resize (desktop only) ----------
+    // Sidebar drag (desktop only)
     (function () {
       const sidebar = document.getElementById('sidebar');
       const mainWrap = document.getElementById('mainWrap');
@@ -757,14 +801,30 @@
       });
     })();
 
-    // ---------- Data + map ----------
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.classList.contains('open')) return;
+        if (!sidebar.contains(e.target) && e.target !== btn) {
+          sidebar.classList.remove('open');
+        }
+      });
+    })();
+
+    // Data + map
     let readings = [];
     try {
       readings = JSON.parse(localStorage.getItem('whReadings') || "[]");
       if (!Array.isArray(readings)) readings = [];
-    } catch (e) {
-      readings = [];
-    }
+    } catch (e) { readings = []; }
     readings.forEach((r, i) => { if (r.id == null) r.id = i; });
 
     function bandForIndex(idx) {
@@ -841,56 +901,40 @@
         map.fitBounds(group.getBounds().pad(0.15));
       }
     }
-
     document.getElementById('bandFilter').addEventListener('change', rebuildMarkers);
     rebuildMarkers();
 
-    //locaions
-    
+    // My location
     document.getElementById('locateBtn').addEventListener('click', () => {
       if (!navigator.geolocation) return;
-      
       navigator.geolocation.getCurrentPosition(
         pos => {
           const { latitude, longitude } = pos.coords;
+          map.setView([latitude, longitude], 13);
+          if (userLocationMarker) {
+            userLocationMarker.setLatLng([latitude, longitude]);
+          } else {
+            userLocationMarker = L.circleMarker([latitude, longitude], {
+              radius: 8,
+              color: '#00b3ff',
+              weight: 2,
+              fillColor: '#00e0ff',
+              fillOpacity: 0.9
+            }).bindPopup("You are here").addTo(map);
+          }
+        },
+        err => { console.warn("Geolocation error:", err); }
+      );
+    });
 
-      // Center the map on user
-      map.setView([latitude, longitude], 13);
-
-      // If marker already exists, just move it
-      if (userLocationMarker) {
-        userLocationMarker.setLatLng([latitude, longitude]);
-      } else {
-        // Create a new pointer-style marker for current location
-        userLocationMarker = L.circleMarker([latitude, longitude], {
-          radius: 8,
-          color: '#00b3ff',
-          weight: 2,
-          fillColor: '#00e0ff',
-          fillOpacity: 0.9
-        })
-        .bindPopup("You are here")
-        .addTo(map);
-      }
-    },
-    err => {
-      console.warn("Geolocation error:", err);
-    }
-  );
-});
-
-    // ---------- Details + recent ----------
+    // Details + recent
     const recentList = document.getElementById('recentList');
     const recentCount = document.getElementById('recentCount');
 
     function updateRecentCount() {
       const s = getMapStrings(currentLang);
       const n = readings.length;
-      if (!n) {
-        recentCount.textContent = "";
-      } else {
-        recentCount.textContent = s.recent_count.replace('{n}', n);
-      }
+      recentCount.textContent = n ? s.recent_count.replace('{n}', n) : "";
     }
 
     function renderRecentList() {
@@ -909,6 +953,7 @@
         const div = document.createElement('div');
         div.className = "recent-item";
         div.dataset.id = r.id;
+
         const dot = document.createElement('div');
         dot.className = "recent-dot";
         dot.style.background = markerColor(bandForIndex(r.index));
@@ -944,8 +989,7 @@
     }
 
     function highlightRecent(id) {
-      const items = recentList.querySelectorAll('.recent-item');
-      items.forEach(it => {
+      recentList.querySelectorAll('.recent-item').forEach(it => {
         if (Number(it.dataset.id) === id) it.classList.add('active');
         else it.classList.remove('active');
       });
@@ -959,14 +1003,12 @@
 
       const whenText = r.when || "–";
       const placeText = r.place || "";
-
       const line = s.details_line
         .replace('{when}', whenText)
         .replace('{place}', placeText);
 
       main.innerHTML = "";
-      const lineNode = document.createTextNode(line + " ");
-      main.appendChild(lineNode);
+      main.appendChild(document.createTextNode(line + " "));
 
       const band = bandForIndex(r.index);
       let bandKey = 'band_unknown';
@@ -997,20 +1039,13 @@
       if (r) showDetails(r);
     }
 
-    // Care / farmers buttons go to pages with query so you can later auto-fill
     document.getElementById('openCareBtn').addEventListener('click', () => {
-      if (selectedId == null) {
-        window.location.href = 'care.html';
-      } else {
-        window.location.href = 'care.html?reading=' + encodeURIComponent(selectedId);
-      }
+      if (selectedId == null) window.location.href = 'care.html';
+      else window.location.href = 'care.html?reading=' + encodeURIComponent(selectedId);
     });
     document.getElementById('openFarmBtn').addEventListener('click', () => {
-      if (selectedId == null) {
-        window.location.href = 'farmers.html';
-      } else {
-        window.location.href = 'farmers.html?reading=' + encodeURIComponent(selectedId);
-      }
+      if (selectedId == null) window.location.href = 'farmers.html';
+      else window.location.href = 'farmers.html?reading=' + encodeURIComponent(selectedId);
     });
 
     renderRecentList();
