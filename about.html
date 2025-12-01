@@ -30,7 +30,7 @@
     }
     body { position: relative; }
 
-    /* Sidebar (same as Home) */
+    /* Sidebar */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -187,7 +187,7 @@
       border-color: #48e8c2;
     }
 
-    /* Top hero section */
+    /* Top hero */
     .about-hero {
       display: flex;
       flex-wrap: wrap;
@@ -263,7 +263,7 @@
       display: block;
     }
 
-    /* Creator + story row */
+    /* Creator + story */
     .creator-story-row {
       display: grid;
       grid-template-columns: minmax(260px, 320px) minmax(260px, 1fr);
@@ -356,7 +356,7 @@
       line-height: 1.55;
     }
 
-    /* Features + future row */
+    /* Features + future */
     .features-future-row {
       display: grid;
       grid-template-columns: minmax(270px, 1.4fr) minmax(250px, 1fr);
@@ -392,7 +392,6 @@
     .feature-pill strong {
       color: #9ef3d7;
     }
-
     .future-card {
       background: #173144;
       border-radius: 22px;
@@ -410,7 +409,7 @@
       margin-bottom: .6rem;
     }
 
-    /* Suggestions board */
+    /* Suggestions */
     .suggestions-section {
       display: grid;
       grid-template-columns: minmax(270px, 340px) minmax(260px, 1.4fr);
@@ -511,41 +510,57 @@
       color: #a9e0ff;
     }
     .bubbles-list {
-  position: relative;
-  min-height: 140px;
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 8px 0.4rem 0 0.4rem;
-}
+      position: relative;
+      min-height: 140px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding: 8px 0.4rem 0 0.4rem;
+    }
     .bubble-item {
-  position: relative;
-  margin: 8px 0 6px 0;          /* extra top margin so it's not glued to the top */
-  display: inline-block;
-  max-width: 100%;
-  padding: .55rem .95rem .6rem .9rem;
-  border-radius: 999px;
-  background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.22), rgba(72,232,194,0.9));
-  color: #05222b;
-  font-size: .92rem;
-  box-shadow: 0 6px 18px #00000063;
-  transform-origin: center;
-  animation: riseBubble 6s ease-out forwards;
-}
+      position: relative;
+      margin: 8px 0 6px 0;
+      display: inline-block;
+      max-width: 100%;
+      padding: .55rem .95rem .6rem .9rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.22), rgba(72,232,194,0.9));
+      color: #05222b;
+      font-size: .92rem;
+      box-shadow: 0 6px 18px #00000063;
+      transform-origin: center;
+      animation: riseBubble 6s ease-out forwards;
+    }
+    .bubble-meta {
+      font-size: .8rem;
+      opacity: .85;
+      margin-bottom: .12rem;
+    }
+    .bubble-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+    @keyframes riseBubble {
+      0% {
+        transform: translate3d(0, 10px, 0) scale(0.95);
+        opacity: 0;
+      }
+      40% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+      }
+    }
+    .empty-note {
+      font-size: .9rem;
+      color: #9ed8ff;
+      opacity: .85;
+      margin-top: .6rem;
+    }
 
-@keyframes riseBubble {
-  0% {
-    transform: translate3d(0, 10px, 0) scale(0.95);
-    opacity: 0;
-  }
-  40% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);  /* no upward offset at end */
-    opacity: 1;
-  }
-  /* Responsive */
+    /* Responsive */
     @media (max-width: 900px) {
       .sidebar {
         width: var(--sidebar-narrow) !important;
@@ -584,14 +599,12 @@
   </style>
 
   <!-- EmailJS SDK and init -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function () {
-    emailjs.init({
-      publicKey: "HCIItAbrysqWp2zKw"  // your public key
-    });
-  })();
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init({ publicKey: "HCIItAbrysqWp2zKw" });
+    })();
+  </script>
 </head>
 <body>
   <!-- Sidebar -->
@@ -685,24 +698,21 @@
       <aside class="screenshots-card">
         <h2 class="screenshots-title" data-i18n="shots_title">From first idea to full app</h2>
         <div class="screenshots-grid">
-          <!-- New design card -->
+          <!-- New design (second-last image) -->
           <div class="shot-box">
             <span class="shot-label" data-i18n="shots_new_title">New design</span>
-            <!-- real image here -->
-            <img src="assets/Screenshot-2025-12-01-093557.png"
-              alt="Current Water Health Index layout">
-
+            <img src="my-folder/Screenshot 2025-12-01 093618.png"
+                 alt="Current Water Health Index layout">
             <div data-i18n="shots_new_caption">
               Modern sidebar layout with separate pages for Measure, Map, Care,
               Farmers Assistant, Learn and more.
             </div>
           </div>
-          <!-- First prototype card -->
+          <!-- Old design (last image) -->
           <div class="shot-box">
             <span class="shot-label" data-i18n="shots_old_title">First prototype</span>
-            <!-- real image here -->
-            <img src="assets/Screenshot-2025-12-01-093618.png"
-              alt="Old Water Index prototype">
+            <img src="my-folder/Screenshot 2025-12-01 093557.png"
+                 alt="Old Water Health Index prototype">
             <div data-i18n="shots_old_caption">
               The original single-page version that proved students in small towns
               could also track water health.
@@ -841,9 +851,7 @@
             Recent ideas appear here as floating bubbles. A summary will also show on the Home page.
           </div>
         </div>
-        <div class="bubbles-list" id="bubblesList">
-          <!-- bubbles inserted by JS -->
-        </div>
+        <div class="bubbles-list" id="bubblesList"></div>
         <div class="empty-note" id="bubblesEmpty" data-i18n="bubbles_empty">
           No suggestions yet – be the first to share an idea.
         </div>
@@ -851,10 +859,9 @@
     </section>
   </main>
 
-  <!-- translations + scripts -->
   <script src="about.translations.js"></script>
   <script>
-    // ---- Language handling (same pattern as Home) ----
+    // Language handling
     const langBtn = document.getElementById('langCurrentBtn');
     const langDropdown = document.getElementById('langDropdown');
     const i18nNodes = document.querySelectorAll('[data-i18n]');
@@ -865,9 +872,7 @@
       const t = getAboutStrings(langCode);
       i18nNodes.forEach(el => {
         const key = el.dataset.i18n;
-        if (t[key]) {
-          el.textContent = t[key];
-        }
+        if (t[key]) el.textContent = t[key];
       });
       currentLang = langCode;
     }
@@ -892,7 +897,7 @@
       });
     });
 
-    // ---- Sidebar drag (desktop) ----
+    // Sidebar drag
     (function () {
       const sidebar = document.getElementById('sidebar');
       const mainWrap = document.getElementById('mainWrap');
@@ -939,8 +944,8 @@
       });
     })();
 
-    // ---- Suggestions: localStorage + bubbles ----
-    const SUGGEST_KEY = 'whi_suggestions_v1'; // shared key with Home page
+    // Suggestions + EmailJS
+    const SUGGEST_KEY = 'whi_suggestions_v1';
     const form = document.getElementById('suggestForm');
     const nameInput = document.getElementById('suggestName');
     const placeInput = document.getElementById('suggestPlace');
@@ -955,54 +960,52 @@
         if (!raw) return [];
         const arr = JSON.parse(raw);
         return Array.isArray(arr) ? arr : [];
-      } catch (e) {
+      } catch {
         return [];
       }
     }
-
     function saveSuggestions(list) {
       localStorage.setItem(SUGGEST_KEY, JSON.stringify(list));
     }
+
     function renderBubbles() {
-  const list = loadSuggestions();
-  bubblesList.innerHTML = '';
+      let list = loadSuggestions();
+      bubblesList.innerHTML = '';
 
-  if (!list.length) {
-    bubblesEmpty.style.display = 'block';
-    return;
-  }
+      if (!list.length) {
+        bubblesEmpty.style.display = 'block';
+        return;
+      }
 
-  // hard-limit what is stored
-  const MAX_SAVED = 20;
-  if (list.length > MAX_SAVED) {
-    list.splice(0, list.length - MAX_SAVED); // remove oldest
-    saveSuggestions(list);                   // write back to localStorage
-  }
+      const MAX_SAVED = 20;
+      if (list.length > MAX_SAVED) {
+        list.splice(0, list.length - MAX_SAVED);
+        saveSuggestions(list);
+      }
 
-  bubblesEmpty.style.display = 'none';
+      bubblesEmpty.style.display = 'none';
 
-  // show only latest 5 in UI (change if you want)
-  const MAX_VISIBLE = 5;
-  const recent = list.slice(-MAX_VISIBLE).reverse();
+      const MAX_VISIBLE = 5;
+      const recent = list.slice(-MAX_VISIBLE).reverse();
 
-  recent.forEach((item, idx) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'bubble-item';
-    wrap.style.animationDelay = (idx * 0.6) + 's';
+      recent.forEach((item, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'bubble-item';
+        wrap.style.animationDelay = (idx * 0.6) + 's';
 
-    const meta = document.createElement('div');
-    meta.className = 'bubble-meta';
-    meta.textContent = item.meta;
+        const meta = document.createElement('div');
+        meta.className = 'bubble-meta';
+        meta.textContent = item.meta;
 
-    const text = document.createElement('div');
-    text.className = 'bubble-text';
-    text.textContent = item.text;
+        const text = document.createElement('div');
+        text.className = 'bubble-text';
+        text.textContent = item.text;
 
-    wrap.appendChild(meta);
-    wrap.appendChild(text);
-    bubblesList.appendChild(wrap);
-  });
-}
+        wrap.appendChild(meta);
+        wrap.appendChild(text);
+        bubblesList.appendChild(wrap);
+      });
+    }
 
     function buildMeta(name, place) {
       const parts = [];
@@ -1010,25 +1013,21 @@
       if (place) parts.push(place);
       const now = new Date();
       const time = now.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-      if (parts.length) {
-        return parts.join(' · ') + ' — ' + time;
-      }
+      if (parts.length) return parts.join(' · ') + ' — ' + time;
       return time;
     }
 
-    // ---- EmailJS helper ----
     function sendSuggestionToEmailJS(payload) {
-  const params = {
-    from_name: payload.name || "Anonymous",
-    message:   payload.text
-  };
-
-  return emailjs.send(
-    "service_0hx6far",   // your service ID
-    "template_mdm609t",  // your template ID
-    params
-  );
-}
+      const params = {
+        from_name: payload.name || "Anonymous",
+        message: payload.text
+      };
+      return emailjs.send(
+        "service_0hx6far",
+        "template_mdm609t",
+        params
+      );
+    }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -1038,6 +1037,7 @@
         statusEl.style.color = '#ffd2a3';
         return;
       }
+
       const name = nameInput.value.trim();
       const place = placeInput.value.trim();
 
@@ -1056,8 +1056,7 @@
       statusEl.textContent = 'Sending...';
       statusEl.style.color = '#aef6d8';
 
-      // send email through EmailJS
-            sendSuggestionToEmailJS(entry)
+      sendSuggestionToEmailJS(entry)
         .then(() => {
           form.reset();
           statusEl.textContent = 'Thank you – your suggestion was sent and saved.';
@@ -1077,5 +1076,3 @@
   </script>
 </body>
 </html>
-
-  
