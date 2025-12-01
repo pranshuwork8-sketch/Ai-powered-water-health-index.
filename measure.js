@@ -157,27 +157,31 @@ document.addEventListener('DOMContentLoaded', () => {
   let facing   = 'environment';
 
   async function openCamera() {
-    if (!video || !canvas) return;
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert('Camera API not supported in this browser.');
-      return;
-    }
-    if (stream) return;
+  if (!video || !canvas) return;
 
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing },
-        audio: false
-      });
-      video.srcObject = stream;
-      video.style.display = 'block';
-      canvas.style.display = 'none';
-      await video.play();
-    } catch (e) {
-      console.error(e);
-      alert('Camera not available or permission denied.');
-    }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert('Camera API not supported in this browser.');
+    return;
   }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: facing },
+      audio: false
+    });
+
+    video.srcObject = stream;
+    video.muted = true;
+    video.playsInline = true;
+
+    await video.play();
+
+    video.style.display = 'block';
+    canvas.style.display = 'none';
+  } catch (e) {
+    console.error(e);
+    alert('Camera not available or permission denied.');
+  }
+}
 
   function closeCamera() {
     if (stream) {
