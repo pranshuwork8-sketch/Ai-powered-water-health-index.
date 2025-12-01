@@ -954,13 +954,6 @@
     if (suggCard) suggCard.classList.add('float-active');
   }, 3000);   // 3.0s total
 })();
-      // remove from DOM after fade completes
-      setTimeout(() => {
-        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-        if (suggCard) suggCard.classList.add('float-active');
-      }, 4300);
-    })();
-
     // mobile menu toggle
     (function(){
       const btn = document.getElementById('mobileMenuBtn');
