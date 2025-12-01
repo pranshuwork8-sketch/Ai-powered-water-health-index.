@@ -11,7 +11,6 @@
   <style>
     :root {
       --sidebar-wide: 225px;
-      --sidebar-narrow: 64px;
       --sidebar-min: 210px;
       --sidebar-max: 380px;
       --accent: #51daf7;
@@ -44,11 +43,15 @@
       min-height: 100vh;
       box-sizing: border-box;
     }
-    body {
-      position: relative;
+    body { position: relative; }
+
+    /* Layout wrapper */
+    .layout-wrap {
+      display: flex;
+      min-height: 100vh;
     }
 
-    /* Sidebar (same as index) */
+    /* Sidebar (desktop default) */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -139,6 +142,7 @@
       padding: 4vw 4vw 3vw 4vw;
       min-height: 100vh;
       box-sizing: border-box;
+      flex: 1;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -242,57 +246,49 @@
       flex: 1 1 360px;
       min-width: 0;
     }
+
     .measure-card {
-  background: var(--measure-card);
-  border-radius: 26px;
-  padding: 2rem 2rem 1.9rem;
-  box-shadow: var(--shadow);
-  border: 1.6px solid #107dac;
-}
-
-/* Shared field width so left and right look symmetrical */
-.measure-field {
-  max-width: 540px;
-  margin: 0 auto 1rem auto;   /* center & space out */
-}
-
-.measure-field label {
-  margin-top: 0.45rem;
-  margin-bottom: 0.1rem;
-  display: block;
-  font-weight: bold;
-  color: var(--measure-accent2);
-  font-size: 1.02rem;
-}
-
-.measure-field input,
-.measure-field select {
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid #2aa2cd;
-  margin: .45rem 0 0.8rem 0;
-  padding: .6rem .85rem;
-  font-size: 1.05rem;
-  background: #102636;
-  color: #e9fff5;
-}
-
-/* Numbers: pH & Temp left, TDS centered & bold */
-input[type="number"] {
-  text-align: left;
-  font-weight: normal;
-  letter-spacing: 0;
-}
-
-#tds {
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-    /* Center closed turbidity text (browser support varies) */
-    #turbidity {
-      text-align-last: center;
+      background: var(--measure-card);
+      border-radius: 26px;
+      padding: 2rem 2rem 1.9rem;
+      box-shadow: var(--shadow);
+      border: 1.6px solid #107dac;
     }
+
+    .measure-field {
+      max-width: 540px;
+      margin: 0 auto 1rem auto;
+    }
+    .measure-field label {
+      margin-top: 0.45rem;
+      margin-bottom: 0.1rem;
+      display: block;
+      font-weight: bold;
+      color: var(--measure-accent2);
+      font-size: 1.02rem;
+    }
+    .measure-field input,
+    .measure-field select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #2aa2cd;
+      margin: .45rem 0 0.8rem 0;
+      padding: .6rem .85rem;
+      font-size: 1.05rem;
+      background: #102636;
+      color: #e9fff5;
+    }
+    input[type="number"] {
+      text-align: left;
+      font-weight: normal;
+      letter-spacing: 0;
+    }
+    #tds {
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    #turbidity { text-align-last: center; }
 
     .small-hint {
       font-size: .84rem;
@@ -456,40 +452,35 @@ input[type="number"] {
 
     /* TDS card */
     .tds-card {
-      margin-top: 1.4rem;                 /* spacing below map */
-      background: var(--measure-card);    /* SAME as .measure-card */
-      border-radius: 26px;                /* SAME as .measure-card */
-      padding: 2rem 2rem 1.9rem;          /* SAME as .measure-card */
-      border: 1.6px solid #107dac;        /* SAME as .measure-card */
+      margin-top: 1.4rem;
+      background: var(--measure-card);
+      border-radius: 26px;
+      padding: 2rem 2rem 1.9rem;
+      border: 1.6px solid #107dac;
       box-shadow: var(--shadow);
     }
-
-.tds-card h2 {
-  margin: 0 0 .5rem 0;
-  font-size: 1.2rem;
-  color: var(--measure-accent);
-}
-
-.tds-intro {
-  margin: 0 0 .7rem 0;
-  font-size: .95rem;
-  color: #d9fbff;
-}
-
-.tds-result {
-  margin-top: .6rem;
-  font-size: .92rem;
-}
-
-.tds-flag {
-  font-weight: bold;
-  margin-bottom: .25rem;
-  color: var(--measure-accent);
-}
-
-.tds-note {
-  color: #d9fbff;
-}
+    .tds-card h2 {
+      margin: 0 0 .5rem 0;
+      font-size: 1.2rem;
+      color: var(--measure-accent);
+    }
+    .tds-intro {
+      margin: 0 0 .7rem 0;
+      font-size: .95rem;
+      color: #d9fbff;
+    }
+    .tds-result {
+      margin-top: .6rem;
+      font-size: .92rem;
+    }
+    .tds-flag {
+      font-weight: bold;
+      margin-bottom: .25rem;
+      color: var(--measure-accent);
+    }
+    .tds-note {
+      color: #d9fbff;
+    }
 
     /* History */
     .history-title {
@@ -521,33 +512,71 @@ input[type="number"] {
       opacity: 0.9;
     }
 
-    /* Mobile tweaks */
+    /* MOBILE TOP BAR + DRAWER */
+    .mobile-topbar { display: none; }
+
     @media (max-width: 900px) {
-      .sidebar {
-        width: var(--sidebar-narrow) !important;
-        min-width: var(--sidebar-narrow);
-        max-width: var(--sidebar-narrow);
+      .mobile-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(10,30,46,0.98);
+        display: flex;
+        align-items: center;
+        padding: 0 0.8rem;
+        z-index: 2100;
+        box-shadow: 0 2px 12px #00000055;
       }
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #51daf7;
+        background: #153044;
+        color: #e3fbfa;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.7rem;
+      }
+      .mobile-topbar-title {
+        color: #9ee8ff;
+        font-weight: bold;
+        font-size: 1.05rem;
+      }
+
+      .sidebar {
+        top: 52px;
+        bottom: 0;
+        width: 220px;
+        max-width: 80vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease-out;
+        position: fixed;
+      }
+      .sidebar.open { transform: translateX(0); }
       .sidebar-header { margin: 1rem 0; }
       .logo-img { font-size: 2.1rem; }
-      .logo-text { font-size: 1.1rem; }
+      .logo-text { font-size: 1.3rem; }
       .sidebar nav .nav-link {
-        font-size: 0;
-        padding: .9rem .3rem;
-        justify-content: center;
+        font-size: 1rem;
+        padding: .7rem .9rem;
+        justify-content: flex-start;
       }
-      .sidebar nav .nav-link .label { display: none; }
+      .sidebar nav .nav-link .label { display: inline; }
+      .sidebar-handle { display: none; }
 
-      .sidebar-handle {
-        pointer-events: none;
-      }
-
+      .layout-wrap { margin-top: 52px; }
       .main-wrap {
-        margin-left: var(--sidebar-narrow) !important;
+        margin-left: 0;
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
       .measure-header {
-        margin-top: 18vw;
+        margin-top: 4vw;
         margin-left: .3rem;
       }
       .measure-layout {
@@ -559,284 +588,287 @@ input[type="number"] {
         width: calc(100% - .6rem);
         margin-left: .3rem;
       }
+      .lang-wrap {
+        top: 60px;
+        right: .8rem;
+      }
     }
 
     @media (max-width: 520px) {
-      .lang-wrap {
-        right: .7rem;
-        top: .7rem;
-      }
       .lang-current {
         font-size: 1rem;
         padding: .5rem 1.3rem .5rem .8rem;
       }
-      .measure-title {
-        font-size: 1.45rem;
-      }
-      .measure-header {
-        margin-top: 22vw;
-      }
+      .measure-title { font-size: 1.45rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="logo-img" aria-hidden="true">🌊</span>
-      <span class="logo-text">Water<br>Index</span>
-    </div>
-    <nav>
-      <a href="index.html" class="nav-link">
-        <span aria-hidden="true">🏠</span>
-        <span class="label" data-i18n="nav_home">Home</span>
-      </a>
-      <a href="measure.html" class="nav-link active">
-        <span aria-hidden="true">🧪</span>
-        <span class="label" data-i18n="nav_measure">Measure</span>
-      </a>
-      <a href="map.html" class="nav-link">
-        <span aria-hidden="true">🗺️</span>
-        <span class="label" data-i18n="nav_map">Map</span>
-      </a>
-      <a href="care.html" class="nav-link">
-        <span aria-hidden="true">💧</span>
-        <span class="label" data-i18n="nav_care">Care</span>
-      </a>
-      <a href="farmers.html" class="nav-link">
-        <span aria-hidden="true">🌾</span>
-        <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
-      </a>
-      <a href="chart.html" class="nav-link">
-        <span aria-hidden="true">📊</span>
-        <span class="label" data-i18n="nav_chart">Chart</span>
-      </a>
-      <a href="learn.html" class="nav-link">
-        <span aria-hidden="true">📚</span>
-        <span class="label" data-i18n="nav_learn">Learn</span>
-      </a>
-      <a href="buykit.html" class="nav-link">
-        <span aria-hidden="true">🛒</span>
-        <span class="label" data-i18n="nav_buykit">Buy Kit</span>
-      </a>
-      <a href="about.html" class="nav-link">
-        <span aria-hidden="true">ℹ️</span>
-        <span class="label" data-i18n="nav_about">About</span>
-      </a>
-    </nav>
-    <footer class="sidebar-footer">
-      &copy; 2025 Water Health Index · Regional project
-    </footer>
-    <div class="sidebar-handle" id="sidebarHandle"></div>
-  </aside>
+  <!-- Mobile top bar -->
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-topbar-title">Water Index</div>
+  </header>
 
-  <!-- Language pill -->
-  <div class="lang-wrap">
-    <button class="lang-current" id="langCurrentBtn">
-      English <span style="font-size:1rem;">&#x25BC;</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button class="lang-opt" data-lang="en">English</button>
-      <button class="lang-opt" data-lang="hi">Hindi</button>
-      <button class="lang-opt" data-lang="bn">Bengali</button>
-      <button class="lang-opt" data-lang="ta">Tamil</button>
-      <button class="lang-opt" data-lang="mr">Marathi</button>
-      <button class="lang-opt" data-lang="gu">Gujarati</button>
-      <button class="lang-opt" data-lang="pa">Punjabi</button>
-      <button class="lang-opt" data-lang="te">Telugu</button>
-      <button class="lang-opt" data-lang="kn">Kannada</button>
-      <button class="lang-opt" data-lang="ur">Urdu</button>
-    </div>
-  </div>
+  <div class="layout-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-img" aria-hidden="true">🌊</span>
+        <span class="logo-text">Water<br>Index</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">
+          <span aria-hidden="true">🏠</span>
+          <span class="label" data-i18n="nav_home">Home</span>
+        </a>
+        <a href="measure.html" class="nav-link active">
+          <span aria-hidden="true">🧪</span>
+          <span class="label" data-i18n="nav_measure">Measure</span>
+        </a>
+        <a href="map.html" class="nav-link">
+          <span aria-hidden="true">🗺️</span>
+          <span class="label" data-i18n="nav_map">Map</span>
+        </a>
+        <a href="care.html" class="nav-link">
+          <span aria-hidden="true">💧</span>
+          <span class="label" data-i18n="nav_care">Care</span>
+        </a>
+        <a href="farmers.html" class="nav-link">
+          <span aria-hidden="true">🌾</span>
+          <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        </a>
+        <a href="chart.html" class="nav-link">
+          <span aria-hidden="true">📊</span>
+          <span class="label" data-i18n="nav_chart">Chart</span>
+        </a>
+        <a href="learn.html" class="nav-link">
+          <span aria-hidden="true">📚</span>
+          <span class="label" data-i18n="nav_learn">Learn</span>
+        </a>
+        <a href="buykit.html" class="nav-link">
+          <span aria-hidden="true">🛒</span>
+          <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        </a>
+        <a href="about.html" class="nav-link">
+          <span aria-hidden="true">ℹ️</span>
+          <span class="label" data-i18n="nav_about">About</span>
+        </a>
+      </nav>
+      <footer class="sidebar-footer">
+        &copy; 2025 Water Health Index · Regional project
+      </footer>
+      <div class="sidebar-handle" id="sidebarHandle"></div>
+    </aside>
 
-  <!-- Main content -->
-  <div class="main-wrap" id="mainWrap">
-    <header class="measure-header">
-      <h1 class="measure-title" data-i18n="measure_title">
-        Measure Water Quality
-      </h1>
-      <p class="measure-subtitle" data-i18n="measure_subtitle">
-        Enter pH, temperature and turbidity, use the camera pH reader, and then check TDS to see if this water is safe for drinking.
-      </p>
-    </header>
+    <!-- Main content -->
+    <div class="main-wrap" id="mainWrap">
+      <!-- Language pill -->
+      <div class="lang-wrap">
+        <button class="lang-current" id="langCurrentBtn">
+          English <span style="font-size:1rem;">&#x25BC;</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-opt" data-lang="en">English</button>
+          <button class="lang-opt" data-lang="hi">Hindi</button>
+          <button class="lang-opt" data-lang="bn">Bengali</button>
+          <button class="lang-opt" data-lang="ta">Tamil</button>
+          <button class="lang-opt" data-lang="mr">Marathi</button>
+          <button class="lang-opt" data-lang="gu">Gujarati</button>
+          <button class="lang-opt" data-lang="pa">Punjabi</button>
+          <button class="lang-opt" data-lang="te">Telugu</button>
+          <button class="lang-opt" data-lang="kn">Kannada</button>
+          <button class="lang-opt" data-lang="ur">Urdu</button>
+        </div>
+      </div>
 
-    <section class="measure-layout">
-      <!-- LEFT -->
-      <div class="measure-left">
-        <div class="measure-card">
-          <div class="measure-field">
-            <label for="ph" data-i18n="measure_ph_label">pH (0.0 - 14.0)</label>
-            <input id="ph" type="number" min="0" max="14" step="0.01" placeholder="7.00" />
-          </div>
+      <header class="measure-header">
+        <h1 class="measure-title" data-i18n="measure_title">
+          Measure Water Quality
+        </h1>
+        <p class="measure-subtitle" data-i18n="measure_subtitle">
+          Enter pH, temperature and turbidity, use the camera pH reader, and then check TDS to see if this water is safe for drinking.
+        </p>
+      </header>
 
-          <div class="measure-field">
-            <label for="temp" data-i18n="measure_temp_label">Temperature (°C)</label>
-            <input id="temp" type="number" min="-10" max="70" step="0.1" placeholder="25" />
-          </div>
-
-          <div class="measure-field">
-            <label for="turbidity" data-i18n="measure_turb_label">Turbidity</label>
-            <select id="turbidity">
-              <option value="" disabled selected data-i18n="measure_turb_select">
-                Select turbidity
-              </option>
-              <option value="Low" data-i18n="measure_turb_low">
-                Low — water looks clear; bottom and small objects are easy to see.
-              </option>
-              <option value="Medium" data-i18n="measure_turb_medium">
-                Medium — water is slightly cloudy; shapes visible but details blurred.
-              </option>
-              <option value="High" data-i18n="measure_turb_high">
-                High — water is cloudy or muddy; hard to see more than a few cm deep.
-              </option>
-            </select>
-            <div class="small-hint" id="turbHint" data-i18n="measure_turb_hint">
-              Low = clear water, Medium = slightly cloudy, High = cloudy or muddy water.
+      <section class="measure-layout">
+        <!-- LEFT -->
+        <div class="measure-left">
+          <div class="measure-card">
+            <div class="measure-field">
+              <label for="ph" data-i18n="measure_ph_label">pH (0.0 - 14.0)</label>
+              <input id="ph" type="number" min="0" max="14" step="0.01" placeholder="7.00" />
             </div>
-          </div>
 
-          <div class="buttons-row">
-            <button type="button" id="btnCamera" class="btn-main" data-i18n="measure_btn_camera">
-              Camera
-            </button>
-            <button type="button" id="btnSwitch" class="btn-main" data-i18n="measure_btn_switch_camera">
-              Switch Camera
-            </button>
-            <button type="button" id="btnLocation" class="btn-main" data-i18n="measure_btn_location">
-              Use My Location
-            </button>
-          </div>
+            <div class="measure-field">
+              <label for="temp" data-i18n="measure_temp_label">Temperature (°C)</label>
+              <input id="temp" type="number" min="-10" max="70" step="0.1" placeholder="25" />
+            </div>
 
-          <!-- Camera card -->
-          <div class="cam-card">
-            <div class="cam-title" id="camTitle" data-i18n="measure_cam_title">
-              Camera pH Reader
-            </div>
-            <div class="cam-box">
-              <video id="cameraView" autoplay playsinline muted></video>
-              <canvas id="phCanvas"></canvas>
-              <div class="cam-overlay"></div>
-            </div>
-            <div class="buttons-row cam-buttons">
-              <button type="button" id="btnDetect" class="btn-main" data-i18n="measure_btn_capture">
-                Capture Color
-              </button>
-              <button type="button" id="btnCloseCam" class="btn-danger" data-i18n="measure_btn_close_camera">
-                Close Camera
-              </button>
-            </div>
-            <div class="cam-info" id="camInfo" data-i18n="measure_cam_info">
-              Align the pH strip inside the dashed box under good light.
-            </div>
-          </div>
-
-          <!-- Location -->
-          <div class="loc-card" id="locCard">
-            <div class="loc-pin">📍</div>
-            <div>
-              <div class="loc-text" id="locationMain" data-i18n="measure_location_main">
-                No location selected yet.
-              </div>
-              <div class="loc-sub" id="locationSub" data-i18n="measure_location_sub">
-                Your current test location
+            <div class="measure-field">
+              <label for="turbidity" data-i18n="measure_turb_label">Turbidity</label>
+              <select id="turbidity">
+                <option value="" disabled selected data-i18n="measure_turb_select">
+                  Select turbidity
+                </option>
+                <option value="Low" data-i18n="measure_turb_low">
+                  Low — water looks clear; bottom and small objects are easy to see.
+                </option>
+                <option value="Medium" data-i18n="measure_turb_medium">
+                  Medium — water is slightly cloudy; shapes visible but details blurred.
+                </option>
+                <option value="High" data-i18n="measure_turb_high">
+                  High — water is cloudy or muddy; hard to see more than a few cm deep.
+                </option>
+              </select>
+              <div class="small-hint" id="turbHint" data-i18n="measure_turb_hint">
+                Low = clear water, Medium = slightly cloudy, High = cloudy or muddy water.
               </div>
             </div>
-          </div>
 
-          <!-- Analyze / save -->
-          <div class="buttons-row">
-            <button type="button" id="btnAnalyze" class="btn-main" data-i18n="measure_btn_analyze">
-              Analyze
-            </button>
-            <button type="button" id="btnSave" class="btn-main" data-i18n="measure_btn_save">
-              Save Reading
-            </button>
-            <button type="button" id="btnClear" class="btn-danger" data-i18n="measure_btn_clear">
-              Clear History
-            </button>
-          </div>
+            <div class="buttons-row">
+              <button type="button" id="btnCamera" class="btn-main" data-i18n="measure_btn_camera">
+                Camera
+              </button>
+              <button type="button" id="btnSwitch" class="btn-main" data-i18n="measure_btn_switch_camera">
+                Switch Camera
+              </button>
+              <button type="button" id="btnLocation" class="btn-main" data-i18n="measure_btn_location">
+                Use My Location
+              </button>
+            </div>
 
-          <!-- Status -->
-          <div class="status-card" id="statusCard">
-            <div class="status-circle" id="statusScore">--</div>
-            <div class="status-details">
+            <!-- Camera card -->
+            <div class="cam-card">
+              <div class="cam-title" id="camTitle" data-i18n="measure_cam_title">
+                Camera pH Reader
+              </div>
+              <div class="cam-box">
+                <video id="cameraView" autoplay playsinline muted></video>
+                anvas id="phCanvas"></canvas>
+                <div class="cam-overlay"></div>
+              </div>
+              <div class="buttons-row cam-buttons">
+                <button type="button" id="btnDetect" class="btn-main" data-i18n="measure_btn_capture">
+                  Capture Color
+                </button>
+                <button type="button" id="btnCloseCam" class="btn-danger" data-i18n="measure_btn_close_camera">
+                  Close Camera
+                </button>
+              </div>
+              <div class="cam-info" id="camInfo" data-i18n="measure_cam_info">
+                Align the pH strip inside the dashed box under good light.
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="loc-card" id="locCard">
+              <div class="loc-pin">📍</div>
               <div>
-                <strong id="statusLabel" data-i18n="measure_status_label">Status</strong>
-                <span class="status-badge" id="statusBadge">--</span>
+                <div class="loc-text" id="locationMain" data-i18n="measure_location_main">
+                  No location selected yet.
+                </div>
+                <div class="loc-sub" id="locationSub" data-i18n="measure_location_sub">
+                  Your current test location
+                </div>
               </div>
-              <div class="status-sub">
-                <span data-i18n="measure_status_params">pH, Temp, Turbidity:</span>
-                <span id="sPh"></span> /
-                <span id="sTemp"></span> /
-                <span id="sTurb"></span>
+            </div>
+
+            <!-- Analyze / save -->
+            <div class="buttons-row">
+              <button type="button" id="btnAnalyze" class="btn-main" data-i18n="measure_btn_analyze">
+                Analyze
+              </button>
+              <button type="button" id="btnSave" class="btn-main" data-i18n="measure_btn_save">
+                Save Reading
+              </button>
+              <button type="button" id="btnClear" class="btn-danger" data-i18n="measure_btn_clear">
+                Clear History
+              </button>
+            </div>
+
+            <!-- Status -->
+            <div class="status-card" id="statusCard">
+              <div class="status-circle" id="statusScore">--</div>
+              <div class="status-details">
+                <div>
+                  <strong id="statusLabel" data-i18n="measure_status_label">Status</strong>
+                  <span class="status-badge" id="statusBadge">--</span>
+                </div>
+                <div class="status-sub">
+                  <span data-i18n="measure_status_params">pH, Temp, Turbidity:</span>
+                  <span id="sPh"></span> /
+                  <span id="sTemp"></span> /
+                  <span id="sTurb"></span>
+                </div>
+                <div class="status-desc" id="statusText"></div>
               </div>
-              <div class="status-desc" id="statusText"></div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- RIGHT -->
-      <div class="measure-right">
-        <div class="measure-card">
-          <div id="map"></div>
-          <div class="map-caption" id="mapCaption" data-i18n="measure_map_caption">
-            Your saved readings appear here. Green = Good, Yellow = Moderate, Red = Poor.
+        <!-- RIGHT -->
+        <div class="measure-right">
+          <div class="measure-card">
+            <div id="map"></div>
+            <div class="map-caption" id="mapCaption" data-i18n="measure_map_caption">
+              Your saved readings appear here. Green = Good, Yellow = Moderate, Red = Poor.
+            </div>
           </div>
-        </div>
 
-        <div class="tds-card">
-          <h2 data-i18n="tds_title">Drinking safety (TDS)</h2>
-          <p class="tds-intro" data-i18n="tds_intro">
-            Use pH and TDS to check if this water is suitable for drinking.
-          </p>
+          <div class="tds-card">
+            <h2 data-i18n="tds_title">Drinking safety (TDS)</h2>
+            <p class="tds-intro" data-i18n="tds_intro">
+              Use pH and TDS to check if this water is suitable for drinking.
+            </p>
 
-          <div class="measure-field">
-            <label for="tds" data-i18n="tds_label">TDS (mg/L or ppm)</label>
-            <input id="tds" type="number" min="0" step="1" placeholder="250" />
+            <div class="measure-field">
+              <label for="tds" data-i18n="tds_label">TDS (mg/L or ppm)</label>
+              <input id="tds" type="number" min="0" step="1" placeholder="250" />
 
-            <button type="button" id="btnCheckTds" class="btn-main" data-i18n="tds_check_btn">
-              Check drinking safety
-            </button>
+              <button type="button" id="btnCheckTds" class="btn-main" data-i18n="tds_check_btn">
+                Check drinking safety
+              </button>
 
-            <div class="tds-result">
-              <div class="tds-flag" id="tdsFlagText" data-i18n="tds_flag_wait">
-                Enter TDS and tap “Check drinking safety”.
+              <div class="tds-result">
+                <div class="tds-flag" id="tdsFlagText" data-i18n="tds_flag_wait">
+                  Enter TDS and tap “Check drinking safety”.
+                </div>
+                <div class="tds-note" id="tdsNoteText"></div>
               </div>
-              <div class="tds-note" id="tdsNoteText"></div>
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- History -->
+      <h2 class="history-title" id="histTitle" data-i18n="measure_history_title">
+        Saved Readings
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th id="thWhen" data-i18n="measure_th_when">When</th>
+            <th id="thPh" data-i18n="measure_th_ph">pH</th>
+            <th id="thTemp" data-i18n="measure_th_temp">Temp</th>
+            <th id="thTurb" data-i18n="measure_th_turb">Turb</th>
+            <th id="thTds" data-i18n="measure_th_tds">TDS</th>
+            <th id="thIndex" data-i18n="measure_th_index">Index</th>
+            <th id="thDrinkable" data-i18n="measure_th_drinkable">Drinkable?</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr>
+            <td colspan="7" style="color:#7ba9b0;" data-i18n="measure_history_empty">
+              No readings saved.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="measure-footer" data-i18n="measure_footer_note">
+        Tip: You can reuse these saved readings on the Map, Farmers Assistant, and Chart pages.
       </div>
-    </section>
-
-    <!-- History -->
-    <h2 class="history-title" id="histTitle" data-i18n="measure_history_title">
-      Saved Readings
-    </h2>
-    <table>
-      <thead>
-        <tr>
-          <th id="thWhen" data-i18n="measure_th_when">When</th>
-          <th id="thPh" data-i18n="measure_th_ph">pH</th>
-          <th id="thTemp" data-i18n="measure_th_temp">Temp</th>
-          <th id="thTurb" data-i18n="measure_th_turb">Turb</th>
-          <th id="thTds" data-i18n="measure_th_tds">TDS</th>
-          <th id="thIndex" data-i18n="measure_th_index">Index</th>
-          <th id="thDrinkable" data-i18n="measure_th_drinkable">Drinkable?</th>
-        </tr>
-      </thead>
-      <tbody id="historyBody">
-        <tr>
-          <td colspan="7" style="color:#7ba9b0;" data-i18n="measure_history_empty">
-            No readings saved.
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="measure-footer" data-i18n="measure_footer_note">
-      Tip: You can reuse these saved readings on the Map, Farmers Assistant, and Chart pages.
     </div>
   </div>
 
@@ -855,9 +887,7 @@ input[type="number"] {
       const t = getMeasureStrings(langCode);
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (t[key]) {
-          el.textContent = t[key];
-        }
+        if (t[key]) el.textContent = t[key];
       });
       localStorage.setItem('whilang', langCode);
     }
@@ -935,6 +965,24 @@ input[type="number"] {
         if (window.innerWidth <= 900) {
           sidebar.style.width = '';
           mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.classList.contains('open')) return;
+        if (!sidebar.contains(e.target) && e.target !== btn) {
+          sidebar.classList.remove('open');
         }
       });
     })();
