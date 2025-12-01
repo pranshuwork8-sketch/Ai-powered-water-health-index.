@@ -29,7 +29,7 @@
     }
     body { position: relative; }
 
-    /* FULLSCREEN WATER INTRO */
+    /* ===== FULLSCREEN WATER INTRO (updated) ===== */
     .intro-overlay {
       position: fixed;
       inset: 0;
@@ -39,6 +39,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      pointer-events: auto;
     }
     .intro-wave {
       position: absolute;
@@ -47,9 +48,9 @@
       border-radius: 50%;
       background:
         radial-gradient(circle at 30% 15%, rgba(255,255,255,0.25), transparent 55%),
-        radial-gradient(circle at 70% 80%, rgba(81,218,247,0.9), rgba(23,72,125,1));
+        radial-gradient(circle at 70% 80%, rgba(81,218,247,0.95), rgba(23,72,125,1));
       transform: translate3d(0, 60%, 0) scale(0.8);
-      animation: introWaveRise 1.35s ease-out forwards;
+      animation: introWaveRise 1.4s ease-out forwards;
     }
     .intro-core {
       position: relative;
@@ -58,11 +59,12 @@
       z-index: 1;
       opacity: 0;
       transform: translateY(18px) scale(0.9);
-      animation: introCoreIn 0.9s ease-out 0.35s forwards;
+      animation: introCoreIn 0.9s ease-out 0.25s forwards;
     }
     .intro-core-logo {
-      font-size: 3.1rem;
+      font-size: 3.2rem;
       text-shadow: 0 0 26px rgba(81,218,247,0.9);
+      animation: introLogoPulse 1.2s ease-in-out 0.25s forwards;
     }
     .intro-core-title {
       font-size: 1.7rem;
@@ -71,35 +73,76 @@
       margin-top: .5rem;
       color: #8ff7ff;
     }
+    /* splash circle that “bursts” the logo into water */
+    .intro-splash {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 0 solid rgba(81,218,247,0.85);
+      box-shadow: 0 0 30px rgba(81,218,247,0.95);
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0;
+      pointer-events: none;
+      animation: logoSplash 0.7s ease-out 1.3s forwards;
+    }
+    /* rings of water during burst */
     .intro-ring {
       position: absolute;
       border-radius: 50%;
       border: 2px solid rgba(81,218,247,0.8);
       box-shadow: 0 0 18px rgba(81,218,247,0.8);
       opacity: 0;
+      pointer-events: none;
     }
-    .intro-ring.r1 { width: 0; height: 0; animation: introRing 0.7s ease-out 0.7s forwards; }
-    .intro-ring.r2 { width: 0; height: 0; animation: introRing 0.9s ease-out 0.84s forwards; }
-    .intro-ring.r3 { width: 0; height: 0; animation: introRing 1.1s ease-out 1.0s forwards; }
+    .intro-ring.r1 { width: 0; height: 0; animation: introRing 0.7s ease-out 1.35s forwards; }
+    .intro-ring.r2 { width: 0; height: 0; animation: introRing 0.9s ease-out 1.45s forwards; }
+    .intro-ring.r3 { width: 0; height: 0; animation: introRing 1.1s ease-out 1.55s forwards; }
+
     .intro-overlay.hide {
-      animation: introFadeOut 0.55s ease-in forwards;
+      animation: introFadeOut 0.6s ease-in 1.6s forwards;
     }
+
     @keyframes introWaveRise {
       0% { transform: translate3d(0, 70%, 0) scale(0.7); opacity: 0.4; }
       55% { transform: translate3d(0, 0%, 0) scale(1); opacity: 1; }
-      100% { transform: translate3d(0, -10%, 0) scale(1.15); opacity: 0.95; }
+      100% { transform: translate3d(0, -8%, 0) scale(1.1); opacity: 0.95; }
     }
     @keyframes introCoreIn {
       0% { opacity: 0; transform: translateY(18px) scale(0.9); }
       60% { opacity: 1; transform: translateY(0) scale(1.03); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
+    @keyframes introLogoPulse {
+      0%   { transform: scale(0.9); filter: drop-shadow(0 0 0 rgba(81,218,247,0)); }
+      40%  { transform: scale(1.05); filter: drop-shadow(0 0 35px rgba(81,218,247,1)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 14px rgba(81,218,247,0.7)); }
+    }
+    @keyframes logoSplash {
+      0% {
+        opacity: 0;
+        border-width: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+      }
+      20% {
+        opacity: 1;
+        border-width: 6px;
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      100% {
+        opacity: 0;
+        border-width: 1px;
+        transform: translate(-50%, -50%) scale(4.2);
+      }
+    }
     @keyframes introRing {
-      0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(4.8); }
+      0%   { opacity: 0.8; transform: translate(-50%, -50%) scale(0.2); }
+      100% { opacity: 0;   transform: translate(-50%, -50%) scale(4.8); }
     }
     @keyframes introFadeOut {
-      0% { opacity: 1; pointer-events: none; }
+      0%   { opacity: 1; pointer-events: none; }
       100% { opacity: 0; visibility: hidden; pointer-events: none; }
     }
 
@@ -322,72 +365,135 @@
       color: #173048;
       text-decoration: none;
       box-shadow: 0 2px 15px #48e8c231;
-      transition: background .15s, color .15s;
+      transition: background .15s, color .15s, transform .12s;
     }
     .welcome-btn.alt {
       background: transparent;
       color: #b7fff6;
       border-color: #9ee8ff;
     }
-    .welcome-btn:hover { background: #17487d; color: #b7fff6; }
+    .welcome-btn:hover { background: #17487d; color: #b7fff6; transform: translateY(-1px); }
     .welcome-btn.alt:hover { background: #223e5b; color: #48e8c2; }
 
-    /* Home suggestions card */
+    /* Home suggestions card - NEW bubble animation */
     .home-suggestions {
-      background: rgba(14,34,52,0.9);
+      background: radial-gradient(circle at 10% -10%, rgba(132,255,247,0.35), rgba(14,34,52,0.95));
       border-radius: 22px;
       padding: 1.4rem 1.7rem 1.8rem 1.7rem;
-      border: 1.4px solid #2aa2cd;
-      box-shadow: 0 8px 26px #050f1b8f;
+      border: 1.4px solid #4dd7ff;
+      box-shadow: 0 10px 30px #02070fa8;
       box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-suggestions::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background:
+        radial-gradient(circle at 20% 120%, rgba(81,218,247,0.25), transparent 55%),
+        radial-gradient(circle at 90% -10%, rgba(184,255,248,0.2), transparent 50%);
+      opacity: 0.4;
+      pointer-events: none;
     }
     .home-suggestions-title {
+      position: relative;
       font-size: 1.3rem;
-      color: #55ebca;
-      margin-bottom: .5rem;
+      color: #f3fffd;
+      margin-bottom: .3rem;
+      text-shadow: 0 0 12px rgba(81,218,247,0.9);
     }
     .home-suggestions-note {
+      position: relative;
       font-size: .9rem;
-      color: #a9e0ff;
+      color: #c7f3ff;
       margin-bottom: .7rem;
     }
+
     .bubbles-list {
       position: relative;
       min-height: 80px;
       max-height: 200px;
-      overflow-y: auto;
-      padding: 8px 0.4rem 0 0.4rem;
+      overflow: hidden;
+      padding: 4px 0 0 0;
+      z-index: 1;
     }
+
     .bubble-item {
       position: relative;
-      margin: 8px 0 6px 0;
       display: inline-block;
-      max-width: 100%;
-      padding: .55rem .95rem .6rem .9rem;
+      max-width: 90%;
+      padding: .6rem 1.1rem .7rem 1rem;
+      margin: 0.35rem 0.6rem;
       border-radius: 999px;
-      background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.22), rgba(72,232,194,0.9));
-      color: #05222b;
+      background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.9), rgba(72,232,194,0.9));
+      color: #04242a;
       font-size: .92rem;
-      box-shadow: 0 6px 18px #00000063;
+      box-shadow:
+        0 0 20px rgba(120,255,230,0.75),
+        0 8px 24px rgba(0,0,0,0.6);
       transform-origin: center;
-      animation: riseBubble 6s ease-out forwards;
+      opacity: 0;
+      transform: translate3d(0, 18px, 0) scale(0.9);
+      animation: bubbleRiseGlow 5.5s cubic-bezier(.2,.6,.8,.4) forwards;
+    }
+    .bubble-item::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: 18%;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0));
+      opacity: 0.85;
     }
     .bubble-meta {
-      font-size: .8rem;
-      opacity: .85;
-      margin-bottom: .12rem;
+      font-size: .78rem;
+      opacity: .8;
+      margin-bottom: .08rem;
     }
-    .bubble-text { white-space: normal; word-break: break-word; }
-    @keyframes riseBubble {
-      0%   { transform: translate3d(0, 10px, 0) scale(0.95); opacity: 0; }
-      40%  { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
-      100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+    .bubble-text {
+      white-space: normal;
+      word-break: break-word;
     }
+
+    @keyframes bubbleRiseGlow {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 18px, 0) scale(0.9);
+        filter: blur(1px);
+      }
+      18% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1.01);
+        filter: blur(0);
+      }
+      55% {
+        opacity: 1;
+        transform: translate3d(0, -4px, 0) scale(1);
+      }
+      100% {
+        opacity: 0.9;
+        transform: translate3d(0, -6px, 0) scale(1);
+      }
+    }
+
     .empty-note {
+      position: relative;
       font-size: .9rem;
-      color: #9ed8ff;
-      opacity: .85;
-      margin-top: .6rem;
+      color: #e0fbff;
+      opacity: .8;
+      margin-top: .4rem;
+    }
+
+    /* subtle floating of entire suggestion card once intro is done */
+    .home-suggestions.float-active {
+      animation: cardFloat 8s ease-in-out infinite alternate;
+    }
+    @keyframes cardFloat {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
     }
 
     /* Credits */
@@ -527,13 +633,14 @@
   </style>
 </head>
 <body>
-  <!-- WATER INTRO -->
+  <!-- WATER INTRO (updated) -->
   <div class="intro-overlay" id="introOverlay">
     <div class="intro-wave"></div>
     <div class="intro-core">
       <div class="intro-core-logo">🌊</div>
       <div class="intro-core-title">WATER INDEX</div>
     </div>
+    <div class="intro-splash"></div>
     <div class="intro-ring r1" style="top:50%;left:50%;"></div>
     <div class="intro-ring r2" style="top:50%;left:50%;"></div>
     <div class="intro-ring r3" style="top:50%;left:50%;"></div>
@@ -645,7 +752,7 @@
         </article>
 
         <!-- Latest suggestions -->
-        <article class="home-suggestions">
+        <article class="home-suggestions" id="homeSuggestionsCard">
           <h2 class="home-suggestions-title" data-i18n="home_suggest_title">
             Latest suggestions
           </h2>
@@ -763,7 +870,7 @@
       });
     })();
 
-    // Suggestions preview from localStorage
+    // Suggestions preview from localStorage with new animation
     const SUGGEST_KEY = 'whi_suggestions_v1';
     const homeBubblesList = document.getElementById('homeBubblesList');
     const homeBubblesEmpty = document.getElementById('homeBubblesEmpty');
@@ -793,32 +900,46 @@
         localStorage.setItem(SUGGEST_KEY, JSON.stringify(list));
       }
       homeBubblesEmpty.style.display = 'none';
+
       const MAX_VISIBLE = 3;
       const recent = list.slice(-MAX_VISIBLE).reverse();
+
       recent.forEach((item, idx) => {
         const wrap = document.createElement('div');
         wrap.className = 'bubble-item';
-        wrap.style.animationDelay = (idx * 0.5) + 's';
+        // stagger so they come one by one after intro
+        wrap.style.animationDelay = (2.2 + idx * 0.6) + 's';
+
         const meta = document.createElement('div');
         meta.className = 'bubble-meta';
         meta.textContent = item.meta;
+
         const text = document.createElement('div');
         text.className = 'bubble-text';
         text.textContent = item.text;
+
         wrap.appendChild(meta);
         wrap.appendChild(text);
         homeBubblesList.appendChild(wrap);
       });
     }
 
-    // remove intro overlay after animation
+    // Intro overlay timing: let burst happen, then fade, then start card float
     (function(){
       const overlay = document.getElementById('introOverlay');
+      const suggCard = document.getElementById('homeSuggestionsCard');
       if (!overlay) return;
+
+      // add hide class slightly after ring animations
       setTimeout(() => {
         overlay.classList.add('hide');
-        setTimeout(() => overlay.remove(), 600);
-      }, 1900);
+      }, 1600);
+
+      // remove node fully a bit later, and enable card float
+      setTimeout(() => {
+        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        if (suggCard) suggCard.classList.add('float-active');
+      }, 2300);
     })();
 
     // mobile menu toggle
