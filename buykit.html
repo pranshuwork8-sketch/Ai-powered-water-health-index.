@@ -30,7 +30,6 @@
     }
     body { position: relative; }
 
-    /* Sidebar (reuse from home page) */
     .sidebar {
       width: var(--sidebar-wide);
       min-width: var(--sidebar-min);
@@ -115,7 +114,6 @@
       background: rgba(81,218,247,0.45);
     }
 
-    /* Main wrapper */
     .main-wrap {
       margin-left: var(--sidebar-wide);
       padding: 4vw 4vw 3vw 4vw;
@@ -130,7 +128,6 @@
       gap: 2rem;
     }
 
-    /* Language pill (reuse from home) */
     .lang-wrap {
       position: fixed;
       top: 1.3rem;
@@ -189,37 +186,29 @@
       border-color: #48e8c2;
     }
 
-    /* Kit cards */
-    .kit-cards {
+    .buykit-content {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.8rem;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
       margin-top: 2rem;
     }
-    .kit-card {
+    .kit-tab {
       background: var(--card-bg);
       border-radius: 26px;
       box-shadow: var(--shadow);
       border: 1.2px solid #107dac;
-      padding: 1.6rem 1.8rem;
+      padding: 1.6rem;
       box-sizing: border-box;
-      text-align: center;
-    }
-    .kit-img {
-      font-size: 4rem;
-      margin-bottom: .8rem;
-      color: var(--accent);
     }
     .kit-title {
       font-size: 1.4rem;
       color: #55ebca;
       font-weight: bold;
-      margin-bottom: .4rem;
+      margin-bottom: .6rem;
     }
     .kit-desc {
       font-size: 1rem;
       color: #d9fbff;
-      line-height: 1.5;
       margin-bottom: 1rem;
     }
     .kit-price {
@@ -242,9 +231,59 @@
       display: inline-block;
     }
     .kit-buy-btn:hover { background: #17487d; color: #b7fff6; }
+    .product-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .product-item {
+      background: rgba(14,34,52,0.9);
+      border-radius: 22px;
+      padding: 1.4rem 1.7rem 1.8rem 1.7rem;
+      border: 1.4px solid #2aa2cd;
+      box-shadow: 0 8px 26px #050f1b8f;
+      box-sizing: border-box;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .product-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .product-details {
+      flex: 1;
+    }
+    .product-title {
+      font-size: 1.2rem;
+      color: #55ebca;
+      margin-bottom: .3rem;
+    }
+    .product-desc {
+      font-size: .95rem;
+      color: #a9e0ff;
+      margin-bottom: .4rem;
+    }
+    .product-price {
+      font-size: 1.1rem;
+      color: #48e8c2;
+      font-weight: bold;
+      margin-bottom: .4rem;
+    }
+    .product-link {
+      font-weight: bold;
+      font-size: .95rem;
+      color: #55ebca;
+      text-decoration: none;
+    }
+    .product-link:hover { color: #b7fff6; }
 
-    /* Responsive */
     @media (max-width: 900px) {
+      .buykit-content {
+        grid-template-columns: 1fr;
+      }
       .sidebar {
         width: var(--sidebar-narrow) !important;
         min-width: var(--sidebar-narrow);
@@ -254,14 +293,10 @@
         margin-left: var(--sidebar-narrow);
         padding: 4vw 2.2vw 3vw 2.2vw;
       }
-      .kit-cards {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <span class="logo-img" aria-hidden="true">🌊</span>
@@ -311,7 +346,6 @@
     <div class="sidebar-handle" id="sidebarHandle"></div>
   </aside>
 
-  <!-- Lang pill -->
   <div class="lang-wrap">
     <button class="lang-current" id="langCurrentBtn">
       English <span style="font-size:1rem;">&#x25BC;</span>
@@ -330,33 +364,49 @@
     </div>
   </div>
 
-  <!-- Main layout -->
   <div class="main-wrap">
     <h1 class="welcome-title" data-i18n="buykit_title">Buy Water Testing Kit</h1>
-    <p class="welcome-text" data-i18n="buykit_intro">
-      Choose from our recommended kits for accurate water quality measurement.
-    </p>
-    <div class="kit-cards">
-      <div class="kit-card">
-        <span class="kit-img" aria-hidden="true">🧪</span>
-        <h2 class="kit-title" data-i18n="kit1_title">Basic Test Kit</h2>
-        <p class="kit-desc" data-i18n="kit1_desc">Perfect for beginners. Measures pH, turbidity, TDS.</p>
-        <div class="kit-price" data-i18n="kit1_price">₹ 1,299</div>
-        <a href="https://example.com/kit1" class="kit-buy-btn" data-i18n="btn_buy">Buy Now</a>
+    <div class="buykit-content">
+      <!-- All-in-One Kit Tab -->
+      <div class="kit-tab">
+        <h2 class="kit-title" data-i18n="kit1_title">All-in-One Water Testing Kit</h2>
+        <p class="kit-desc" data-i18n="kit1_desc">Buy our complete kit for basic water quality checks – includes pH strips, TDS meter, and thermometer. Just ₹350!</p>
+        <div class="kit-price" data-i18n="kit1_price">₹ 350</div>
+        <a href="#" class="kit-buy-btn" data-i18n="btn_buy">Buy Now</a>
       </div>
-      <div class="kit-card">
-        <span class="kit-img" aria-hidden="true">🔬</span>
-        <h2 class="kit-title" data-i18n="kit2_title">Farmer's Pack</h2>
-        <p class="kit-desc" data-i18n="kit2_desc">Designed for farmers, measures nutrients and contaminants.</p>
-        <div class="kit-price" data-i18n="kit2_price">₹ 2,499</div>
-        <a href="https://example.com/kit2" class="kit-buy-btn" data-i18n="btn_buy">Buy Now</a>
-      </div>
-      <div class="kit-card">
-        <span class="kit-img" aria-hidden="true">🔧</span>
-        <h2 class="kit-title" data-i18n="kit3_title">Advanced Sensor Kit</h2>
-        <p class="kit-desc" data-i18n="kit3_desc">Includes sensors for automated data logging.</p>
-        <div class="kit-price" data-i18n="kit3_price">₹ 4,999</div>
-        <a href="https://example.com/kit3" class="kit-buy-btn" data-i18n="btn_buy">Buy Now</a>
+
+      <!-- Product Tabs -->
+      <div class="product-tabs">
+        <!-- TDS Meter -->
+        <div class="product-item">
+          <img src="https://www.waterpurifieronline.com/wp-content/uploads/2023/02/Wellon-TDS-Meter-1.jpg" alt="TDS Meter" class="product-img"/>
+          <div class="product-details">
+            <h3 class="product-title">Wellon TDS Meter</h3>
+            <p class="product-desc">Measures Total Dissolved Solids (TDS) and temperature for accurate water quality testing.</p>
+            <div class="product-price">₹80 - ₹188</div>
+            <a href="https://www.amazon.in/Wellon-Dissolved-Solids-Quality-Testing/dp/B0D4M5B1L2" class="product-link" target="_blank">Buy on Amazon</a>
+          </div>
+        </div>
+        <!-- Thermometer -->
+        <div class="product-item">
+          <img src="https://www.jiomart.com/images/product/original/490210074/aptechdeals-digital-thermometer-0-product-0-202207271417.jpg" alt="Digital Thermometer" class="product-img"/>
+          <div class="product-details">
+            <h3 class="product-title">AptechDeals Digital Thermometer</h3>
+            <p class="product-desc">Portable digital thermometer for quick water temperature measurement.</p>
+            <div class="product-price">₹77 - ₹387</div>
+            <a href="https://www.amazon.in/AptechDeals-thermometer-temperaure-Temperature-Thermocouple/dp/B07FFT49V4" class="product-link" target="_blank">Buy on Amazon</a>
+          </div>
+        </div>
+        <!-- pH Test Paper -->
+        <div class="product-item">
+          <img src="https://www.meesho.com/p/p/78gndv/ph-1-14-test-paper-litmus-strips-tester-litmus-paper-for-ph-testingwater-testing80-strips?source=web" alt="pH Test Paper" class="product-img"/>
+          <div class="product-details">
+            <h3 class="product-title">pH Test Paper (80 Strips)</h3>
+            <p class="product-desc">Universal pH indicator strips for testing water, soil, and more.</p>
+            <div class="product-price">₹105</div>
+            <a href="https://www.meesho.com/ph-1-14-test-paper-litmus-strips-tester-litmus-paper-for-ph-testingwater-testing80-strips/p/78gndv" class="product-link" target="_blank">Buy on Meesho</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -402,53 +452,6 @@
         applyKitLanguage(langCode);
       });
     });
-
-    // Sidebar drag (reuse from home)
-    (function() {
-      const sidebar = document.getElementById('sidebar');
-      const mainWrap = document.getElementById('mainWrap');
-      const handle = document.getElementById('sidebarHandle');
-      if (!sidebar || !handle || !mainWrap) return;
-
-      let isDragging = false;
-      let startX = 0;
-      let startWidth = 0;
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
-      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
-
-      handle.addEventListener('mousedown', (e) => {
-        if (window.innerWidth <= 900) return;
-        isDragging = true;
-        startX = e.clientX;
-        startWidth = sidebar.offsetWidth;
-        document.body.style.userSelect = 'none';
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const delta = e.clientX - startX;
-        let newWidth = startWidth + delta;
-        if (newWidth < minWidth) newWidth = minWidth;
-        if (newWidth > maxWidth) newWidth = maxWidth;
-        sidebar.style.width = newWidth + 'px';
-        mainWrap.style.marginLeft = newWidth + 'px';
-      });
-
-      window.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        document.body.style.userSelect = '';
-      });
-
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 900) {
-          sidebar.style.width = '';
-          mainWrap.style.marginLeft = '';
-        }
-      });
-    })();
   </script>
 </body>
 </html>
