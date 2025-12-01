@@ -152,103 +152,89 @@ document.addEventListener('DOMContentLoaded', () => {
   const video  = document.getElementById('cameraView');
   const canvas = document.getElementById('phCanvas');
   const ctx    = canvas ? canvas.getContext('2d', { willReadFrequently: true }) : null;
+  // =======================================
+// SIMPLE & RELIABLE CAMERA SYSTEM
+// =======================================
 
-  let stream   = null;
-  let facing   = 'environment';
+let stream = null;
+let facingMode = "environment";
 
-  async function openCamera() {
-  if (!video || !canvas) return;
+const video = document.getElementById("cameraView");
+const canvas = document.getElementById("phCanvas");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    alert('Camera API not supported in this browser.');
-    return;
-  }
+async function startCamera() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: facing },
+      video: { facingMode },
       audio: false
     });
 
     video.srcObject = stream;
     video.muted = true;
     video.playsInline = true;
-
     await video.play();
 
-    video.style.display = 'block';
-    canvas.style.display = 'none';
-  } catch (e) {
-    console.error(e);
-    alert('Camera not available or permission denied.');
+    video.style.display = "block";
+    canvas.style.display = "none";
+
+  } catch (err) {
+    alert("Camera blocked. Please run the site on HTTPS or allow permissions.");
+    console.error(err);
   }
 }
 
-  function closeCamera() {
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-      stream = null;
-    }
-    if (video) {
-      video.srcObject = null;
-      video.style.display = 'none';
-    }
-    if (canvas) {
-      canvas.style.display = 'none';
-    }
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop());
+    stream = null;
+  }
+  video.srcObject = null;
+  video.style.display = "none";
+  canvas.style.display = "none";
+}
+
+function switchCamera() {
+  facingMode = facingMode === "environment" ? "user" : "environment";
+  stopCamera();
+  startCamera();
+}
+
+function captureColor() {
+  if (!video.videoWidth) {
+    alert("Camera not ready.");
+    return;
   }
 
-  function switchCamera() {
-    facing = (facing === 'environment') ? 'user' : 'environment';
-    closeCamera();
-    openCamera();
+  const w = video.videoWidth;
+  const h = video.videoHeight;
+  canvas.width = w;
+  canvas.height = h;
+
+  ctx.drawImage(video, 0, 0, w, h);
+
+  const boxSize = 30;
+  const x = Math.floor(w / 2 - boxSize / 2);
+  const y = Math.floor(h / 2 - boxSize / 2);
+  const img = ctx.getImageData(x, y, boxSize, boxSize);
+
+  let r = 0, g = 0, b = 0;
+  const pixels = img.data.length / 4;
+  for (let i = 0; i < img.data.length; i += 4) {
+    r += img.data[i];
+    g += img.data[i + 1];
+    b += img.data[i + 2];
   }
+  r /= pixels; g /= pixels; b /= pixels;
 
-  function captureColor() {
-    if (!video || !canvas || !ctx) {
-      alert('Camera canvas not available.');
-      return;
-    }
-    if (!video.videoWidth) {
-      alert('Open the camera and wait a moment, then tap Capture again.');
-      return;
-    }
+  alert(`Captured Color: R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)}`);
+}
 
-    const w = video.videoWidth;
-    const h = video.videoHeight;
-    canvas.width = w;
-    canvas.height = h;
-    ctx.drawImage(video, 0, 0, w, h);
-
-    const box = 20;
-    const sx = Math.max(0, Math.floor(w / 2 - box / 2));
-    const sy = Math.max(0, Math.floor(h / 2 - box / 2));
-    const img = ctx.getImageData(sx, sy, box, box);
-    const data = img.data;
-
-    let r = 0, g = 0, b = 0;
-    const px = data.length / 4;
-    for (let i = 0; i < data.length; i += 4) {
-      r += data[i];
-      g += data[i + 1];
-      b += data[i + 2];
-    }
-    r /= px;
-    g /= px;
-    b /= px;
-
-    const ph = rgbToPh(r, g, b);
-    if (phInput) phInput.value = ph.toFixed(2);
-    if (camInfo) {
-      camInfo.textContent =
-        `Captured color (avg): R${r.toFixed(0)} G${g.toFixed(0)} B${b.toFixed(0)} → pH ≈ ${ph.toFixed(2)}`;
-    }
-  }
-
-  if (btnCamera)   btnCamera.addEventListener('click', openCamera);
-  if (btnCloseCam) btnCloseCam.addEventListener('click', closeCamera);
-  if (btnSwitch)   btnSwitch.addEventListener('click', switchCamera);
-  if (btnDetect)   btnDetect.addEventListener('click', captureColor);
-
+// Buttons
+document.getElementById("btnCamera").onclick = startCamera;
+document.getElementById("btnCloseCam").onclick = stopCamera;
+document.getElementById("btnSwitch").onclick = switchCamera;
+document.getElementById("btnDetect").onclick = captureColor;
   // pH reference table
   const phReference = [
     { pH: 1,  rgb: [235,  90, 120] },
