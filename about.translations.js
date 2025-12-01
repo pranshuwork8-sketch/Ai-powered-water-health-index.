@@ -26,7 +26,7 @@
       about_intro_2:
         "Using only simple test strips or a small kit, the site converts pH, turbidity, temperature and TDS into a 0–100 score, shows it on a map, and explains what to do next in friendly language.",
 
-      shots_title: "From first idea to full app",
+      shots_title: "From a idea to a site",
       shots_new_label: "New design",
       shots_new_text:
         "Modern sidebar layout with separate pages for Measure, Map, Care, Farmers Assistant, Learn and more.",
