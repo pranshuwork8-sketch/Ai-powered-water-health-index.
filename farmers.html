@@ -258,7 +258,7 @@
       padding:.16rem .6rem;
       border-radius:999px;
       font-size:.82rem;
-      border:1px solid #51daf7;
+      border:1px solid:#51daf7;
       color:#aefef5;
       background:rgba(8,30,46,0.9);
     }
@@ -761,9 +761,9 @@
   </section>
 
   <script>
-    // ---------- Translations (English only for now) ----------
+    /* ========= SIMPLE TRANSLATIONS: EN ONLY FOR NOW ========= */
     function getFarmersStrings(langCode){
-      const en = {
+      const en={
         topbar_title:"Water Index",
         nav_home:"Home",
         nav_measure:"Measure",
@@ -829,7 +829,7 @@
     (function initLanguage(){
       const saved=localStorage.getItem('whi_lang')||'en';
       applyFarmersLanguage(saved);
-      langOptions.forEach(b=>{ if(b.dataset.lang===saved) b.classList.add('selected'); });
+      langOptions.forEach(b=>{if(b.dataset.lang===saved)b.classList.add('selected');});
       const currentLabel=Array.from(langOptions).find(b=>b.dataset.lang===saved);
       if(currentLabel){
         langBtn.innerHTML=currentLabel.textContent+' <span style="font-size:1rem;">&#x25BC;</span>';
@@ -856,23 +856,23 @@
       });
     });
 
-    // Sidebar drag
+    /* ========= SIDEBAR + MOBILE ========= */
     (function(){
       const sidebar=document.getElementById('sidebar');
       const mainWrap=document.getElementById('mainWrap');
       const handle=document.getElementById('sidebarHandle');
-      if(!sidebar||!handle||!mainWrap) return;
+      if(!sidebar||!handle||!mainWrap)return;
       let isDragging=false,startX=0,startWidth=0;
       const rootStyles=getComputedStyle(document.documentElement);
       const minWidth=parseInt(rootStyles.getPropertyValue('--sidebar-min'))||210;
       const maxWidth=parseInt(rootStyles.getPropertyValue('--sidebar-max'))||380;
       handle.addEventListener('mousedown',e=>{
-        if(window.innerWidth<=900) return;
+        if(window.innerWidth<=900)return;
         isDragging=true;startX=e.clientX;startWidth=sidebar.offsetWidth;
         document.body.style.userSelect='none';
       });
       window.addEventListener('mousemove',e=>{
-        if(!isDragging) return;
+        if(!isDragging)return;
         const delta=e.clientX-startX;
         let newWidth=startWidth+delta;
         if(newWidth<minWidth)newWidth=minWidth;
@@ -893,7 +893,6 @@
       });
     })();
 
-    // Mobile menu
     (function(){
       const btn=document.getElementById('mobileMenuBtn');
       const sidebar=document.getElementById('sidebar');
@@ -911,7 +910,7 @@
       });
     })();
 
-    // AI placeholder open/close
+    /* ========= AI PLACEHOLDER ========= */
     (function(){
       const openBtn=document.getElementById('openFarmAiBtn');
       const panel=document.getElementById('aiPlaceholder');
@@ -921,22 +920,20 @@
       closeBtn.addEventListener('click',()=>{panel.style.display='none';});
     })();
 
-    // LocalStorage latest reading (uses same whReadings key as old page)
-    const STORAGE_KEY='whReadings';
+    /* ========= STORAGE: LATEST READING (whReadings) ========= */
+    const STORAGE_KEY='whReadings';  // same key as old page [file:13]
 
     function loadLatestReading(){
       try{
         const raw=localStorage.getItem(STORAGE_KEY);
-        if(!raw) return null;
+        if(!raw)return null;
         const arr=JSON.parse(raw);
-        if(!Array.isArray(arr)||!arr.length) return null;
+        if(!Array.isArray(arr)||!arr.length)return null;
         const last=arr[arr.length-1];
         const p=typeof last.ph==="number"?last.ph:parseFloat(last.ph);
-        if(isNaN(p)) return null;
+        if(isNaN(p))return null;
         return {ph:p,raw:last};
-      }catch(e){
-        return null;
-      }
+      }catch(e){return null;}
     }
 
     const statusSummaryText=document.getElementById('statusSummaryText');
@@ -946,14 +943,14 @@
     const statusExtra=document.getElementById('statusExtra');
 
     function classifyPH(p){
-      if(isNaN(p)) return {band:'unknown',label:'—',className:'chip-warn'};
-      if(p<5) return {band:'veryLow',label:'strongly acidic',className:'chip-bad'};
-      if(p<6) return {band:'low',label:'acidic',className:'chip-bad'};
-      if(p<6.5) return {band:'slightLow',label:'slightly acidic',className:'chip-warn'};
-      if(p<=7.5) return {band:'neutral',label:'near neutral',className:'chip-ok'};
-      if(p<=8.2) return {band:'slightHigh',label:'slightly alkaline',className:'chip-warn'};
-      if(p<=9) return {band:'high',label:'alkaline',className:'chip-bad'};
-      return {band:'veryHigh',label:'very alkaline',className:'chip-bad'};
+      if(isNaN(p))return{band:'unknown',label:'—',className:'chip-warn'};
+      if(p<5)return{band:'veryLow',label:'strongly acidic',className:'chip-bad'};
+      if(p<6)return{band:'low',label:'acidic',className:'chip-bad'};
+      if(p<6.5)return{band:'slightLow',label:'slightly acidic',className:'chip-warn'};
+      if(p<=7.5)return{band:'neutral',label:'near neutral',className:'chip-ok'};
+      if(p<=8.2)return{band:'slightHigh',label:'slightly alkaline',className:'chip-warn'};
+      if(p<=9)return{band:'high',label:'alkaline',className:'chip-bad'};
+      return{band:'veryHigh',label:'very alkaline',className:'chip-bad'};
     }
 
     function updateLatestStatusBox(){
@@ -973,7 +970,7 @@
       statusExtra.textContent='Tip: use the pH helper below to see matching crops and correction steps.';
     }
 
-    // Crop database (21 crops)
+    /* ========= CROP DATABASE (21 CROPS) ========= */
     const FARM_CROPS=[
       {id:'rice',name:'Rice (paddy)',group:'staple',phMin:5.5,phMax:7.0,
         improveLow:[
@@ -1355,7 +1352,7 @@
       }
     ];
 
-    // pH helper
+    /* ========= pH HELPER ========= */
     const phInput=document.getElementById('phInput');
     const btnUseLatest=document.getElementById('btnUseLatest');
     const btnCheckPh=document.getElementById('btnCheckPh');
@@ -1366,11 +1363,11 @@
 
     function describePH(p){
       const c=classifyPH(p);
-      if(c.band==='unknown') return 'Enter a pH value between 0 and 14.';
+      if(c.band==='unknown')return'Enter a pH value between 0 and 14.';
       if(c.band==='neutral'){
-        return 'pH '+p.toFixed(2)+' is close to neutral. Most crops can grow well if soil and water are managed properly.';
+        return'pH '+p.toFixed(2)+' is close to neutral. Most crops can grow well if soil and water are managed properly.';
       }
-      return 'pH '+p.toFixed(2)+' is '+c.label+
+      return'pH '+p.toFixed(2)+' is '+c.label+
              '. Some crops will struggle unless you correct pH or choose tolerant crops.';
     }
 
@@ -1421,10 +1418,10 @@
       }
       updatePHStatus(v);
       const currentCropId=document.getElementById('cropSelect').value;
-      if(currentCropId) showCropAdvice(currentCropId,v);
+      if(currentCropId)showCropAdvice(currentCropId,v);
     });
 
-    // pH improvement
+    /* ========= pH IMPROVEMENT ========= */
     const phImprove=document.getElementById('phImprove');
     const btnImprove=document.getElementById('btnImprove');
     const improveCards=document.getElementById('improveCards');
@@ -1481,7 +1478,7 @@
           'Shift to salt‑tolerant crops until soil and water quality improve.'
         );
       }
-      return {short,long};
+      return{short,long};
     }
 
     btnImprove.addEventListener('click',()=>{
@@ -1498,7 +1495,7 @@
       improveCards.style.display='block';
     });
 
-    // Crop advice
+    /* ========= CROP ADVICE ========= */
     const cropSelect=document.getElementById('cropSelect');
     const cropAdviceArea=document.getElementById('cropAdviceArea');
     const cropRangeText=document.getElementById('cropRangeText');
@@ -1536,9 +1533,11 @@
         statusText='Enter or load pH on the left to check fit more clearly.';
       }
       cropRangeText.textContent=crop.name+' grows best between pH '+crop.phMin.toFixed(1)+' and '+crop.phMax.toFixed(1)+'. '+statusText;
+
       cropImproveList.innerHTML='';
       irrigationList.innerHTML='';
       managementList.innerHTML='';
+
       const lowSide=crop.improveLow||[];
       const highSide=crop.improveHigh||[];
       let improveSource=[];
@@ -1564,6 +1563,7 @@
         li.textContent=txt;
         managementList.appendChild(li);
       });
+
       cropAdviceArea.style.display='block';
     }
 
@@ -1577,7 +1577,7 @@
       showCropAdvice(id,v);
     });
 
-    // Init
+    /* ========= INIT ========= */
     populateCropSelect();
     updateLatestStatusBox();
   </script>
