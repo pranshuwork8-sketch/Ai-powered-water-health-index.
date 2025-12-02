@@ -16,11 +16,9 @@
     }
     html,body{
       margin:0;
-      background:
-        linear-gradient(120deg,rgba(81,218,247,0.74),rgba(23,72,125,0.81) 85%),
-        url('assets/bg-water.jpg');
-      background-size:cover,cover;
-      background-repeat:no-repeat,no-repeat;
+      background:linear-gradient(120deg,rgba(81,218,247,0.74),rgba(23,72,125,0.81) 85%);
+      background-size:cover;
+      background-repeat:no-repeat;
       background-attachment:fixed;
       color:#e3fbfa;
       font-family:"Times New Roman",Times,serif;
@@ -485,7 +483,7 @@
       font-size:.88rem;
     }
 
-    /* AI placeholder box (logic in farmers.ai.js) */
+    /* AI placeholder */
     .ai-placeholder{
       position:fixed;
       bottom:32px;
@@ -625,8 +623,7 @@
           </div>
           <div class="farmers-ai-strip">
             <p class="farmers-ai-note" data-i18n="farm_ai_note">
-              Soon this button will open a voice helper. For now it shows a simple
-              preview box only.
+              In the next version this button will open a full voice helper. For now it shows a simple preview box.
             </p>
             <button class="farmers-ai-btn" id="openFarmAiBtn" data-i18n="farm_ai_btn">
               Open Farmers AI Assistant
@@ -654,7 +651,7 @@
           <h2 data-i18n="ph_helper_title">Smart pH helper</h2>
           <p class="farmers-panel-sub" data-i18n="ph_helper_sub">
             Step 1: choose a pH value. Step 2: see which crops are happy. Step 3: get
-            simple actions to move pH closer to 7.0.
+            clear actions to move pH closer to 7.0.
           </p>
 
           <div class="farmers-section">
@@ -745,7 +742,7 @@
     </main>
   </div>
 
-  <!-- AI placeholder box – real AI will live in farmers.ai.js -->
+  <!-- AI placeholder box -->
   <section class="ai-placeholder" id="aiPlaceholder">
     <header class="ai-placeholder-header">
       <div class="ai-placeholder-title" data-i18n="ai_placeholder_title">
@@ -763,37 +760,81 @@
     </div>
   </section>
 
-  <script src="farmers.translations.js"></script>
-  <script src="farmers.ai.js"></script>
-
   <script>
-    // ---------- Language handling ----------
-    const langBtn = document.getElementById('langCurrentBtn');
-    const langDropdown = document.getElementById('langDropdown');
-    const langOptions = document.querySelectorAll('.lang-opt');
-    const i18nNodes = document.querySelectorAll('[data-i18n]');
-
-    function applyFarmersLanguage(langCode){
-      if(typeof getFarmersStrings!=="function") return;
-      const t = getFarmersStrings(langCode);
-      i18nNodes.forEach(el=>{
-        const key = el.dataset.i18n;
-        if(t[key]) el.textContent = t[key];
-      });
+    // ---------- Translations (English only for now) ----------
+    function getFarmersStrings(langCode){
+      const en = {
+        topbar_title:"Water Index",
+        nav_home:"Home",
+        nav_measure:"Measure",
+        nav_map:"Map",
+        nav_care:"Care",
+        nav_farmers:"Farmers Assistant",
+        nav_chart:"Chart",
+        nav_learn:"Learn",
+        nav_buykit:"Buy Kit",
+        nav_about:"About",
+        farm_title:"Farmers Assistance",
+        farm_intro:"Turn water readings into simple steps: choose pH, pick a crop, and read clear tips on what to do next.",
+        farm_badge_household:"Households",
+        farm_badge_farmers:"Farmers",
+        farm_badge_students:"Student projects",
+        farm_ai_note:"In the next version this button will open a full voice helper. For now it shows a simple preview box.",
+        farm_ai_btn:"Open Farmers AI Assistant",
+        status_title:"Latest water status",
+        status_text_empty:"No saved reading found yet. Measure water on the “Measure” page and save it to see a quick summary here.",
+        ph_helper_title:"Smart pH helper",
+        ph_helper_sub:"Step 1: choose a pH value. Step 2: see which crops are happy. Step 3: get clear actions to move pH closer to 7.0.",
+        ph_choose_title:"1. Choose or enter pH",
+        ph_label:"pH",
+        ph_use_latest:"Use latest reading",
+        ph_check_btn:"Check pH for crops",
+        ph_note:"If you already measured water and pressed “Save” on the Measure page, this button will pull that value.",
+        best_crops_title:"Best crops at this pH",
+        ph_improve_title:"2. Improve pH towards 7.0",
+        ph_improve_label:"Current pH",
+        ph_improve_btn:"Show improvement tips",
+        short_term_title:"Short‑term steps",
+        long_term_title:"Long‑term soil health",
+        improve_note:"Always match pH correction with soil tests and local agriculture advice.",
+        crop_helper_title:"Crop‑based advice",
+        crop_helper_sub:"Pick a crop and reuse the same pH. You will see simple text on fit, fertiliser, irrigation and care.",
+        crop_choose_title:"3. Select a crop",
+        crop_label:"Crop",
+        crop_placeholder:"Choose crop…",
+        crop_note:"Enter or load pH on the left, then choose crop here to see how well the water matches.",
+        crop_range_title:"Ideal pH range",
+        crop_ph_improve_title:"pH improvement for this crop",
+        irrigation_title:"Irrigation tips",
+        management_title:"Fertiliser & management",
+        ai_placeholder_title:"Farmers AI Assistant (preview)",
+        ai_placeholder_close:"Close",
+        ai_placeholder_text:"In the future this box will speak, answer questions and show step‑by‑step guidance. For now it is only a preview. Use the pH helper and crop advice panels below."
+      };
+      return en; // other languages can be added later
     }
 
-    (function initLanguage(){
-      const stored = localStorage.getItem('whi_lang') || 'en';
-      applyFarmersLanguage(stored);
-      langOptions.forEach(b=>{
-        if(b.dataset.lang===stored) b.classList.add('selected');
+    const langBtn=document.getElementById('langCurrentBtn');
+    const langDropdown=document.getElementById('langDropdown');
+    const langOptions=document.querySelectorAll('.lang-opt');
+    const i18nNodes=document.querySelectorAll('[data-i18n]');
+
+    function applyFarmersLanguage(langCode){
+      const t=getFarmersStrings(langCode);
+      i18nNodes.forEach(el=>{
+        const key=el.dataset.i18n;
+        if(t[key]) el.textContent=t[key];
       });
-      const currentLabel = Array.from(langOptions).find(b=>b.dataset.lang===stored);
+    }
+    (function initLanguage(){
+      const saved=localStorage.getItem('whi_lang')||'en';
+      applyFarmersLanguage(saved);
+      langOptions.forEach(b=>{ if(b.dataset.lang===saved) b.classList.add('selected'); });
+      const currentLabel=Array.from(langOptions).find(b=>b.dataset.lang===saved);
       if(currentLabel){
-        langBtn.innerHTML = currentLabel.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langBtn.innerHTML=currentLabel.textContent+' <span style="font-size:1rem;">&#x25BC;</span>';
       }
     })();
-
     langBtn.addEventListener('click',e=>{
       e.stopPropagation();
       langDropdown.classList.toggle('open');
@@ -807,43 +848,40 @@
       btn.addEventListener('click',function(){
         langOptions.forEach(b=>b.classList.remove('selected'));
         this.classList.add('selected');
-        const code = this.dataset.lang || 'en';
+        const code=this.dataset.lang||'en';
         localStorage.setItem('whi_lang',code);
-        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langBtn.innerHTML=this.textContent+' <span style="font-size:1rem;">&#x25BC;</span>';
         langDropdown.classList.remove('open');
         applyFarmersLanguage(code);
       });
     });
 
-    // ---------- Sidebar drag ----------
+    // Sidebar drag
     (function(){
-      const sidebar = document.getElementById('sidebar');
-      const mainWrap = document.getElementById('mainWrap');
-      const handle = document.getElementById('sidebarHandle');
-      if(!sidebar || !handle || !mainWrap) return;
+      const sidebar=document.getElementById('sidebar');
+      const mainWrap=document.getElementById('mainWrap');
+      const handle=document.getElementById('sidebarHandle');
+      if(!sidebar||!handle||!mainWrap) return;
       let isDragging=false,startX=0,startWidth=0;
-      const rootStyles = getComputedStyle(document.documentElement);
-      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
-      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
-
+      const rootStyles=getComputedStyle(document.documentElement);
+      const minWidth=parseInt(rootStyles.getPropertyValue('--sidebar-min'))||210;
+      const maxWidth=parseInt(rootStyles.getPropertyValue('--sidebar-max'))||380;
       handle.addEventListener('mousedown',e=>{
         if(window.innerWidth<=900) return;
-        isDragging=true;
-        startX=e.clientX;
-        startWidth=sidebar.offsetWidth;
+        isDragging=true;startX=e.clientX;startWidth=sidebar.offsetWidth;
         document.body.style.userSelect='none';
       });
       window.addEventListener('mousemove',e=>{
         if(!isDragging) return;
-        const delta = e.clientX-startX;
-        let newWidth = startWidth+delta;
-        if(newWidth<minWidth) newWidth=minWidth;
-        if(newWidth>maxWidth) newWidth=maxWidth;
+        const delta=e.clientX-startX;
+        let newWidth=startWidth+delta;
+        if(newWidth<minWidth)newWidth=minWidth;
+        if(newWidth>maxWidth)newWidth=maxWidth;
         sidebar.style.width=newWidth+'px';
         mainWrap.style.marginLeft=newWidth+'px';
       });
       window.addEventListener('mouseup',()=>{
-        if(!isDragging) return;
+        if(!isDragging)return;
         isDragging=false;
         document.body.style.userSelect='';
       });
@@ -855,87 +893,88 @@
       });
     })();
 
-    // ---------- Mobile menu ----------
+    // Mobile menu
     (function(){
       const btn=document.getElementById('mobileMenuBtn');
       const sidebar=document.getElementById('sidebar');
-      if(!btn || !sidebar) return;
+      if(!btn||!sidebar)return;
       btn.addEventListener('click',e=>{
         e.stopPropagation();
         sidebar.classList.toggle('open');
       });
       document.addEventListener('click',e=>{
-        if(window.innerWidth>900) return;
-        if(!sidebar.classList.contains('open')) return;
-        if(!sidebar.contains(e.target) && e.target!==btn){
+        if(window.innerWidth>900)return;
+        if(!sidebar.classList.contains('open'))return;
+        if(!sidebar.contains(e.target)&&e.target!==btn){
           sidebar.classList.remove('open');
         }
       });
     })();
 
-    // ---------- LocalStorage helper (more robust) ----------
-    const STORAGE_KEYS = ['whReadings','measure_readings','whi_readings'];
+    // AI placeholder open/close
+    (function(){
+      const openBtn=document.getElementById('openFarmAiBtn');
+      const panel=document.getElementById('aiPlaceholder');
+      const closeBtn=document.getElementById('aiPlaceholderClose');
+      if(!openBtn||!panel||!closeBtn)return;
+      openBtn.addEventListener('click',()=>{panel.style.display='block';});
+      closeBtn.addEventListener('click',()=>{panel.style.display='none';});
+    })();
+
+    // LocalStorage latest reading (uses same whReadings key as old page)
+    const STORAGE_KEY='whReadings';
 
     function loadLatestReading(){
-      for(const key of STORAGE_KEYS){
-        try{
-          const raw = localStorage.getItem(key);
-          if(!raw) continue;
-          const arr = JSON.parse(raw);
-          if(Array.isArray(arr) && arr.length){
-            const last = arr[arr.length-1];
-            // try different field names
-            const p = typeof last.ph==="number" ? last.ph :
-                      typeof last.pH==="number" ? last.pH :
-                      typeof last.phValue==="number" ? last.phValue :
-                      parseFloat(last.ph);
-            if(!isNaN(p)) return { ph:p, raw:last, key };
-          }
-        }catch(e){}
+      try{
+        const raw=localStorage.getItem(STORAGE_KEY);
+        if(!raw) return null;
+        const arr=JSON.parse(raw);
+        if(!Array.isArray(arr)||!arr.length) return null;
+        const last=arr[arr.length-1];
+        const p=typeof last.ph==="number"?last.ph:parseFloat(last.ph);
+        if(isNaN(p)) return null;
+        return {ph:p,raw:last};
+      }catch(e){
+        return null;
       }
-      return null;
     }
 
-    // ---------- Latest water status ----------
-    const statusSummaryText = document.getElementById('statusSummaryText');
-    const statusPill = document.getElementById('statusPill');
-    const statusPillLabel = document.getElementById('statusPillLabel');
-    const statusPillChip = document.getElementById('statusPillChip');
-    const statusExtra = document.getElementById('statusExtra');
+    const statusSummaryText=document.getElementById('statusSummaryText');
+    const statusPill=document.getElementById('statusPill');
+    const statusPillLabel=document.getElementById('statusPillLabel');
+    const statusPillChip=document.getElementById('statusPillChip');
+    const statusExtra=document.getElementById('statusExtra');
 
     function classifyPH(p){
-      if(isNaN(p)) return { band:'unknown', label:'—', className:'chip-warn' };
-      if(p<5) return { band:'veryLow', label:'strongly acidic', className:'chip-bad' };
-      if(p<6) return { band:'low', label:'acidic', className:'chip-bad' };
-      if(p<6.5) return { band:'slightLow', label:'slightly acidic', className:'chip-warn' };
-      if(p<=7.5) return { band:'neutral', label:'near neutral', className:'chip-ok' };
-      if(p<=8.2) return { band:'slightHigh', label:'slightly alkaline', className:'chip-warn' };
-      if(p<=9) return { band:'high', label:'alkaline', className:'chip-bad' };
-      return { band:'veryHigh', label:'very alkaline', className:'chip-bad' };
+      if(isNaN(p)) return {band:'unknown',label:'—',className:'chip-warn'};
+      if(p<5) return {band:'veryLow',label:'strongly acidic',className:'chip-bad'};
+      if(p<6) return {band:'low',label:'acidic',className:'chip-bad'};
+      if(p<6.5) return {band:'slightLow',label:'slightly acidic',className:'chip-warn'};
+      if(p<=7.5) return {band:'neutral',label:'near neutral',className:'chip-ok'};
+      if(p<=8.2) return {band:'slightHigh',label:'slightly alkaline',className:'chip-warn'};
+      if(p<=9) return {band:'high',label:'alkaline',className:'chip-bad'};
+      return {band:'veryHigh',label:'very alkaline',className:'chip-bad'};
     }
 
     function updateLatestStatusBox(){
-      const r = loadLatestReading();
+      const r=loadLatestReading();
       if(!r){
         statusPill.style.display='none';
         statusExtra.textContent='';
         return;
       }
-      const p = r.ph;
-      const c = classifyPH(p);
+      const p=r.ph;
+      const c=classifyPH(p);
       statusPill.style.display='inline-flex';
       statusPillLabel.textContent='pH '+p.toFixed(2);
       statusPillChip.textContent=c.label;
       statusPillChip.className='status-chip '+c.className;
-      statusSummaryText.textContent=
-        'Latest saved water has pH '+p.toFixed(2)+
-        ', which is '+c.label+' for most crops.';
-      statusExtra.textContent=
-        'Source: data saved on the Measure page ('+r.key+'). Use the pH helper below for crop advice.';
+      statusSummaryText.textContent='Latest saved water has pH '+p.toFixed(2)+', which is '+c.label+' for most crops.';
+      statusExtra.textContent='Tip: use the pH helper below to see matching crops and correction steps.';
     }
 
-    // ---------- Crop database (20+ crops, simple advice) ----------
-    const FARM_CROPS = [
+    // Crop database (21 crops)
+    const FARM_CROPS=[
       {id:'rice',name:'Rice (paddy)',group:'staple',phMin:5.5,phMax:7.0,
         improveLow:[
           'If pH is below 5.5, mix farmyard manure and compost into the top soil.',
@@ -950,8 +989,8 @@
           'Level the field so water depth is even in all corners.'
         ],
         fertiliser:[
-          'Use split nitrogen (for example urea) in 2–3 doses.',
-          'Use NPK basal dose as per recommendation and add zinc sulphate where deficiency is common.'
+          'Use split nitrogen in 2–3 doses instead of one heavy dose.',
+          'Use basal NPK and add zinc sulphate where deficiency is common.'
         ]
       },
       {id:'wheat',name:'Wheat',group:'staple',phMin:6.0,phMax:7.5,
@@ -960,7 +999,7 @@
           'Use more organic manure so soil does not become too sharp and acidic.'
         ],
         improveHigh:[
-          'Above pH 7.8, watch for yellow leaves between veins; use zinc / iron foliar spray.',
+          'Above pH 7.8, watch for yellow leaves between veins; use zinc or iron foliar spray.',
           'Avoid over‑irrigation that brings salts to the surface.'
         ],
         irrigation:[
@@ -968,7 +1007,7 @@
           'Do not allow waterlogging; wheat likes moist but airy soil.'
         ],
         fertiliser:[
-          'Use balanced NPK (for example 100:50:40 kg/ha type dose as per region).',
+          'Use balanced NPK as per local dose.',
           'Avoid only nitrogen; extra N makes crop tall and weak.'
         ]
       },
@@ -1032,7 +1071,7 @@
           'Use FYM and compost so soil stays loose.'
         ],
         improveHigh:[
-          'At high pH, use iron chelate or ferrous sulphate spray if leaves turn yellow.',
+          'At high pH, use iron or micronutrient spray if leaves turn yellow.',
           'Avoid thick waterlogging around plants.'
         ],
         irrigation:[
@@ -1064,11 +1103,11 @@
       },
       {id:'mustard',name:'Mustard',group:'oilseed',phMin:6.0,phMax:7.5,
         improveLow:[
-          'Apply lime in strips or bands before sowing where soil is very acidic.',
+          'Apply lime in strips before sowing where soil is very acidic.',
           'Use FYM or compost at least once in rotation.'
         ],
         improveHigh:[
-          'Use sulphur‑rich fertiliser (like bentonite sulphur or SSP) on high pH soil.',
+          'Use sulphur‑rich fertiliser on high pH soil.',
           'Avoid saline irrigation water, especially at germination.'
         ],
         irrigation:[
@@ -1076,7 +1115,7 @@
           'Do not keep standing water around plants.'
         ],
         fertiliser:[
-          'Use NPK dose as per recommendation; sulphur is very important for oil content.',
+          'Use NPK as per recommendation; sulphur is important for oil content.',
           'Use boron where flower drop is common and soil test shows deficiency.'
         ]
       },
@@ -1130,7 +1169,7 @@
           'Avoid waterlogging; it causes rots.'
         ],
         fertiliser:[
-          'Use more potash (K) for firm tubers.',
+          'Use more potash for firm tubers.',
           'Split nitrogen into 2–3 doses; do not apply late heavy N.'
         ]
       },
@@ -1221,7 +1260,7 @@
         ],
         fertiliser:[
           'Give fertiliser in ring around plant, not touching pseudostem.',
-          'Split nitrogen and potash in 5–6 small doses through the year.'
+          'Split nitrogen and potash in many small doses through the year.'
         ]
       },
       {id:'mango',name:'Mango',group:'fruit',phMin:5.5,phMax:7.5,
@@ -1230,7 +1269,7 @@
           'Grow green manure crops in basins and incorporate them.'
         ],
         improveHigh:[
-          'On high pH, spray micronutrients (zinc, iron, manganese) at new flush.',
+          'On high pH, spray micronutrients at new flush.',
           'Mulch basins to reduce cracking and salt build‑up.'
         ],
         irrigation:[
@@ -1253,7 +1292,7 @@
         ],
         irrigation:[
           'Irrigate at longer intervals but with enough water to wet root zone.',
-          'Provide drainage in heavy soils to avoid Phytophthora root rot.'
+          'Provide drainage in heavy soils to avoid root rot.'
         ],
         fertiliser:[
           'Use NPK in 2–3 splits per year along with FYM.',
@@ -1262,7 +1301,7 @@
       },
       {id:'tea',name:'Tea',group:'plantation',phMin:4.5,phMax:6.0,
         improveLow:[
-          'Tea likes acidic soil; only correct if pH is extremely low (<4.3).',
+          'Tea likes acidic soil; only correct if pH is extremely low.',
           'Use organic mulches to protect surface roots.'
         ],
         improveHigh:[
@@ -1293,7 +1332,7 @@
         ],
         fertiliser:[
           'Use NPK dose recommended for area; potash is important for oil.',
-          'Keep weeds under control in early growth for good response to fertiliser.'
+          'Keep weeds under control in early growth for good fertiliser response.'
         ]
       },
       {id:'millet',name:'Pearl millet (bajra)',group:'cereal',phMin:5.5,phMax:7.5,
@@ -1314,19 +1353,19 @@
           'Use seed treatment and proper spacing for better fertiliser use.'
         ]
       }
-    ]; // 21 crops total
+    ];
 
-    // ---------- pH helper ----------
-    const phInput = document.getElementById('phInput');
-    const btnUseLatest = document.getElementById('btnUseLatest');
-    const btnCheckPh = document.getElementById('btnCheckPh');
-    const phStatusBox = document.getElementById('phStatusBox');
-    const bestCropsBox = document.getElementById('bestCropsBox');
-    const bestCropsPills = document.getElementById('bestCropsPills');
-    const bestCropsNote = document.getElementById('bestCropsNote');
+    // pH helper
+    const phInput=document.getElementById('phInput');
+    const btnUseLatest=document.getElementById('btnUseLatest');
+    const btnCheckPh=document.getElementById('btnCheckPh');
+    const phStatusBox=document.getElementById('phStatusBox');
+    const bestCropsBox=document.getElementById('bestCropsBox');
+    const bestCropsPills=document.getElementById('bestCropsPills');
+    const bestCropsNote=document.getElementById('bestCropsNote');
 
     function describePH(p){
-      const c = classifyPH(p);
+      const c=classifyPH(p);
       if(c.band==='unknown') return 'Enter a pH value between 0 and 14.';
       if(c.band==='neutral'){
         return 'pH '+p.toFixed(2)+' is close to neutral. Most crops can grow well if soil and water are managed properly.';
@@ -1341,12 +1380,10 @@
         bestCropsBox.style.display='none';
         return;
       }
-      phStatusBox.textContent = describePH(p);
-
-      const good = FARM_CROPS.filter(c=>p>=c.phMin && p<=c.phMax);
-      const near = FARM_CROPS.filter(c=>p>=c.phMin-0.4 && p<=c.phMax+0.4 && !good.includes(c));
-      const list = (good.length?good:near).slice(0,8);
-
+      phStatusBox.textContent=describePH(p);
+      const good=FARM_CROPS.filter(c=>p>=c.phMin && p<=c.phMax);
+      const near=FARM_CROPS.filter(c=>p>=c.phMin-0.4 && p<=c.phMax+0.4 && !good.includes(c));
+      const list=(good.length?good:near).slice(0,8);
       bestCropsPills.innerHTML='';
       list.forEach(crop=>{
         const pill=document.createElement('span');
@@ -1354,7 +1391,6 @@
         pill.textContent=crop.name;
         bestCropsPills.appendChild(pill);
       });
-
       if(!list.length){
         bestCropsNote.textContent='This pH is hard for most common crops. Work on pH correction first, then plant.';
       }else if(good.length>=6){
@@ -1366,34 +1402,34 @@
     }
 
     btnUseLatest.addEventListener('click',()=>{
-      const r = loadLatestReading();
+      const r=loadLatestReading();
       if(!r){
         phStatusBox.textContent='No saved reading found. Go to Measure page, test water and press Save.';
         bestCropsBox.style.display='none';
         return;
       }
-      phInput.value = r.ph.toFixed(2);
+      phInput.value=r.ph.toFixed(2);
       updatePHStatus(r.ph);
     });
 
     btnCheckPh.addEventListener('click',()=>{
-      const v = parseFloat(phInput.value);
+      const v=parseFloat(phInput.value);
       if(isNaN(v)){
         phStatusBox.textContent='Type a pH value or use the latest saved reading first.';
         bestCropsBox.style.display='none';
         return;
       }
       updatePHStatus(v);
-      const currentCropId = document.getElementById('cropSelect').value;
+      const currentCropId=document.getElementById('cropSelect').value;
       if(currentCropId) showCropAdvice(currentCropId,v);
     });
 
-    // ---------- pH improvement ----------
-    const phImprove = document.getElementById('phImprove');
-    const btnImprove = document.getElementById('btnImprove');
-    const improveCards = document.getElementById('improveCards');
-    const shortTermList = document.getElementById('shortTermList');
-    const longTermList = document.getElementById('longTermList');
+    // pH improvement
+    const phImprove=document.getElementById('phImprove');
+    const btnImprove=document.getElementById('btnImprove');
+    const improveCards=document.getElementById('improveCards');
+    const shortTermList=document.getElementById('shortTermList');
+    const longTermList=document.getElementById('longTermList');
 
     function buildImproveTips(p){
       const short=[],long=[];
@@ -1437,7 +1473,7 @@
         );
       }else{
         short.push(
-          'Do not use this water for nurseries or pot culture unless mixed with better water.',
+          'Do not use this water for nurseries or pots unless mixed with better water.',
           'Try to use this water only on more tolerant crops or for leaching salts.'
         );
         long.push(
@@ -1449,30 +1485,26 @@
     }
 
     btnImprove.addEventListener('click',()=>{
-      const v = parseFloat(phImprove.value);
+      const v=parseFloat(phImprove.value);
       if(isNaN(v)){
         improveCards.style.display='none';
         return;
       }
-      const tips = buildImproveTips(v);
+      const tips=buildImproveTips(v);
       shortTermList.innerHTML='';
       longTermList.innerHTML='';
-      tips.short.forEach(t=>{
-        const li=document.createElement('li');li.textContent=t;shortTermList.appendChild(li);
-      });
-      tips.long.forEach(t=>{
-        const li=document.createElement('li');li.textContent=t;longTermList.appendChild(li);
-      });
+      tips.short.forEach(t=>{const li=document.createElement('li');li.textContent=t;shortTermList.appendChild(li);});
+      tips.long.forEach(t=>{const li=document.createElement('li');li.textContent=t;longTermList.appendChild(li);});
       improveCards.style.display='block';
     });
 
-    // ---------- Crop advice ----------
-    const cropSelect = document.getElementById('cropSelect');
-    const cropAdviceArea = document.getElementById('cropAdviceArea');
-    const cropRangeText = document.getElementById('cropRangeText');
-    const cropImproveList = document.getElementById('cropImproveList');
-    const irrigationList = document.getElementById('irrigationList');
-    const managementList = document.getElementById('managementList');
+    // Crop advice
+    const cropSelect=document.getElementById('cropSelect');
+    const cropAdviceArea=document.getElementById('cropAdviceArea');
+    const cropRangeText=document.getElementById('cropRangeText');
+    const cropImproveList=document.getElementById('cropImproveList');
+    const irrigationList=document.getElementById('irrigationList');
+    const managementList=document.getElementById('managementList');
 
     function populateCropSelect(){
       const sorted=[...FARM_CROPS].sort((a,b)=>a.name.localeCompare(b.name));
@@ -1485,12 +1517,12 @@
     }
 
     function showCropAdvice(cropId,pVal){
-      const crop = FARM_CROPS.find(c=>c.id===cropId);
+      const crop=FARM_CROPS.find(c=>c.id===cropId);
       if(!crop){
         cropAdviceArea.style.display='none';
         return;
       }
-      const p = pVal;
+      const p=pVal;
       let statusText='';
       if(!isNaN(p)){
         if(p>=crop.phMin && p<=crop.phMax){
@@ -1503,18 +1535,12 @@
       }else{
         statusText='Enter or load pH on the left to check fit more clearly.';
       }
-
-      cropRangeText.textContent =
-        crop.name+' grows best between pH '+crop.phMin.toFixed(1)+
-        ' and '+crop.phMax.toFixed(1)+'. '+statusText;
-
+      cropRangeText.textContent=crop.name+' grows best between pH '+crop.phMin.toFixed(1)+' and '+crop.phMax.toFixed(1)+'. '+statusText;
       cropImproveList.innerHTML='';
       irrigationList.innerHTML='';
       managementList.innerHTML='';
-
-      const lowSide = crop.improveLow || [];
-      const highSide = crop.improveHigh || [];
-
+      const lowSide=crop.improveLow||[];
+      const highSide=crop.improveHigh||[];
       let improveSource=[];
       if(!isNaN(p)){
         if(prop.phMin) improveSource=lowSide;
@@ -1528,7 +1554,6 @@
         li.textContent=txt;
         cropImproveList.appendChild(li);
       });
-
       (crop.irrigation||[]).forEach(txt=>{
         const li=document.createElement('li');
         li.textContent=txt;
@@ -1539,7 +1564,6 @@
         li.textContent=txt;
         managementList.appendChild(li);
       });
-
       cropAdviceArea.style.display='block';
     }
 
@@ -1553,7 +1577,7 @@
       showCropAdvice(id,v);
     });
 
-    // ---------- Init ----------
+    // Init
     populateCropSelect();
     updateLatestStatusBox();
   </script>
