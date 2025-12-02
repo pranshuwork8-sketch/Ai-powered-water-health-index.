@@ -1849,7 +1849,7 @@ const FARM_CROPS = [
     const shortTermList=document.getElementById('shortTermList');
     const longTermList=document.getElementById('longTermList');
 
-    function buildImproveTips(p) {
+    function showImprovementTips(p) {
   shortTermList.innerHTML = '';
   longTermList.innerHTML = '';
 
@@ -1975,19 +1975,18 @@ const FARM_CROPS = [
   improveCards.style.display = 'block';
 }
 
-    btnImprove.addEventListener('click',()=>{
-      const v=parseFloat(phImprove.value);
-      if(isNaN(v)){
-        improveCards.style.display='none';
-        return;
-      }
-      const tips=buildImproveTips(v);
-      shortTermList.innerHTML='';
-      longTermList.innerHTML='';
-      tips.short.forEach(t=>{const li=document.createElement('li');li.textContent=t;shortTermList.appendChild(li);});
-      tips.long.forEach(t=>{const li=document.createElement('li');li.textContent=t;longTermList.appendChild(li);});
-      improveCards.style.display='block';
-    });
+    btnImprove.addEventListener('click', () => {
+  const v = parseFloat(phImprove.value);
+  if (isNaN(v)) {
+    improveCards.style.display = 'none';
+    return;
+  }
+  // save current pH if you reuse it elsewhere
+  currentPH = v;
+
+  // NEW: just call the function that fills the lists
+  showImprovementTips(v);
+});
 
     /* ========= CROP ADVICE ========= */
     const cropSelect=document.getElementById('cropSelect');
