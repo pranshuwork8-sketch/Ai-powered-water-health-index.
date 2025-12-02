@@ -484,7 +484,7 @@
     }
 
     /* AI placeholder */
-    .ai-placeholder{
+        .ai-placeholder{
       position:fixed;
       bottom:32px;
       right:20px;
@@ -499,6 +499,9 @@
       z-index:2400;
       display:none;
       overflow:hidden;
+
+      /* allow moving */
+      cursor:default;
     }
     .ai-placeholder-header{
       padding:6px 10px;
@@ -506,6 +509,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
+      cursor:move; /* drag handle */
     }
     .ai-placeholder-title{
       font-weight:bold;
@@ -986,6 +990,69 @@ function getFarmersStrings(langCode) {
         answerBox.textContent = '';
       }
     });
+  })();
+      /* ========= MAKE AI BOX DRAGGABLE ========= */
+  (function () {
+    const box = document.getElementById('aiPlaceholder');
+    const header = box ? box.querySelector('.ai-placeholder-header') : null;
+    if (!box || !header) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    function pxToNumber(value) {
+      const n = parseFloat(value);
+      return isNaN(n) ? 0 : n;
+    }
+
+    header.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isDragging = true;
+
+      // Switch from bottom/right to top/left on first drag
+      const rect = box.getBoundingClientRect();
+      box.style.top = rect.top + 'px';
+      box.style.left = rect.left + 'px';
+      box.style.bottom = 'auto';
+      box.style.right = 'auto';
+
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = pxToNumber(box.style.left);
+      startTop = pxToNumber(box.style.top);
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      let newLeft = startLeft + dx;
+      let newTop = startTop + dy;
+
+      // keep box inside viewport a bit
+      const maxLeft = window.innerWidth - box.offsetWidth - 8;
+      const maxTop = window.innerHeight - box.offsetHeight - 8;
+
+      newLeft = Math.max(8, Math.min(maxLeft, newLeft));
+      newTop = Math.max(8, Math.min(maxTop, newTop));
+
+      box.style.left = newLeft + 'px';
+      box.style.top = newTop + 'px';
+    }
+
+    function onMouseUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
   })();
 
     /* ========= STORAGE: LATEST READING (whReadings) ========= */
