@@ -745,9 +745,26 @@
   <!-- AI placeholder box -->
   <section class="ai-placeholder" id="aiPlaceholder">
     <header class="ai-placeholder-header">
-      <div class="ai-placeholder-title" data-i18n="ai_placeholder_title">
-        Farmers AI Assistant (preview)
-      </div>
+        <div class="ai-placeholder-body">
+    <p>
+      Ask the Farmers AI about your pH, crop and water. It will use the values you set below.
+    </p>
+
+    <div style="font-size:0.85rem;margin-bottom:4px;">
+      <strong>pH:</strong> <span id="aiCurrentPh">–</span>
+      <strong style="margin-left:8px;">Crop:</strong> <span id="aiCurrentCrop">–</span>
+    </div>
+
+    <textarea id="farmAiQuestion" rows="3" style="width:100%;resize:vertical;"
+      placeholder="Example: pH is 8.3 and I want to grow wheat. What should I change?"></textarea>
+
+    <button class="btn-main" id="farmAiSendBtn" style="margin-top:6px;">
+      Ask AI
+    </button>
+
+    <div id="farmAiStatus" class="note" style="margin-top:4px;"></div>
+    <div id="farmAiAnswer" style="margin-top:8px;font-size:0.9rem;white-space:pre-wrap;"></div>
+  </div>
       <button class="ai-placeholder-close" id="aiPlaceholderClose" data-i18n="ai_placeholder_close">
         Close
       </button>
@@ -877,15 +894,110 @@ function getFarmersStrings(langCode) {
       });
     })();
 
-    /* ========= AI PLACEHOLDER ========= */
-    (function(){
-      const openBtn=document.getElementById('openFarmAiBtn');
-      const panel=document.getElementById('aiPlaceholder');
-      const closeBtn=document.getElementById('aiPlaceholderClose');
-      if(!openBtn||!panel||!closeBtn)return;
-      openBtn.addEventListener('click',()=>{panel.style.display='block';});
-      closeBtn.addEventListener('click',()=>{panel.style.display='none';});
-    })();
+    /* ========= FARMERS AI (REAL BACKEND) ========= */
+(function () {
+  const openBtn = document.getElementById('openFarmAiBtn');
+  const panel = document.getElementById('aiPlaceholder');
+  const closeBtn = document.getElementById('aiPlaceholderClose');
+
+  const phInput = document.getElementById('phInput');
+  const cropSelect = document.getElementById('cropSelect');
+
+  const qInput = document.getElementById('farmAiQuestion');
+  const sendBtn = document.getElementById('farmAiSendBtn');
+  const statusBox = document.getElementById('farmAiStatus');
+  const answerBox = document.getElementById('farmAiAnswer');
+  const aiCurrentPh = document.getElementById('aiCurrentPh');
+  const aiCurrentCrop = document.getElementById('aiCurrentCrop');
+
+  // IMPORTANT: adjust PATH and JSON keys to match your FastAPI docs.
+  // If Swagger shows POST /farmers_ai then keep '/farmers_ai';
+  // if it shows /farmers-ai use that instead.
+  const FARMERS_AI_URL =
+    'https://visceral-subclimatic-lashunda.ngrok-free.dev/farmers-ai';
+
+  if (!openBtn || !panel || !closeBtn || !qInput || !sendBtn) return;
+
+  function updateAiContextLabels() {
+    const p = parseFloat(phInput.value);
+    aiCurrentPh.textContent = isNaN(p) ? '–' : p.toFixed(2);
+
+    const cropId = cropSelect.value;
+    if (!cropId) {
+      aiCurrentCrop.textContent = '–';
+    } else {
+      const label =
+        cropSelect.options[cropSelect.selectedIndex].textContent || cropId;
+      aiCurrentCrop.textContent = label;
+    }
+  }
+
+  openBtn.addEventListener('click', () => {
+    updateAiContextLabels();
+    panel.style.display = 'block';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    panel.style.display = 'none';
+  });
+
+  // Keep labels in sync when user edits pH or crop
+  phInput.addEventListener('input', updateAiContextLabels);
+  cropSelect.addEventListener('change', updateAiContextLabels);
+
+  sendBtn.addEventListener('click', async () => {
+    const question = qInput.value.trim();
+    if (!question) {
+      statusBox.textContent = 'Type a question for the AI first.';
+      answerBox.textContent = '';
+      return;
+    }
+
+    const phVal = parseFloat(phInput.value);
+    const cropId = cropSelect.value || null;
+    const cropName = cropId
+      ? (cropSelect.options[cropSelect.selectedIndex].textContent || '')
+      : null;
+
+    statusBox.textContent = 'Contacting AI...';
+    answerBox.textContent = '';
+
+    try {
+      const resp = await fetch(FARMERS_AI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          // CHANGE these keys to match your FastAPI request model
+          ph: isNaN(phVal) ? null : phVal,
+          crop_id: cropId,
+          crop_name: cropName,
+          question: question
+        })
+      });
+
+      if (!resp.ok) {
+        statusBox.textContent =
+          'AI server error: ' + resp.status + '. Is your laptop + ngrok running?';
+        return;
+      }
+
+      const data = await resp.json();
+
+      // If your API returns {answer: "..."} adjust this line:
+      const text =
+        data.answer ||
+        data.message ||
+        JSON.stringify(data, null, 2);
+
+      statusBox.textContent = 'Answer from AI:';
+      answerBox.textContent = text;
+    } catch (err) {
+      statusBox.textContent =
+        'Could not reach AI. Check internet, backend on port 8001, and ngrok tunnel.';
+      answerBox.textContent = '';
+    }
+  });
+})();
 
     /* ========= STORAGE: LATEST READING (whReadings) ========= */
     const STORAGE_KEY='whReadings';  // same key as old page [file:13]
