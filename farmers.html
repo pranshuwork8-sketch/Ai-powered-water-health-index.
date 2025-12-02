@@ -1512,60 +1512,76 @@
         cropSelect.appendChild(opt);
       });
     }
+    function showCropAdvice(cropId, pVal) {
+  const crop = FARM_CROPS.find(c => c.id === cropId);
+  if (!crop) {
+    cropAdviceArea.style.display = 'none';
+    return;
+  }
 
-    function showCropAdvice(cropId,pVal){
-      const crop=FARM_CROPS.find(c=>c.id===cropId);
-      if(!crop){
-        cropAdviceArea.style.display='none';
-        return;
-      }
-      const p=pVal;
-      let statusText='';
-      if(!isNaN(p)){
-        if(p>=crop.phMin && p<=crop.phMax){
-          statusText='Your pH '+p.toFixed(2)+' is inside the good range for this crop.';
-        }else if(prop.phMin){
-          statusText='Your pH '+p.toFixed(2)+' is lower than this crop likes. Water and soil are more acidic.';
-        }else{
-          statusText='Your pH '+p.toFixed(2)+' is higher than this crop likes. Water and soil are more alkaline.';
-        }
-      }else{
-        statusText='Enter or load pH on the left to check fit more clearly.';
-      }
-      cropRangeText.textContent=crop.name+' grows best between pH '+crop.phMin.toFixed(1)+' and '+crop.phMax.toFixed(1)+'. '+statusText;
+  const p = pVal;
+  let statusText = '';
 
-      cropImproveList.innerHTML='';
-      irrigationList.innerHTML='';
-      managementList.innerHTML='';
-
-      const lowSide=crop.improveLow||[];
-      const highSide=crop.improveHigh||[];
-      let improveSource=[];
-      if(!isNaN(p)){
-        if(prop.phMin) improveSource=lowSide;
-        else if(p>crop.phMax) improveSource=highSide;
-        else improveSource=lowSide.concat(highSide);
-      }else{
-        improveSource=lowSide.concat(highSide);
-      }
-      improveSource.forEach(txt=>{
-        const li=document.createElement('li');
-        li.textContent=txt;
-        cropImproveList.appendChild(li);
-      });
-      (crop.irrigation||[]).forEach(txt=>{
-        const li=document.createElement('li');
-        li.textContent=txt;
-        irrigationList.appendChild(li);
-      });
-      (crop.fertiliser||[]).forEach(txt=>{
-        const li=document.createElement('li');
-        li.textContent=txt;
-        managementList.appendChild(li);
-      });
-
-      cropAdviceArea.style.display='block';
+  if (!isNaN(p)) {
+    if (p >= crop.phMin && p <= crop.phMax) {
+      statusText = 'Your pH ' + p.toFixed(2) +
+        ' is inside the good range for this crop.';
+    } else if (p < crop.phMin) {
+      statusText = 'Your pH ' + p.toFixed(2) +
+        ' is lower than this crop likes. Water and soil are more acidic.';
+    } else {
+      statusText = 'Your pH ' + p.toFixed(2) +
+        ' is higher than this crop likes. Water and soil are more alkaline.';
     }
+  } else {
+    statusText = 'Enter or load pH on the left to check fit more clearly.';
+  }
+
+  cropRangeText.textContent =
+    crop.name + ' grows best between pH ' +
+    crop.phMin.toFixed(1) + ' and ' + crop.phMax.toFixed(1) +
+    '. ' + statusText;
+
+  cropImproveList.innerHTML = '';
+  irrigationList.innerHTML = '';
+  managementList.innerHTML = '';
+
+  const lowSide = crop.improveLow || [];
+  const highSide = crop.improveHigh || [];
+
+  let improveSource = [];
+  if (!isNaN(p)) {
+    if (p < crop.phMin) {
+      improveSource = lowSide;
+    } else if (p > crop.phMax) {
+      improveSource = highSide;
+    } else {
+      improveSource = lowSide.concat(highSide);
+    }
+  } else {
+    improveSource = lowSide.concat(highSide);
+  }
+
+  improveSource.forEach(txt => {
+    const li = document.createElement('li');
+    li.textContent = txt;
+    cropImproveList.appendChild(li);
+  });
+
+  (crop.irrigation || []).forEach(txt => {
+    const li = document.createElement('li');
+    li.textContent = txt;
+    irrigationList.appendChild(li);
+  });
+
+  (crop.fertiliser || []).forEach(txt => {
+    const li = document.createElement('li');
+    li.textContent = txt;
+    managementList.appendChild(li);
+  });
+
+  cropAdviceArea.style.display = 'block';
+}
 
     cropSelect.addEventListener('change',()=>{
       const id=cropSelect.value;
