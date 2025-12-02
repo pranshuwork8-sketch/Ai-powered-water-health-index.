@@ -1006,9 +1006,8 @@ window.FARMERS_I18N.en = {
     }
   },
   // Part 1: UI + pH improvement (Hindi)
-window.FARMERS_I18N = window.FARMERS_I18N || {};
-
-window.FARMERS_I18N.hi = {
+  
+  window.FARMERS_I18N.hi = {
   /* ================= UI TEXT (HINDI) ================= */
 
   ui: {
