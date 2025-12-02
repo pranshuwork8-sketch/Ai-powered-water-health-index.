@@ -971,386 +971,680 @@
     }
 
     /* ========= CROP DATABASE (21 CROPS) ========= */
-    const FARM_CROPS=[
-      {id:'rice',name:'Rice (paddy)',group:'staple',phMin:5.5,phMax:7.0,
-        improveLow:[
-          'If pH is below 5.5, mix farmyard manure and compost into the top soil.',
-          'Apply agricultural lime or dolomite 2–3 months before transplanting as per soil test.'
-        ],
-        improveHigh:[
-          'If pH is above 7.5, avoid long standing water and use short wet–dry cycles.',
-          'Add green manure crops like dhaincha or sunnhemp and plough them in.'
-        ],
-        irrigation:[
-          'Keep 3–5 cm water during tillering; drain field before harvest.',
-          'Level the field so water depth is even in all corners.'
-        ],
-        fertiliser:[
-          'Use split nitrogen in 2–3 doses instead of one heavy dose.',
-          'Use basal NPK and add zinc sulphate where deficiency is common.'
-        ]
-      },
-      {id:'wheat',name:'Wheat',group:'staple',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'If pH is below 6.0, apply lime once in rotation based on soil test.',
-          'Use more organic manure so soil does not become too sharp and acidic.'
-        ],
-        improveHigh:[
-          'Above pH 7.8, watch for yellow leaves between veins; use zinc or iron foliar spray.',
-          'Avoid over‑irrigation that brings salts to the surface.'
-        ],
-        irrigation:[
-          'Give irrigation at crown root initiation, tillering and grain filling.',
-          'Do not allow waterlogging; wheat likes moist but airy soil.'
-        ],
-        fertiliser:[
-          'Use balanced NPK as per local dose.',
-          'Avoid only nitrogen; extra N makes crop tall and weak.'
-        ]
-      },
-      {id:'maize',name:'Maize (corn)',group:'cereal',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Below pH 5.8, use lime so roots are not damaged by acidity.',
-          'Mix lime with FYM for better and longer effect.'
-        ],
-        improveHigh:[
-          'At high pH, use zinc and manganese rich fertiliser or foliar spray.',
-          'Add crop residues back to the field every season.'
-        ],
-        irrigation:[
-          'Do not allow stress at tasselling and grain filling; yield drops a lot.',
-          'Avoid standing water for more than 1–2 days.'
-        ],
-        fertiliser:[
-          'Place fertiliser in bands 5 cm away from seed, not broadcast.',
-          'Use a starter dose of DAP or complex NPK at sowing.'
-        ]
-      },
-      {id:'sugarcane',name:'Sugarcane',group:'cash',phMin:5.5,phMax:8.0,
-        improveLow:[
-          'Add lime and bulky organic manure to extend ratoon life.',
-          'Use press‑mud or filter cake where available.'
-        ],
-        improveHigh:[
-          'Leach salts with good quality water if soil is alkaline and saline.',
-          'Grow green manure crops in off‑season to soften soil.'
-        ],
-        irrigation:[
-          'Give light but frequent irrigation in sandy soil.',
-          'Stop irrigation 15–20 days before harvest.'
-        ],
-        fertiliser:[
-          'Apply nitrogen in 3–4 splits along the furrow, not on the shoot.',
-          'Use recommended doses of phosphorus and potash for strong canes.'
-        ]
-      },
-      {id:'cotton',name:'Cotton',group:'cash',phMin:5.8,phMax:7.5,
-        improveLow:[
-          'Apply lime where soil is very acidic to avoid poor root growth.',
-          'Mix FYM and compost at land preparation.'
-        ],
-        improveHigh:[
-          'On sodic soils, use gypsum after soil test.',
-          'Avoid irrigation with very salty or alkaline water.'
-        ],
-        irrigation:[
-          'Give deep irrigation at flowering and boll formation.',
-          'Avoid waterlogging; it causes boll drop and root rot.'
-        ],
-        fertiliser:[
-          'Use balanced NPK and one dose of sulphur if soil is low in sulphur.',
-          'Do not give heavy nitrogen after flowering; it delays maturity.'
-        ]
-      },
-      {id:'soybean',name:'Soybean',group:'pulse',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Below pH 6.0, light liming improves nodulation.',
-          'Use FYM and compost so soil stays loose.'
-        ],
-        improveHigh:[
-          'At high pH, use iron or micronutrient spray if leaves turn yellow.',
-          'Avoid thick waterlogging around plants.'
-        ],
-        irrigation:[
-          'Protect crop from waterlogging in heavy rain.',
-          'If irrigated, keep good moisture at flowering and pod filling.'
-        ],
-        fertiliser:[
-          'Use seed treatment with Rhizobium and phosphate solubilising bacteria.',
-          'Use starter phosphorus through DAP or SSP at sowing.'
-        ]
-      },
-      {id:'groundnut',name:'Groundnut (peanut)',group:'oilseed',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Very acidic soil needs lime to support peg and pod formation.',
-          'Apply gypsum at pegging for better kernel filling.'
-        ],
-        improveHigh:[
-          'On alkaline soil, micronutrient sprays (boron, zinc) may be needed.',
-          'Add compost and crop residue to keep soil friable.'
-        ],
-        irrigation:[
-          'Keep soil moist but not sticky from flowering to pod filling.',
-          'Stop irrigation 10–15 days before digging.'
-        ],
-        fertiliser:[
-          'Use SSP as phosphorus source; it also gives sulphur.',
-          'Do not overuse nitrogen; groundnut fixes its own nitrogen.'
-        ]
-      },
-      {id:'mustard',name:'Mustard',group:'oilseed',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Apply lime in strips before sowing where soil is very acidic.',
-          'Use FYM or compost at least once in rotation.'
-        ],
-        improveHigh:[
-          'Use sulphur‑rich fertiliser on high pH soil.',
-          'Avoid saline irrigation water, especially at germination.'
-        ],
-        irrigation:[
-          'Key irrigations are at flowering and pod filling.',
-          'Do not keep standing water around plants.'
-        ],
-        fertiliser:[
-          'Use NPK as per recommendation; sulphur is important for oil content.',
-          'Use boron where flower drop is common and soil test shows deficiency.'
-        ]
-      },
-      {id:'chickpea',name:'Chickpea (gram)',group:'pulse',phMin:6.0,phMax:8.0,
-        improveLow:[
-          'In strongly acidic soils, light liming before chickpea helps nodules.',
-          'Use raised beds in high rainfall areas.'
-        ],
-        improveHigh:[
-          'Use organic matter to keep soil open on high pH fields.',
-          'Avoid heavy pre‑sowing irrigation that leaves soil sticky.'
-        ],
-        irrigation:[
-          'Mostly grown on stored soil moisture; avoid excess water.',
-          'If water is available, one irrigation at pod filling can boost yield.'
-        ],
-        fertiliser:[
-          'Treat seed with Rhizobium culture.',
-          'Apply basal phosphorus; chickpea responds well to P.'
-        ]
-      },
-      {id:'pigeonpea',name:'Pigeonpea (arhar)',group:'pulse',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Use lime and FYM on very acidic land before sowing.',
-          'Keep good drainage so roots are not standing in water.'
-        ],
-        improveHigh:[
-          'In alkaline areas, select tolerant varieties recommended locally.',
-          'Grow green manures or grasses in rotation to improve structure.'
-        ],
-        irrigation:[
-          'Crop tolerates short drought but needs water at flowering and pod set.',
-          'In heavy rains, drain extra water quickly.'
-        ],
-        fertiliser:[
-          'Apply small starter dose of nitrogen and good phosphorus.',
-          'Avoid deep tillage near roots once crop is established.'
-        ]
-      },
-      {id:'potato',name:'Potato',group:'vegetable',phMin:5.0,phMax:6.5,
-        improveLow:[
-          'If pH is below 5, moderate with small lime doses as per soil test.',
-          'Add plenty of FYM for soft, loose soil.'
-        ],
-        improveHigh:[
-          'Above pH 7, common scab increases; avoid fresh undecomposed manure.',
-          'Use sulphur‑based fertilisers to slightly lower pH near tubers.'
-        ],
-        irrigation:[
-          'Keep soil moist from tuber initiation to bulking.',
-          'Avoid waterlogging; it causes rots.'
-        ],
-        fertiliser:[
-          'Use more potash for firm tubers.',
-          'Split nitrogen into 2–3 doses; do not apply late heavy N.'
-        ]
-      },
-      {id:'tomato',name:'Tomato',group:'vegetable',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'On very acidic soil, apply lime to reduce blossom‑end rot.',
-          'Use compost to buffer acidity and hold water.'
-        ],
-        improveHigh:[
-          'At high pH, use micronutrient sprays when leaves turn pale.',
-          'Mulch with straw or crop waste to keep roots cool.'
-        ],
-        irrigation:[
-          'Keep moisture even; big swings cause fruit cracking.',
-          'Avoid wetting foliage late evening to reduce disease.'
-        ],
-        fertiliser:[
-          'Use basal NPK and extra potash for good fruit quality.',
-          'Too much nitrogen gives leaves but few fruits.'
-        ]
-      },
-      {id:'onion',name:'Onion',group:'vegetable',phMin:6.0,phMax:7.0,
-        improveLow:[
-          'Apply lime and FYM one season before onion on very acidic soil.',
-          'Use raised beds so bulbs do not sit in water.'
-        ],
-        improveHigh:[
-          'High pH can lock micronutrients; use foliar spray if tips yellow.',
-          'Keep adding compost so bulbs grow in soft soil.'
-        ],
-        irrigation:[
-          'Give light but frequent irrigation; roots are shallow.',
-          'Stop irrigation 10–12 days before harvest for better storage.'
-        ],
-        fertiliser:[
-          'Onion needs more potash and sulphur; use SSP and MOP as per dose.',
-          'Do not apply heavy fresh manure just before planting.'
-        ]
-      },
-      {id:'okra',name:'Okra (bhindi)',group:'vegetable',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Apply lime where pH is very low and plants look stunted.',
-          'Use FYM and compost to keep soil open.'
-        ],
-        improveHigh:[
-          'On alkaline soil, avoid salty irrigation water.',
-          'Use drip or furrow to keep root zone comfortable.'
-        ],
-        irrigation:[
-          'Irrigate regularly during flowering and fruiting.',
-          'Avoid waterlogging; wilt disease spreads fast in wet soil.'
-        ],
-        fertiliser:[
-          'Use balanced NPK and one or two sprays of micronutrient mixture.',
-          'Do not harvest fruits when very old; it weakens the plant.'
-        ]
-      },
-      {id:'brinjal',name:'Brinjal (eggplant)',group:'vegetable',phMin:5.5,phMax:7.0,
-        improveLow:[
-          'Light liming and FYM help in very acidic fields.',
-          'Keep soil well drained to avoid root rots.'
-        ],
-        improveHigh:[
-          'High pH may reduce iron and manganese; use foliar mixture.',
-          'Mulch heavily to keep moisture steady.'
-        ],
-        irrigation:[
-          'Give regular irrigation; long dry spell causes flower drop.',
-          'Increase frequency in light sandy soils.'
-        ],
-        fertiliser:[
-          'Apply basal NPK and top‑dress nitrogen in splits.',
-          'Use organic manures to support long picking season.'
-        ]
-      },
-      {id:'banana',name:'Banana',group:'fruit',phMin:5.5,phMax:7.5,
-        improveLow:[
-          'Apply lime and plenty of FYM in very acidic soil.',
-          'Use good drainage; roots do not like stagnant water.'
-        ],
-        improveHigh:[
-          'Leach salts with heavy irrigation using good quality water if soil is sodic.',
-          'Mulch thickly with crop residues around plant base.'
-        ],
-        irrigation:[
-          'Banana is very sensitive to drought; do not let soil dry out.',
-          'Avoid waterlogging to prevent root and corm rots.'
-        ],
-        fertiliser:[
-          'Give fertiliser in ring around plant, not touching pseudostem.',
-          'Split nitrogen and potash in many small doses through the year.'
-        ]
-      },
-      {id:'mango',name:'Mango',group:'fruit',phMin:5.5,phMax:7.5,
-        improveLow:[
-          'Apply lime before planting new orchard on very acidic soil.',
-          'Grow green manure crops in basins and incorporate them.'
-        ],
-        improveHigh:[
-          'On high pH, spray micronutrients at new flush.',
-          'Mulch basins to reduce cracking and salt build‑up.'
-        ],
-        irrigation:[
-          'Young plants need regular water in summer.',
-          'Avoid irrigation close to flowering flush where recommended.'
-        ],
-        fertiliser:[
-          'Give FYM plus NPK dose once or twice a year around drip line.',
-          'Adjust dose by tree age; do not over‑fertilise old trees.'
-        ]
-      },
-      {id:'citrus',name:'Citrus (orange/limon)',group:'fruit',phMin:5.5,phMax:7.5,
-        improveLow:[
-          'Correct very acidic soil with lime before planting.',
-          'Use FYM and compost shallowly as roots stay near surface.'
-        ],
-        improveHigh:[
-          'High pH often causes micronutrient deficiency; use chelated sprays.',
-          'Avoid piling fertiliser next to trunk; place in circular band.'
-        ],
-        irrigation:[
-          'Irrigate at longer intervals but with enough water to wet root zone.',
-          'Provide drainage in heavy soils to avoid root rot.'
-        ],
-        fertiliser:[
-          'Use NPK in 2–3 splits per year along with FYM.',
-          'Regular micronutrient spray keeps leaves dark green.'
-        ]
-      },
-      {id:'tea',name:'Tea',group:'plantation',phMin:4.5,phMax:6.0,
-        improveLow:[
-          'Tea likes acidic soil; only correct if pH is extremely low.',
-          'Use organic mulches to protect surface roots.'
-        ],
-        improveHigh:[
-          'If pH is too high, use ammonium sulphate and organic matter to lower it slowly.',
-          'Avoid extra liming near mature bushes.'
-        ],
-        irrigation:[
-          'In dry spells, give light irrigation or sprinkler where possible.',
-          'Mulch helps keep soil cool and moist.'
-        ],
-        fertiliser:[
-          'Follow regional tea board fertiliser schedule.',
-          'Do not apply high doses of fertiliser in one shot on dry soil.'
-        ]
-      },
-      {id:'sunflower',name:'Sunflower',group:'oilseed',phMin:6.0,phMax:7.5,
-        improveLow:[
-          'Use lime and FYM on very acidic soils before sowing.',
-          'Avoid compaction; keep soil well tilled and open.'
-        ],
-        improveHigh:[
-          'On high pH soils, boron may be low; use small boron dose if advised.',
-          'Add crop residues back instead of burning.'
-        ],
-        irrigation:[
-          'Moisture must be good at flowering and grain filling.',
-          'Do not over‑irrigate; waterlogging reduces oil content.'
-        ],
-        fertiliser:[
-          'Use NPK dose recommended for area; potash is important for oil.',
-          'Keep weeds under control in early growth for good fertiliser response.'
-        ]
-      },
-      {id:'millet',name:'Pearl millet (bajra)',group:'cereal',phMin:5.5,phMax:7.5,
-        improveLow:[
-          'Use FYM and light liming where pH is very low.',
-          'Select tolerant varieties suited to local dryland conditions.'
-        ],
-        improveHigh:[
-          'Millet tolerates slightly higher pH but avoid very sodic patches.',
-          'Increase organic matter to keep soil soft.'
-        ],
-        irrigation:[
-          'Often grown on rainfall; if irrigated, avoid stress at booting and flowering.',
-          'Do not waterlog light sandy soils.'
-        ],
-        fertiliser:[
-          'Apply basal NPK and one top dressing of nitrogen.',
-          'Use seed treatment and proper spacing for better fertiliser use.'
-        ]
-      }
-    ];
+    // ========= CROP DATABASE (21 CROPS, 4+ TIPS EACH) =========
+const FARM_CROPS = [
+  {
+    id: 'rice',
+    name: 'Rice (paddy)',
+    group: 'staple',
+    phMin: 5.5,
+    phMax: 7.0,
+    improveLow: [
+      'If pH is below 5.5, mix farmyard manure and compost into the top 10–15 cm of soil.',
+      'Apply agricultural lime or dolomite 2–3 months before transplanting as per soil test.',
+      'Avoid using only high‑nitrogen fertilisers on very acidic land; always combine with organic matter.',
+      'Grow a legume or green‑manure crop before rice to soften the soil and gently raise pH.'
+    ],
+    improveHigh: [
+      'If pH is above 7.5, avoid long standing water and use short wet–dry cycles instead of deep flooding.',
+      'Add green‑manure crops like dhaincha or sunnhemp and plough them in at flowering.',
+      'Use more organic residues (straw, weed biomass) so the soil slowly moves closer to neutral.',
+      'If canal or rain water is better than well water, prefer it for nurseries and early crop stages.'
+    ],
+    irrigation: [
+      'Keep 3–5 cm water during tillering; drain the field completely before harvest.',
+      'Level the field carefully so water depth is even and fertiliser loss is lower.',
+      'Avoid using very turbid or salty water for seedling nurseries whenever you have a choice.',
+      'Do not let seedlings remain in stagnant, foul‑smelling water; refresh with cleaner water if needed.'
+    ],
+    fertiliser: [
+      'Use split nitrogen in 2–3 doses instead of one heavy dose (for example, basal, tillering and panicle stage).',
+      'Apply basal NPK before planting and add zinc sulphate where deficiency is common in your area.',
+      'Where organic manure is available, mix it in before puddling to reduce dependence on chemical fertiliser.',
+      'Avoid high nitrogen right before flowering; it can cause lodging and delay maturity.'
+    ]
+  },
+
+  {
+    id: 'wheat',
+    name: 'Wheat',
+    group: 'staple',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'If pH is below 6.0, apply lime based on soil test at least one season before wheat.',
+      'In very acidic patches, apply lime in strips or bands in the root zone instead of the whole field.',
+      'Increase FYM and compost so soil is well buffered and does not become sharply acidic.',
+      'Avoid repeated use of only ammonium‑based fertilisers on acidic soils without organic inputs.'
+    ],
+    improveHigh: [
+      'Above pH 7.8, watch for yellowing between veins; use zinc or iron foliar spray when symptoms appear.',
+      'Use more organic residues and manures to reduce crusting on alkaline soils.',
+      'If irrigation water is also alkaline, keep depths shallow and avoid over‑irrigation.',
+      'Grow a legume in rotation before wheat to improve structure and nutrient balance.'
+    ],
+    irrigation: [
+      'Important irrigations are at crown‑root initiation, tillering, flowering and grain filling.',
+      'Avoid waterlogging; wheat prefers moist but well‑aerated soil with no standing water.',
+      'Irrigate lightly after sowing to ensure uniform germination, especially on light soils.',
+      'Stop irrigation when grains turn hard; too much late water reduces grain quality.'
+    ],
+    fertiliser: [
+      'Use balanced NPK according to local recommendation instead of only urea.',
+      'Place fertiliser slightly below seed level rather than broadcasting everything on the surface.',
+      'On lighter soils, split nitrogen into more but smaller doses so it is not lost by leaching.',
+      'Retain some straw as mulch or residue to recycle nutrients and reduce temperature stress.'
+    ]
+  },
+
+  {
+    id: 'maize',
+    name: 'Maize (corn)',
+    group: 'cereal',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Below pH 5.8, apply lime to prevent root damage and poor nutrient uptake.',
+      'Combine lime with FYM so the effect on pH is smoother and lasts longer.',
+      'Avoid sowing maize immediately after very heavy applications of acidic fertilisers.',
+      'Where acidity is patchy, treat only the problem spots instead of the whole field.'
+    ],
+    improveHigh: [
+      'At high pH, apply zinc and manganese rich fertiliser or foliar mixture if leaves pale.',
+      'Add crop residues and compost each season so the soil does not harden or crack.',
+      'Prefer neutral canal or rain water for critical stages if available.',
+      'Grow a green‑manure or fodder crop before maize on very alkaline land to soften the profile.'
+    ],
+    irrigation: [
+      'Do not allow stress at tasselling and grain filling; these stages decide final yield.',
+      'Avoid standing water around plants for more than one or two days.',
+      'On sandy soil, give more frequent but lighter irrigations to prevent wilting.',
+      'After heavy rain, open small drains so excess water moves out quickly.'
+    ],
+    fertiliser: [
+      'Place fertiliser bands 5 cm away and 5 cm below the seed instead of broad‑casting.',
+      'Use a starter dose of DAP or complex NPK at sowing for strong early growth.',
+      'Top‑dress nitrogen when plants are knee‑high and again just before tasselling.',
+      'Where organic manure is available, combine it with chemical fertiliser rather than replacing one with the other completely.'
+    ]
+  },
+
+  {
+    id: 'sugarcane',
+    name: 'Sugarcane',
+    group: 'cash',
+    phMin: 5.5,
+    phMax: 8.0,
+    improveLow: [
+      'On very acidic soils, apply lime and bulky organic manure before planting the plant crop.',
+      'Use press‑mud or filter cake from sugar mills where available to improve pH and fertility.',
+      'Avoid planting new ratoons on severely acidic patches; reclaim them first with amendments.',
+      'Grow a green‑manure crop in the fallow period and incorporate it deeply.'
+    ],
+    improveHigh: [
+      'Where soil is alkaline and saline, leach salts with good‑quality water during pre‑plant irrigation.',
+      'Use gypsum if soil tests show high exchangeable sodium.',
+      'Maintain good surface drainage so salts do not accumulate around the stool.',
+      'Plant tolerant varieties recommended for sodic or saline areas when reclamation is slow.'
+    ],
+    irrigation: [
+      'Give light but frequent irrigations in sandy soils; avoid wide gaps between irrigations.',
+      'Stop irrigation 15–20 days before harvest to improve sugar recovery.',
+      'Repair field channels and furrows before each season so water reaches all rows evenly.',
+      'Avoid deep cracks in clay soil by timely irrigation and trash mulching between rows.'
+    ],
+    fertiliser: [
+      'Apply nitrogen in 3–4 splits along the furrows instead of one heavy application.',
+      'Use balanced NPK doses as per local recommendation and soil test.',
+      'In ratoon crops, apply fertiliser after gap‑filling so all stools receive similar nutrition.',
+      'Combine chemical fertiliser with trash mulching or compost to keep soil alive for long seasons.'
+    ]
+  },
+
+  {
+    id: 'cotton',
+    name: 'Cotton',
+    group: 'cash',
+    phMin: 5.8,
+    phMax: 7.5,
+    improveLow: [
+      'On very acidic soil, apply lime to avoid poor root growth and nutrient toxicity.',
+      'Mix FYM and compost at land preparation so soil stays open and well drained.',
+      'Avoid water stagnation in acidic black soils; prepare proper ridges and furrows.',
+      'Use tolerant varieties where soils are naturally more acidic in your region.'
+    ],
+    improveHigh: [
+      'On sodic soils, apply gypsum according to soil test and ensure good drainage.',
+      'Avoid using highly alkaline well water if a better source is available.',
+      'Add crop residues and manures to reduce crusting and surface sealing.',
+      'Grow a deep‑rooted green manure before cotton on fields with long‑term alkalinity.'
+    ],
+    irrigation: [
+      'Give deep irrigation at flowering and boll formation; shallow wetting is not enough.',
+      'Avoid waterlogging; it causes boll drop and root rot quickly.',
+      'Do not irrigate late in the season when most bolls have opened; this encourages rank growth.',
+      'Use furrow irrigation or drip to keep the root zone moist but not flooded.'
+    ],
+    fertiliser: [
+      'Use balanced NPK based on soil test rather than only nitrogen.',
+      'Apply sulphur‑containing fertiliser where sulphur deficiency is common.',
+      'Top‑dress nitrogen in smaller splits and stop heavy nitrogen after flowering.',
+      'Combine fertiliser use with regular weeding so nutrients go to crop, not weeds.'
+    ]
+  },
+
+  {
+    id: 'soybean',
+    name: 'Soybean',
+    group: 'pulse',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Below pH 6.0, light liming improves nodulation and root growth.',
+      'Use FYM and compost so the top soil stays loose and well aerated.',
+      'Avoid water stagnation on acidic clays by using raised beds or broad‑bed furrows.',
+      'Check pH of nursery and seed‑bed soils separately; they may be more acidic than the main field.'
+    ],
+    improveHigh: [
+      'At high pH, apply iron or micronutrient spray if leaf veins remain green but areas between turn yellow.',
+      'Increase organic matter to soften clods and reduce cracks.',
+      'Avoid over‑irrigation on alkaline soils to prevent salt build‑up at the surface.',
+      'Rotate soybean with cereals instead of growing it repeatedly on the same alkaline field.'
+    ],
+    irrigation: [
+      'Protect the crop from waterlogging during heavy rain; soybean is sensitive to standing water.',
+      'Maintain good moisture at flowering and pod filling for maximum yield.',
+      'In rain‑fed areas, conserve moisture by early weeding and interculture.',
+      'Where irrigation is available, give one light pre‑flower irrigation if monsoon breaks.'
+    ],
+    fertiliser: [
+      'Treat seed with Rhizobium and phosphate‑solubilising bacteria before sowing.',
+      'Apply starter phosphorus through DAP or SSP at sowing; pulses respond strongly to P.',
+      'Avoid heavy nitrogen; it reduces nodulation and wastes fertiliser.',
+      'Add some organic manure each season so nodules and soil microbes stay active.'
+    ]
+  },
+
+  {
+    id: 'groundnut',
+    name: 'Groundnut (peanut)',
+    group: 'oilseed',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Very acidic soil needs lime to support peg and pod formation.',
+      'Apply gypsum at pegging (flowering to peg stage) for better kernel filling.',
+      'Keep soil loose by shallow tillage; hard pans at low pH restrict peg entry.',
+      'Avoid continuous use of acid‑forming fertilisers without organic manure.'
+    ],
+    improveHigh: [
+      'On alkaline soil, micronutrient sprays of boron and zinc can prevent empty or poorly filled pods.',
+      'Add compost and crop residue regularly so soil stays friable.',
+      'If irrigation water is very alkaline, use smaller, more frequent irrigations instead of heavy flooding.',
+      'Rotate with cereals or green manures to avoid build‑up of soil‑borne diseases.'
+    ],
+    irrigation: [
+      'Keep soil moist but not sticky from flowering to pod filling.',
+      'Stop irrigation 10–15 days before digging for easier harvest and better shell quality.',
+      'Avoid deep cracks in dry weather by timely irrigation and mulching.',
+      'Do not use flood irrigation on light sandy soils; use furrows or sprinkler instead.'
+    ],
+    fertiliser: [
+      'Use SSP as phosphorus source; it also supplies sulphur for oil formation.',
+      'Do not overuse nitrogen; groundnut fixes most of its own nitrogen through nodules.',
+      'Apply gypsum around the pegging zone rather than spreading it randomly.',
+      'Add well‑decomposed organic manure during land preparation to support soil life.'
+    ]
+  },
+
+  {
+    id: 'mustard',
+    name: 'Mustard',
+    group: 'oilseed',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Apply lime in strips or bands before sowing where soil is strongly acidic.',
+      'Use FYM or compost in the previous crop so mustard sees a softer top soil.',
+      'On very acid fields, avoid late sowing; seedlings are more sensitive in cold, acidic soils.',
+      'Mix crop residues instead of burning them to improve pH slowly.'
+    ],
+    improveHigh: [
+      'Use sulphur‑rich fertiliser like SSP, ammonium sulphate or bentonite sulphur on high pH soils.',
+      'Avoid saline irrigation water, especially at sowing and early seedling stage.',
+      'Where boron deficiency is known, apply a small boron dose as per recommendation.',
+      'Grow a legume or fodder crop after mustard on very alkaline land to rebuild structure.'
+    ],
+    irrigation: [
+      'Key irrigations are at flowering and pod filling; stress here cuts yield sharply.',
+      'Avoid standing water; mustard is highly sensitive to waterlogging.',
+      'Under rain‑fed conditions, conserve moisture by timely weed control and light interculture.',
+      'Where frost risk is high, avoid irrigation just before expected frost nights.'
+    ],
+    fertiliser: [
+      'Use NPK doses recommended for your zone, not just urea.',
+      'Ensure enough sulphur in the fertiliser schedule; oil content depends strongly on sulphur.',
+      'Apply basal fertiliser below seed level and not in direct contact with seed.',
+      'Combine fertiliser with good weed management so nutrients are not stolen by weeds.'
+    ]
+  },
+
+  {
+    id: 'chickpea',
+    name: 'Chickpea (gram)',
+    group: 'pulse',
+    phMin: 6.0,
+    phMax: 8.0,
+    improveLow: [
+      'On strongly acidic land, light liming before chickpea improves nodulation.',
+      'Use broad‑bed and furrow system in high rainfall zones to avoid crusting.',
+      'Do not over‑irrigate acidic heavy clays; roots need air to fix nitrogen.',
+      'Add FYM or compost in the previous crop so chickpea enters a mellow soil.'
+    ],
+    improveHigh: [
+      'On high pH soils, keep adding organic matter so nutrients stay available.',
+      'Where hard pan exists, break it once in a few years with deep tillage.',
+      'Avoid over‑use of sodium‑rich irrigation water; it worsens alkalinity.',
+      'Rotate chickpea with cereals and oilseeds instead of growing pulses back‑to‑back.'
+    ],
+    irrigation: [
+      'Chickpea is mostly grown on stored soil moisture; too much water encourages disease.',
+      'If irrigation is available, one light irrigation at pod filling gives good response.',
+      'Avoid standing water in depressions by opening small drains after heavy rain.',
+      'Do not irrigate when crop is close to harvest; pods may blacken and sprout.'
+    ],
+    fertiliser: [
+      'Treat seed with Rhizobium culture so plants can fix nitrogen efficiently.',
+      'Apply basal phosphorus as per recommendation; chickpea responds well to P.',
+      'Avoid high nitrogen fertiliser; it reduces nodulation and increases lodging.',
+      'Add small doses of zinc or other micronutrients where soil tests show deficiency.'
+    ]
+  },
+
+  {
+    id: 'pigeonpea',
+    name: 'Pigeonpea (arhar)',
+    group: 'pulse',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Use lime on very acidic land before sowing pigeonpea or its preceding crop.',
+      'Add FYM and compost to improve drainage and reduce crusting.',
+      'Avoid sowing pigeonpea in low‑lying acidic spots that stay waterlogged.',
+      'Use tolerant varieties where soils remain moderately acidic even after treatment.'
+    ],
+    improveHigh: [
+      'In alkaline fields, ensure good surface drainage so salts are not trapped near roots.',
+      'Grow green manure or fodder grasses in rotation to improve soil structure.',
+      'Avoid repeated irrigation with very alkaline tube‑well water.',
+      'Leave crop residues on the surface after harvest to slowly add organic matter.'
+    ],
+    irrigation: [
+      'Pigeonpea can handle short drought, but severe stress at flowering reduces yield.',
+      'In heavy rains, open drains quickly so water does not stand around stems.',
+      'Where supplemental irrigation is possible, give one irrigation at pod setting.',
+      'Avoid very late irrigations that may delay maturity and interfere with harvest.'
+    ],
+    fertiliser: [
+      'Apply a small starter dose of nitrogen and sufficient phosphorus at sowing.',
+      'Treat seed with Rhizobium so nodules form early and strongly.',
+      'Do not apply large nitrogen doses later in the crop; rely on biological fixation.',
+      'Use organic manures in rotation to keep deep roots moving through the profile.'
+    ]
+  },
+
+  {
+    id: 'potato',
+    name: 'Potato',
+    group: 'vegetable',
+    phMin: 5.0,
+    phMax: 6.5,
+    improveLow: [
+      'If pH is below 5.0, apply small lime doses based on soil test a season before potato.',
+      'Use plenty of FYM so soil becomes loose and well drained.',
+      'Avoid very acid peat‑like soils for seed potato unless corrected first.',
+      'Grow a cereal or fodder crop with manure before potato in very sour fields.'
+    ],
+    improveHigh: [
+      'Above pH 7.0, common scab increases; avoid fresh undecomposed manure close to planting.',
+      'Use sulphur‑based fertilisers to slightly lower pH near tubers.',
+      'Irrigate carefully so soil stays moist but not waterlogged; scab worsens in alternating dry and wet soil.',
+      'Where scab is a major issue, choose tolerant varieties recommended locally.'
+    ],
+    irrigation: [
+      'Keep soil moist from tuber initiation to bulking; moisture stress reduces size.',
+      'Avoid standing water, which leads to rots and hollow heart.',
+      'Stop irrigation 7–10 days before harvest so skins cure and do not peel.',
+      'Use ridges high enough to protect tubers from sunlight and green‑ing.'
+    ],
+    fertiliser: [
+      'Use more potash relative to nitrogen for firm, well‑keeping tubers.',
+      'Split nitrogen into 2–3 applications instead of one heavy dose.',
+      'Avoid too much nitrogen late in the season; it delays maturity and softens tubers.',
+      'Include organic manure or compost to improve flavour and storage life.'
+    ]
+  },
+
+  {
+    id: 'tomato',
+    name: 'Tomato',
+    group: 'vegetable',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'On very acidic soil, apply lime to reduce blossom‑end rot and calcium problems.',
+      'Add compost and FYM to improve buffering and water‑holding capacity.',
+      'Avoid planting tomatoes right after heavy applications of only ammonium fertiliser.',
+      'Where acidity is patchy, treat low‑pH beds separately with lime.'
+    ],
+    improveHigh: [
+      'At high pH, apply micronutrient sprays if leaves look pale between veins.',
+      'Use organic mulches to keep the root zone cool and moist.',
+      'Avoid over‑irrigation with alkaline water; salts may build up on the surface.',
+      'Rotate with cereals or green manures to refresh soil on long‑term alkaline beds.'
+    ],
+    irrigation: [
+      'Keep moisture even; strong wet–dry swings cause fruit cracking and blossom‑end rot.',
+      'Avoid overhead irrigation late in the evening to reduce leaf diseases.',
+      'Use drip or furrow irrigation so foliage stays as dry as possible.',
+      'Reduce irrigation slightly as fruits ripen to improve taste and shelf life.'
+    ],
+    fertiliser: [
+      'Apply basal NPK and extra potash to support fruit load and quality.',
+      'Do not overload with nitrogen; it gives tall plants with few fruits.',
+      'Use small doses of calcium or calcium‑rich sprays where blossom‑end rot appears.',
+      'Combine organic manures with chemical fertilisers to maintain soil life.'
+    ]
+  },
+
+  {
+    id: 'onion',
+    name: 'Onion',
+    group: 'vegetable',
+    phMin: 6.0,
+    phMax: 7.0,
+    improveLow: [
+      'Apply lime and FYM one season before onion on very acidic soil.',
+      'Use raised beds to improve drainage and prevent bulb rots.',
+      'Avoid very acidic peat‑like soils unless they are corrected.',
+      'Where acidity is high, grow a cereal or fodder crop with lime and manure before onion.'
+    ],
+    improveHigh: [
+      'High pH can lock micronutrients; use foliar spray if tips yellow and bulbs remain small.',
+      'Maintain organic matter to keep bulbs growing in soft soil.',
+      'Avoid heavy applications of sodium‑rich irrigation water on onion beds.',
+      'Use sulphur‑containing fertiliser to support bulb size and flavour on alkaline soils.'
+    ],
+    irrigation: [
+      'Give light but frequent irrigation; onion roots are shallow and fine.',
+      'Stop irrigation 10–12 days before harvest for better curing and storage.',
+      'Avoid standing water in the field, which can rot necks and bulbs.',
+      'Do not over‑irrigate late in the season; bulbs may become soft and split.'
+    ],
+    fertiliser: [
+      'Onion needs good potash and sulphur; include SSP and MOP or similar fertilisers.',
+      'Apply nitrogen in small splits; too much N late reduces storage life.',
+      'Place fertiliser in bands beside the row, not directly on the seed line.',
+      'Add some compost each season to keep soil crumbly for bulb expansion.'
+    ]
+  },
+
+  {
+    id: 'okra',
+    name: 'Okra (bhindi)',
+    group: 'vegetable',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Apply lime where pH is very low and plants remain stunted.',
+      'Use FYM and compost to build a loose, friable seed bed.',
+      'Avoid heavy metal or industrial effluent water on acidic okra fields.',
+      'Rotate with cereal or pulse crops and manure additions to slowly raise pH.'
+    ],
+    improveHigh: [
+      'On alkaline soil, avoid salty irrigation water, especially at seedling stage.',
+      'Use drip or furrow irrigation to keep the root zone moist but not flooded.',
+      'Add plenty of organic residues so soil does not become hard and cracked.',
+      'Grow green‑manure crops before okra in badly sodic fields.'
+    ],
+    irrigation: [
+      'Irrigate regularly during flowering and fruiting to keep pods tender.',
+      'Avoid waterlogging; wilt diseases spread fast in hot, wet soil.',
+      'Use mulches between rows to reduce evaporation and keep weeds down.',
+      'Do not allow long dry periods followed by heavy irrigation; this can split pods.'
+    ],
+    fertiliser: [
+      'Use balanced NPK and one or two sprays of micronutrient mixture in long‑season crops.',
+      'Do not over‑apply nitrogen; it gives excess leaves and fewer pods.',
+      'Incorporate FYM before sowing to support steady picking over many weeks.',
+      'Harvest pods frequently; regular picking encourages new flushes and better fertiliser use.'
+    ]
+  },
+
+  {
+    id: 'brinjal',
+    name: 'Brinjal (eggplant)',
+    group: 'vegetable',
+    phMin: 5.5,
+    phMax: 7.0,
+    improveLow: [
+      'Light liming and FYM help in very acidic fields before planting brinjal.',
+      'Avoid planting seedlings into waterlogged, sour soil; wait until it drains.',
+      'Use raised beds or ridges on acidic heavy clays.',
+      'Check nursery bed pH; it should not be extremely low compared with the main field.'
+    ],
+    improveHigh: [
+      'High pH may reduce iron and manganese; use foliar mixture if leaves pale.',
+      'Apply plenty of organic matter to keep soil soft and active.',
+      'Avoid over‑irrigation with alkaline water, which can form white crust on the surface.',
+      'Rotate with cereals and pulses to rest the soil on long‑term alkaline plots.'
+    ],
+    irrigation: [
+      'Give regular irrigation; long dry spells cause flower drop and fruit shedding.',
+      'Increase watering frequency in light sandy soils and during strong winds.',
+      'Avoid wetting foliage late evening to reduce foliar diseases.',
+      'Mulch around plants so the root zone stays cool in hot months.'
+    ],
+    fertiliser: [
+      'Apply basal NPK and top‑dress nitrogen in 2–3 splits through the season.',
+      'Combine chemical fertiliser with FYM or compost for better taste and shelf life.',
+      'Do not oversupply nitrogen during late fruiting; it reduces yield and quality.',
+      'Use micronutrient sprays if fruits remain small or leaves look pale despite good NPK.'
+    ]
+  },
+
+  {
+    id: 'banana',
+    name: 'Banana',
+    group: 'fruit',
+    phMin: 5.5,
+    phMax: 7.5,
+    improveLow: [
+      'Apply lime and plenty of FYM in very acidic soil before planting suckers.',
+      'Ensure good drainage by preparing raised pits or mounds.',
+      'Avoid continuous banana on the same highly acidic land; rotate with other crops and manures.',
+      'Monitor leaf colour; severe acidity often shows as weak, yellow plants with small leaves.'
+    ],
+    improveHigh: [
+      'Leach salts with good‑quality water where soil is sodic or saline.',
+      'Apply gypsum according to soil test where exchangeable sodium is high.',
+      'Mulch thickly with crop residues and leaves around the plant base.',
+      'Use organic manures every year so roots explore a soft, cool layer of soil.'
+    ],
+    irrigation: [
+      'Banana is very sensitive to drought; do not allow soil to dry out at any stage.',
+      'Avoid waterlogging at the base; prolonged flooding leads to root and corm rot.',
+      'In very hot periods, increase irrigation frequency but reduce depth per watering.',
+      'Stop heavy irrigation a few days before harvest to improve fruit handling.'
+    ],
+    fertiliser: [
+      'Apply fertiliser in a ring around the plant, away from the pseudostem.',
+      'Split nitrogen and potash into many small doses during the growing season.',
+      'Combine chemical fertilisers with FYM or compost to maintain soil structure.',
+      'Use magnesium and micronutrient sprays if old leaves show typical deficiency patterns.'
+    ]
+  },
+
+  {
+    id: 'mango',
+    name: 'Mango',
+    group: 'fruit',
+    phMin: 5.5,
+    phMax: 7.5,
+    improveLow: [
+      'Apply lime before planting new orchards on strongly acidic soil.',
+      'Grow green‑manure crops in basins and incorporate them when tender.',
+      'Avoid puddled or waterlogged basins around mango trees on acidic clays.',
+      'Use mulches and FYM to build a soft surface layer rich in fine roots.'
+    ],
+    improveHigh: [
+      'On high pH soils, spray micronutrients like zinc, iron and manganese at new flush.',
+      'Keep basins mulched so salts do not accumulate and crack the surface.',
+      'Avoid applying large amounts of sodium‑rich irrigation water near trunks.',
+      'Where soil is very alkaline, plant on raised mounds with lots of organic matter.'
+    ],
+    irrigation: [
+      'Young plants need regular irrigation in summer for quick establishment.',
+      'In bearing trees, provide moisture at fruit development but avoid excess near flowering.',
+      'Do not leave deep standing water around trunks; it can suffocate roots.',
+      'In rain‑fed orchards, conserve moisture with mulches and cover crops.'
+    ],
+    fertiliser: [
+      'Give FYM plus NPK dose once or twice a year in a ring around the canopy drip line.',
+      'Adjust fertiliser dose by tree age; young trees need lighter but more frequent feeding.',
+      'Avoid placing fertiliser right against the trunk; keep it in a circular band.',
+      'Regular micronutrient sprays keep foliage dark green and fruits well filled.'
+    ]
+  },
+
+  {
+    id: 'citrus',
+    name: 'Citrus (orange/limon)',
+    group: 'fruit',
+    phMin: 5.5,
+    phMax: 7.5,
+    improveLow: [
+      'Correct very acidic soil with lime before establishing citrus orchards.',
+      'Apply FYM and compost shallowly because most citrus feeder roots are near the surface.',
+      'Avoid water stagnation in acidic soils; construct ridges or drains if needed.',
+      'Do not apply strong acid‑forming fertilisers without organic matter on already acidic land.'
+    ],
+    improveHigh: [
+      'High pH often causes micronutrient deficiency; use chelated sprays several times in the season.',
+      'Avoid piling fertiliser next to the trunk; spread it evenly under the canopy.',
+      'Maintain thick organic mulch to reduce cracking and salt crust formation.',
+      'Where soil is very alkaline, apply small, regular doses of organic matter instead of rare heavy applications.'
+    ],
+    irrigation: [
+      'Irrigate at longer intervals but with enough water to wet the root zone thoroughly.',
+      'Provide drainage in heavy soils to avoid Phytophthora root rot.',
+      'Do not leave basins completely dry for long periods; sudden heavy irrigation can crack fruits.',
+      'Reduce irrigation slightly just before harvest to improve fruit sweetness.'
+    ],
+    fertiliser: [
+      'Apply NPK in 2–3 splits per year together with FYM or compost.',
+      'Use micronutrient sprays based on leaf analysis or visible deficiency.',
+      'Place fertiliser in a circular band under the canopy, not close to the stem.',
+      'Keep weeds out of the basin so fertiliser benefits only the trees.'
+    ]
+  },
+
+  {
+    id: 'tea',
+    name: 'Tea',
+    group: 'plantation',
+    phMin: 4.5,
+    phMax: 6.0,
+    improveLow: [
+      'Tea prefers acidic soil; only correct pH if it is extremely low and roots are being damaged.',
+      'Use organic mulches like pruned twigs and leaves to protect shallow surface roots.',
+      'Avoid deep cultivation around bushes on very acidic slopes.',
+      'Monitor leaf colour and growth; very slow bushes may indicate need for mild pH correction.'
+    ],
+    improveHigh: [
+      'If pH rises too high, use ammonium sulphate and other acid‑forming fertilisers.',
+      'Add organic matter such as composted prunings to lower pH slowly.',
+      'Avoid extra liming near mature tea bushes unless soil tests demand it.',
+      'Improve drainage so alkaline salts are washed out rather than trapped.'
+    ],
+    irrigation: [
+      'In low‑rainfall areas, use sprinkler or drip irrigation during long dry spells.',
+      'Mulch heavily under bushes to conserve moisture and moderate temperature.',
+      'Avoid standing water in tea fields; waterlogged roots decline quickly.',
+      'Adjust irrigation frequency with shade level and wind speed.'
+    ],
+    fertiliser: [
+      'Follow the regional tea board fertiliser schedule for NPK and micronutrients.',
+      'Apply fertiliser in shallow bands around bushes, not directly on stems.',
+      'Do not apply heavy fertiliser doses on very dry soil; it can burn roots.',
+      'Combine chemical fertiliser with regular organic inputs to keep soil organisms active.'
+    ]
+  },
+
+  {
+    id: 'sunflower',
+    name: 'Sunflower',
+    group: 'oilseed',
+    phMin: 6.0,
+    phMax: 7.5,
+    improveLow: [
+      'Use lime and FYM on very acidic soils before sowing sunflower.',
+      'Avoid sowing on strongly acidic, compacted patches without prior treatment.',
+      'Grow a legume or fodder crop with manure additions one season before sunflower.',
+      'Where acidity is localised, apply lime only in those spots instead of the whole field.'
+    ],
+    improveHigh: [
+      'On high pH soils, boron may be low; apply a small boron dose if recommended.',
+      'Return crop residues to the soil instead of burning to improve structure.',
+      'Avoid long flood irrigations with alkaline water; they raise pH further.',
+      'Grow green manure crops between sunflower seasons on sodic fields.'
+    ],
+    irrigation: [
+      'Ensure good moisture at flowering and grain filling; stress here sharply reduces yield.',
+      'Do not over‑irrigate; waterlogging lowers oil content and weakens stems.',
+      'On light soils, more frequent but lighter irrigations work better.',
+      'Avoid very late irrigation close to harvest; heads may bend and lodge.'
+    ],
+    fertiliser: [
+      'Use recommended NPK dose; potash is important for oil quality and disease resistance.',
+      'Apply most phosphorus and potash basally and split nitrogen into 2–3 doses.',
+      'Keep weeds under control during early growth so fertiliser is used efficiently.',
+      'Add organic manure when possible to support deep tap‑root growth.'
+    ]
+  },
+
+  {
+    id: 'millet',
+    name: 'Pearl millet (bajra)',
+    group: 'cereal',
+    phMin: 5.5,
+    phMax: 7.5,
+    improveLow: [
+      'Use FYM and light liming where pH is very low to avoid seedling shock.',
+      'Do not sow bajra in extremely acidic sandy soils without at least some amendment.',
+      'Grow a legume or mixed fodder crop with manure before bajra to soften the top soil.',
+      'Avoid burning residues; incorporate them to help pH move slowly upwards.'
+    ],
+    improveHigh: [
+      'Millet tolerates slightly higher pH but avoid very sodic patches with white salt crust.',
+      'Increase organic matter so the surface does not seal after rain.',
+      'Where irrigation water is alkaline, use small doses and avoid ponding.',
+      'Rotate bajra with legumes to keep soil structure open and active.'
+    ],
+    irrigation: [
+      'Often grown on rainfall; where irrigated, avoid stress at booting and flowering.',
+      'Do not waterlog light sandy soils; short, shallow irrigations are enough.',
+      'On heavy soils, give one pre‑sowing irrigation and sow on residual moisture.',
+      'Use contour bunds and ridges in drylands to trap more rainwater.'
+    ],
+    fertiliser: [
+      'Apply basal NPK and one top dressing of nitrogen at early tillering.',
+      'Use seed treatment and proper spacing so each plant can use fertiliser efficiently.',
+      'On very poor soils, add FYM or compost during land preparation.',
+      'Avoid over‑fertilising with nitrogen where moisture is limited; it can cause lodging and poor grain filling.'
+    ]
+  }
+];
 
     /* ========= pH HELPER ========= */
     const phInput=document.getElementById('phInput');
