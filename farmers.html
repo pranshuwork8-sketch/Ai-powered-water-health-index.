@@ -1849,58 +1849,131 @@ const FARM_CROPS = [
     const shortTermList=document.getElementById('shortTermList');
     const longTermList=document.getElementById('longTermList');
 
-    function buildImproveTips(p){
-      const short=[],long=[];
-      if(p<5.5){
-        short.push(
-          'For nurseries and young plants, mix this water with cleaner source or use rainwater if possible.',
-          'Apply lime or dolomite only as per soil test; mix well into top 10–15 cm soil.',
-          'Avoid very strong single dose of acidic fertilisers like only urea; use balanced NPK.'
-        );
-        long.push(
-          'Add FYM, compost and crop residues every season to slowly raise pH.',
-          'Grow deep‑rooted legumes and leave roots in soil after harvest.',
-          'Reduce burning of crop waste; keep organic matter on the field.'
-        );
-      }else if(p<6.5){
-        short.push(
-          'For sensitive vegetables, apply small lime dose in planting rows, not on whole field.',
-          'Check pH at more than one spot; some patches may be lower than others.'
-        );
-        long.push(
-          'Follow rotation with at least one legume crop to keep soil stable.',
-          'Use complex fertilisers (NPK) instead of only nitrogen.'
-        );
-      }else if(p<=7.8){
-        short.push(
-          'This pH is close to ideal. Focus on clean water, correct fertiliser dose and good drainage.',
-          'Test water and soil once a year to confirm pH is staying stable.'
-        );
-        long.push(
-          'Keep soil covered with mulches or cover crops so biology remains active.',
-          'Reduce very heavy tillage which breaks soil structure.'
-        );
-      }else if(p<=8.5){
-        short.push(
-          'Avoid long flood irrigation with this water; give shorter, controlled irrigation.',
-          'Mix this water with better‑quality source if you have two wells or canals.'
-        );
-        long.push(
-          'Use gypsum on sodic soil after lab test confirms requirement.',
-          'Grow green manure, add press‑mud or compost and do deep ploughing once in few years.'
-        );
-      }else{
-        short.push(
-          'Do not use this water for nurseries or pots unless mixed with better water.',
-          'Try to use this water only on more tolerant crops or for leaching salts.'
-        );
-        long.push(
-          'Plan a long‑term reclamation programme with experts; may include drainage, gypsum and crop choice.',
-          'Shift to salt‑tolerant crops until soil and water quality improve.'
-        );
-      }
-      return{short,long};
-    }
+    function buildImproveTips(p) {
+  shortTermList.innerHTML = '';
+  longTermList.innerHTML = '';
+
+  const short = [];
+  const long = [];
+
+  if (p < 4.5) {
+    // pH 0–4.5  VERY VERY ACID
+    short.push(
+      'This water is extremely acidic. Do NOT use it directly for vegetables, nurseries or young plants.',
+      'If you must use it, always mix it with a better water source or collected rainwater.',
+      'Never pour strong urea or other fertilisers straight into this water; it will burn roots badly.',
+      'Use this water first for leaching salty soils or for non‑crop use, not for sensitive crops.'
+    );
+    long.push(
+      'Get a soil and water test from a lab before investing in crops with this water.',
+      'Plan to apply lime or dolomite in several small doses over many seasons, not one huge shot.',
+      'Grow very hardy grasses or green‑manure crops first, and slowly build organic matter.',
+      'Work with local experts on a full reclamation plan (drainage + gypsum / lime + crop choice).'
+    );
+
+  } else if (p < 5.5) {
+    // pH 4.5–5.5  STRONG ACID
+    short.push(
+      'Water is strongly acidic. Many crops will suffer unless soil is corrected.',
+      'For nurseries, mix this water with cleaner water or use rainwater where possible.',
+      'Apply lime or dolomite only as per soil test, and mix it into the top 10–15 cm of soil.',
+      'Avoid using only ammonium‑type fertilisers; prefer balanced NPK plus plenty of compost.'
+    );
+    long.push(
+      'Every season, add FYM, compost and crop residues to slowly raise pH and protect roots.',
+      'Include deep‑rooted legumes or fodder crops in rotation and leave roots in the soil.',
+      'Do not burn crop residues; keeping straw and leaves on the field improves pH buffering.',
+      'Test pH every 2–3 years and adjust lime doses instead of doing one very heavy application.'
+    );
+
+  } else if (p < 6.5) {
+    // pH 5.5–6.5  SLIGHT ACID
+    short.push(
+      'Water is a little acidic. This is okay for many crops, but some vegetables prefer it slightly higher.',
+      'For very sensitive crops (like onion, cabbage nurseries), you can apply a small lime dose in rows or pits.',
+      'Check pH in different corners of the field; some small patches may be more acidic than others.',
+      'Use balanced NPK instead of only urea so the soil does not keep moving more acidic.'
+    );
+    long.push(
+      'Keep at least one pulse or green‑manure crop in rotation to hold pH steady.',
+      'Return crop residues to the soil and use compost so the top layer stays soft and buffered.',
+      'Avoid long‑term standing water (continuous puddling) on these soils; it can slowly push pH down.',
+      'Store your soil‑test reports and compare them every few years to see if pH moves up or down.'
+    );
+
+  } else if (p <= 7.5) {
+    // pH 6.5–7.5  NEAR NEUTRAL
+    short.push(
+      'Your pH is close to ideal. Focus on keeping it stable, not changing it.',
+      'Do not add lime or strong acid fertilisers without a soil test; they can spoil this good balance.',
+      'Use clean water and avoid mixing in industrial or drainage water that may shift pH quickly.',
+      'Choose crops mainly based on climate, soil type and market price, because pH is friendly here.'
+    );
+    long.push(
+      'Maintain soil cover with mulches or cover crops so microbes stay active and protect structure.',
+      'Use reasonable tillage: deep plough only when needed, otherwise use shallow, timely cultivation.',
+      'Include at least one legume or green‑manure crop every 2–3 years to keep soil biology strong.',
+      'Keep a simple notebook: record pH, crop and yield each year so you notice small changes early.'
+    );
+
+  } else if (p <= 8.5) {
+    // pH 7.5–8.5  MODERATE ALKALINE
+    short.push(
+      'Water is moderately alkaline. Some crops are okay, but others will show yellow leaves or poor growth.',
+      'Avoid long flood irrigation; give shorter irrigations through furrows or drip so salts do not climb up.',
+      'If you have two water sources, use the better (lower pH) one for nurseries and fruits/vegetables.',
+      'Watch the soil surface: a white crust is a sign of salt and high pH build‑up.'
+    );
+    long.push(
+      'Where soil tests confirm sodicity, apply gypsum in the right dose and ensure drainage.',
+      'Add lots of FYM, compost and crop residues every season so roots grow in a softer, darker layer.',
+      'Deep plough once in a few years and cut small surface drains so rainwater can carry salts away.',
+      'Prefer slightly tolerant crops (barley, mustard, chickpea, sorghum, bajra) while reclamation is going on.'
+    );
+
+  } else if (p <= 9.5) {
+    // pH 8.5–9.5  STRONG ALKALINE
+    short.push(
+      'Water is strongly alkaline. Most sensitive crops will struggle, especially vegetables and pulses.',
+      'Do not use this water for seed trays or pots unless you mix it with better quality water.',
+      'Use furrow or drip irrigation instead of full‑field flooding to reduce salt rise.',
+      'Check for white crusts and hard clods; these are signs that soil salts and pH are already high.'
+    );
+    long.push(
+      'Work with a soil lab to design a gypsum + drainage programme for the worst affected fields.',
+      'Grow salt‑tolerant crops, grasses or fodder initially and slowly shift to less tolerant crops later.',
+      'Add thick organic mulches (straw, crop waste) so the top 5–10 cm becomes crumbly and darker.',
+      'Monitor both pH and electrical conductivity (salinity) every few years to track improvement.'
+    );
+
+  } else {
+    // pH > 9.5  EXTREME ALKALINE
+    short.push(
+      'This pH is extremely alkaline. Direct irrigation on most crops is unsafe.',
+      'Use this water only after mixing with much better water, or for leaching and non‑crop uses.',
+      'Do not establish new orchards or high‑value vegetables with only this water source.',
+      'Get professional lab advice before spending money on fertiliser or amendments.'
+    );
+    long.push(
+      'Plan a long‑term reclamation project: good drainage, gypsum or other amendments, and heavy organic matter.',
+      'Use very tolerant grasses, trees or halophyte species first to slowly change soil condition.',
+      'Collect and store rainwater wherever possible (ponds, tanks) to blend with this water in future.',
+      'Keep detailed records of tests, crops and yields so you can prove that reclamation is working over time.'
+    );
+  }
+
+  short.forEach(text => {
+    const li = document.createElement('li');
+    li.textContent = text;
+    shortTermList.appendChild(li);
+  });
+  long.forEach(text => {
+    const li = document.createElement('li');
+    li.textContent = text;
+    longTermList.appendChild(li);
+  });
+  improveCards.style.display = 'block';
+}
 
     btnImprove.addEventListener('click',()=>{
       const v=parseFloat(phImprove.value);
