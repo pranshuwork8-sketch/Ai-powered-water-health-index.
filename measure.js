@@ -122,18 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (postcode) pieces.push(postcode);
     return pieces.join(', ');
   }
-
   async function reverseGeocode(lat, lng) {
-    try {
-      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-      const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
-      const data = await res.json();
-      return formatLocation(data.address);
-    } catch (e) {
-      console.error('Reverse geocode failed', e);
-      return 'Unknown location';
-    }
+  try {
+    const url =
+      `https://nominatim.openstreetmap.org/reverse` +
+      `?format=jsonv2&lat=${lat}&lon=${lng}` +
+      `&zoom=18&addressdetails=1`;  // request house/street-level result
+    const res = await fetch(url, { headers: { 'Accept-Language': 'en-IN' } });
+    const data = await res.json();
+    return formatLocation(data.address);
+  } catch (e) {
+    console.error('Reverse geocode failed', e);
+    return 'Unknown location';
   }
+}
 
   if (btnLocation) {
     btnLocation.addEventListener('click', () => {
@@ -142,20 +144,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const label = await reverseGeocode(lat, lng);
-        currentLat = lat; currentLng = lng; currentPlace = label;
-        if (locationMain) locationMain.textContent = label;
-        if (map) map.setView([lat, lng], 16);
-        addReadingMarker({
-          ph: phInput.value || '–',
-          temp: tempInput.value || '–',
-          turb: turbSelect.value || '–',
-          tds: tdsInput.value ? Number(tdsInput.value) : null,
-          index: 0, drinkableFlag: '', lat, lng, place: label
-        });
-      }, () => alert('Could not get location.'), {
+  const lat = pos.coords.latitude;
+  const lng = pos.coords.longitude;
+  const acc = pos.coords.accuracy; // meters
+
+  const label = await reverseGeocode(lat, lng);
+
+  currentLat = lat;
+  currentLng = lng;
+  currentPlace = label;
+
+  const accuracyText = acc
+    ? ` (±${Math.round(acc)} m)`
+    : '';
+
+  if (locationMain) {
+    locationMain.textContent = label + accuracyText;
+  }
+
+  // If accuracy is terrible, warn the user
+  if (acc && acc > 2000) {
+    alert(
+      'Your browser only gave an approximate location (±' +
+      Math.round(acc) +
+      ' m). For precise judging, please open this site on a phone with GPS.'
+    );
+  }
+
+  if (map) map.setView([lat, lng], 16);
+  addReadingMarker({
+    ph: phInput.value || '–',
+    temp: tempInput.value || '–',
+    turb: turbSelect.value || '–',
+    tds: tdsInput.value ? Number(tdsInput.value) : null,
+    index: 0,
+    drinkableFlag: '',
+    lat,
+    lng,
+    place: label
+  });
+}, () => alert('Could not get location.'), {
         enableHighAccuracy: true, timeout: 10000, maximumAge: 30000
       });
     });
