@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Water Health Index - Farmers</title>
+  <style>
+    :root {
+      --sidebar-wide: 225px;
+      --sidebar-min: 210px;
+      --sidebar-max: 380px;
+      --accent: #51daf7;
+      --active: #48e8c2;
+      --card-bg: #1d334b;
+      --shadow: 0 8px 32px #17487d40;
+    }
+
+    html, body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(81,218,247,0.74), rgba(23,72,125,0.81) 85%),
+        url('assets/bg-water.jpg');
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body { position: relative; }
+
+    .layout-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-wide);
+      min-width: var(--sidebar-min);
+      max-width: var(--sidebar-max);
+      background: rgba(16,38,54,0.98);
+      box-shadow: 3px 0 20px #143d5344;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 2000;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2.1rem 0 2.3rem 0;
+    }
+    .logo-img {
+      font-size: 2.7rem;
+      animation: waveMotion 2.3s infinite alternate cubic-bezier(.55,.06,.87,.6);
+      filter: drop-shadow(0 2px 19px #51daf7a0);
+    }
+    .logo-text {
+      color: var(--accent);
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.16;
+    }
+    @keyframes waveMotion {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin-bottom: auto;
+    }
+    .nav-link {
+      color: #e3fbfa;
+      text-decoration: none;
+      padding: 0.7rem 1.15rem;
+      font-size: 1.09rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      border-radius: 13px;
+      margin: 0 .4rem;
+      transition: background .12s, color .12s;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--active);
+      color: #154b68;
+    }
+
+    .sidebar-footer {
+      color: #9ee8ff;
+      font-size: .95rem;
+      font-style: italic;
+      padding: 1.1rem .8rem 1rem .8rem;
+      text-align: center;
+    }
+
+    .sidebar-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: ew-resize;
+      background: transparent;
+      pointer-events: auto;
+    }
+    .sidebar-handle:hover {
+      background: rgba(81,218,247,0.45);
+    }
+
+    /* Mobile top bar */
+    .mobile-topbar {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .mobile-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(10,30,46,0.98);
+        display: flex;
+        align-items: center;
+        padding: 0 0.8rem;
+        z-index: 2100;
+        box-shadow: 0 2px 12px #00000055;
+      }
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #51daf7;
+        background: #153044;
+        color: #e3fbfa;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.7rem;
+      }
+      .mobile-topbar-title {
+        color: #9ee8ff;
+        font-weight: bold;
+        font-size: 1.05rem;
+      }
+      .sidebar {
+        top: 52px;
+        bottom: 0;
+        width: 220px;
+        max-width: 80vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease-out;
+        position: fixed;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-header { margin: 1rem 0; }
+      .logo-img { font-size: 2.1rem; }
+      .logo-text { font-size: 1.3rem; }
+      .sidebar nav .nav-link {
+        font-size: 1rem;
+        padding: .7rem .9rem;
+        justify-content: flex-start;
+      }
+      .sidebar-handle { display: none; }
+      .layout-wrap { margin-top: 52px; }
+    }
+
+    /* Main wrapper */
+    .main-wrap {
+      margin-left: var(--sidebar-wide);
+      padding: 4vw 4vw 3vw 4vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 900px) {
+      .main-wrap {
+        margin-left: 0;
+        padding: 4vw 2.2vw 3vw 2.2vw;
+      }
+    }
+
+    /* Language pill */
+    .lang-wrap {
+      position: fixed;
+      top: 1.3rem;
+      right: 1.4rem;
+      z-index: 1500;
+    }
+    .lang-current {
+      background: #51daf7;
+      color: #173048;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.7rem 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #2183a235;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 2.7rem;
+      right: 0;
+      background: #184c6cfa;
+      border-radius: 14px;
+      box-shadow: 0 7px 26px #155070ad;
+      padding: .4rem .55rem;
+      border: 1.4px solid #39bbe9;
+      overflow-y: auto;
+      max-height: 50vh;
+      min-width: 170px;
+      box-sizing: border-box;
+    }
+    .lang-dropdown.open { display: flex; }
+    .lang-opt {
+      background: transparent;
+      color: #55ebca;
+      border-radius: 11px;
+      border: 1.2px solid #39bbe9;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: .22rem;
+      cursor: pointer;
+      padding: .4rem .76rem;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+      font-weight: 600;
+    }
+    .lang-opt:hover,
+    .lang-opt.selected {
+      background: #51daf7;
+      color: #143d53;
+      border-color: #48e8c2;
+    }
+
+    @media (max-width: 520px) {
+      .lang-current { font-size: 1rem; padding: .5rem 1.3rem .5rem .8rem; }
+    }
+
+    /* Farmers content layout */
+    .farmers-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 4vw;
+      align-items: stretch;
+    }
+    .farmers-title-card {
+      flex: 2;
+      min-width: 260px;
+      background: var(--card-bg);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      border: 1.2px solid #107dac;
+      padding: 1.8rem 2.1rem 1.7rem 2.1rem;
+      box-sizing: border-box;
+    }
+    .farmers-heading {
+      font-size: 2.0rem;
+      color: #55ebca;
+      font-weight: bold;
+      margin: 0 0 .4rem 0;
+      text-shadow: 0 2px 16px #51daf784;
+    }
+    .farmers-intro {
+      font-size: 1.02rem;
+      color: #d9fbff;
+      margin: 0 0 1rem 0;
+      line-height: 1.6;
+    }
+    .farmers-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-bottom: 1rem;
+    }
+    .farmers-badge {
+      padding: .18rem .65rem;
+      border-radius: 999px;
+      font-size: .82rem;
+      border: 1px solid #51daf7;
+      color: #aefef5;
+      background: rgba(8,30,46,0.9);
+    }
+
+    .farmers-ai-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: .3rem;
+    }
+    .farmers-ai-note {
+      font-size: .9rem;
+      color: #bdefff;
+      max-width: 330px;
+    }
+    .farmers-ai-btn {
+      font-weight: bold;
+      font-size: 1rem;
+      padding: .6rem 1.4rem;
+      border-radius: 999px;
+      border: 1.4px solid #51daf7;
+      background: #48e8c2;
+      color: #173048;
+      cursor: pointer;
+      box-shadow: 0 2px 15px #48e8c231;
+      transition: background .15s, color .15s, transform .12s;
+    }
+    .farmers-ai-btn:hover {
+      background: #17487d;
+      color: #b7fff6;
+      transform: translateY(-1px);
+    }
+
+    .farmers-status-card {
+      flex: 1.4;
+      min-width: 240px;
+      background: radial-gradient(circle at 10% -10%, rgba(132,255,247,0.35), rgba(14,34,52,0.95));
+      border-radius: 22px;
+      padding: 1.2rem 1.5rem 1.4rem 1.5rem;
+      border: 1.4px solid #4dd7ff;
+      box-shadow: 0 10px 30px #02070fa8;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .farmers-status-card::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background:
+        radial-gradient(circle at 20% 120%, rgba(81,218,247,0.25), transparent 55%),
+        radial-gradient(circle at 90% -10%, rgba(184,255,248,0.2), transparent 50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .farmers-status-title {
+      position: relative;
+      font-size: 1.2rem;
+      margin-bottom: .25rem;
+      color: #f3fffd;
+    }
+    .farmers-status-text {
+      position: relative;
+      font-size: .9rem;
+      color: #c7f3ff;
+      margin-bottom: .6rem;
+    }
+    .farmers-status-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .22rem .8rem;
+      border-radius: 999px;
+      font-size: .86rem;
+      font-weight: bold;
+      background: #163947;
+      border: 1px solid #48e8c2;
+      color: #bffef3;
+    }
+    .farmers-status-small {
+      position: relative;
+      display: block;
+      font-size: .78rem;
+      color: #e0fbff;
+      margin-top: .4rem;
+      opacity: .9;
+    }
+
+    /* Main grid: left pH helper, right crop advice */
+    .farmers-main-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.6fr) minmax(260px, 1.2fr);
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .farmers-main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .farmers-panel {
+      background: rgba(17,40,60,0.96);
+      border-radius: 22px;
+      border: 1.1px solid #1fa8d7;
+      padding: 1.4rem 1.6rem 1.6rem 1.6rem;
+      box-shadow: 0 7px 24px rgba(0,0,0,0.55);
+      box-sizing: border-box;
+    }
+    .farmers-panel h2 {
+      margin: 0 0 .4rem 0;
+      font-size: 1.35rem;
+      color: #55ebca;
+    }
+    .farmers-panel-sub {
+      font-size: .9rem;
+      color: #aee3ff;
+      margin-bottom: .8rem;
+    }
+
+    .farmers-section {
+      margin-top: 1rem;
+      padding-top: .6rem;
+      border-top: 1px solid rgba(160,220,240,0.28);
+    }
+    .farmers-section-title {
+      font-weight: bold;
+      color: #51daf7;
+      margin-bottom: .35rem;
+      font-size: .95rem;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      align-items: center;
+      margin: .4rem 0 .7rem;
+    }
+    .controls-row label {
+      font-weight: bold;
+      color: #9ee8ff;
+      font-size: .9rem;
+    }
+    .controls-row input[type=number],
+    .controls-row select {
+      padding: .4rem .6rem;
+      border-radius: 7px;
+      border: 1px solid #27536b;
+      background: #182b35;
+      color: #e7fbff;
+      font-family: "Times New Roman", Times, serif;
+      font-size: .95rem;
+    }
+    .controls-row select {
+      min-width: 190px;
+    }
+
+    .btn-main {
+      border: none;
+      border-radius: 8px;
+      padding: .45rem .95rem;
+      font-family: "Times New Roman", Times, serif;
+      font-size: .95rem;
+      font-weight: bold;
+      cursor: pointer;
+      background: #2cb5d6;
+      color: #fff;
+      transition: background .15s, transform .08s;
+    }
+    .btn-main:hover {
+      background: #168eaf;
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      border-radius: 8px;
+      padding: .45rem .95rem;
+      font-family: "Times New Roman", Times, serif;
+      font-size: .95rem;
+      font-weight: bold;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid #3b7b95;
+      color: #cdefff;
+      transition: background .15s, color .15s, transform .08s;
+    }
+    .btn-ghost:hover {
+      background: #153045;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .note {
+      font-size: .86rem;
+      color: #b9e3ff;
+      margin-top: .3rem;
+    }
+
+    .status-chip {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .8rem;
+      font-weight: bold;
+      margin-left: .4rem;
+    }
+    .chip-ok    { background: #225f36; color: #e7ffe9; }
+    .chip-warn  { background: #735616; color: #fff2c0; }
+    .chip-bad   { background: #7b1f1f; color: #ffe3e3; }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-top: .3rem;
+    }
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .82rem;
+      background: #16323f;
+      border: 1px solid #3f7f97;
+      color: #d2f6ff;
+    }
+
+    .advice-card {
+      background: #162c3a;
+      border-radius: 10px;
+      padding: .6rem .7rem .7rem;
+      font-size: .9rem;
+      color: #e5fbff;
+      margin-top: .3rem;
+    }
+    .advice-title {
+      font-weight: bold;
+      color: #55ebca;
+      margin-bottom: .18rem;
+    }
+    .advice-card ul {
+      margin: .2rem 0 0 1.1rem;
+      padding: 0;
+      list-style: disc;
+      font-size: .88rem;
+    }
+
+    /* Simple placeholder AI panel */
+    .ai-placeholder {
+      position: fixed;
+      bottom: 32px;
+      right: 20px;
+      width: 340px;
+      max-width: 100%;
+      background: #102530;
+      border-radius: 16px;
+      border: 1px solid #3fd1c9;
+      box-shadow: 0 0 18px #000;
+      color: #e3fbfa;
+      font-family: "Times New Roman", Times, serif;
+      z-index: 2400;
+      display: none;
+      overflow: hidden;
+    }
+    .ai-placeholder-header {
+      padding: 6px 10px;
+      background: #143545;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ai-placeholder-title {
+      font-weight: bold;
+      color: #55ebca;
+      font-size: .96rem;
+    }
+    .ai-placeholder-body {
+      padding: 9px 11px 11px 11px;
+      font-size: .88rem;
+    }
+    .ai-placeholder-close {
+      border: 1px solid #3b7b95;
+      background: transparent;
+      border-radius: 7px;
+      padding: 2px 8px;
+      color: #cdefff;
+      cursor: pointer;
+      font-size: .8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile top bar -->
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-topbar-title" data-i18n="topbar_title">Water Index</div>
+  </header>
+
+  <div class="layout-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-img" aria-hidden="true">🌊</span>
+        <span class="logo-text">Water<br>Index</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">
+          <span aria-hidden="true">🏠</span>
+          <span class="label" data-i18n="nav_home">Home</span>
+        </a>
+        <a href="measure.html" class="nav-link">
+          <span aria-hidden="true">🧪</span>
+          <span class="label" data-i18n="nav_measure">Measure</span>
+        </a>
+        <a href="map.html" class="nav-link">
+          <span aria-hidden="true">🗺️</span>
+          <span class="label" data-i18n="nav_map">Map</span>
+        </a>
+        <a href="care.html" class="nav-link">
+          <span aria-hidden="true">💧</span>
+          <span class="label" data-i18n="nav_care">Care</span>
+        </a>
+        <a href="farmers.html" class="nav-link active">
+          <span aria-hidden="true">🌾</span>
+          <span class="label" data-i18n="nav_farmers">Farmers Assistant</span>
+        </a>
+        <a href="chart.html" class="nav-link">
+          <span aria-hidden="true">📊</span>
+          <span class="label" data-i18n="nav_chart">Chart</span>
+        </a>
+        <a href="learn.html" class="nav-link">
+          <span aria-hidden="true">📚</span>
+          <span class="label" data-i18n="nav_learn">Learn</span>
+        </a>
+        <a href="buykit.html" class="nav-link">
+          <span aria-hidden="true">🛒</span>
+          <span class="label" data-i18n="nav_buykit">Buy Kit</span>
+        </a>
+        <a href="about.html" class="nav-link">
+          <span aria-hidden="true">ℹ️</span>
+          <span class="label" data-i18n="nav_about">About</span>
+        </a>
+      </nav>
+      <footer class="sidebar-footer">
+        &copy; 2025 Water Health Index · Regional project
+      </footer>
+      <div class="sidebar-handle" id="sidebarHandle"></div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-wrap" id="mainWrap">
+      <!-- Language pill -->
+      <div class="lang-wrap">
+        <button class="lang-current" id="langCurrentBtn">
+          English <span style="font-size:1rem;">&#x25BC;</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-opt" data-lang="en">English</button>
+          <button class="lang-opt" data-lang="hi">Hindi</button>
+          <button class="lang-opt" data-lang="bn">Bengali</button>
+          <button class="lang-opt" data-lang="ta">Tamil</button>
+          <button class="lang-opt" data-lang="mr">Marathi</button>
+          <button class="lang-opt" data-lang="gu">Gujarati</button>
+          <button class="lang-opt" data-lang="pa">Punjabi</button>
+          <button class="lang-opt" data-lang="te">Telugu</button>
+          <button class="lang-opt" data-lang="kn">Kannada</button>
+          <button class="lang-opt" data-lang="ur">Urdu</button>
+        </div>
+      </div>
+
+      <!-- Top row: title + last reading summary -->
+      <section class="farmers-header-row">
+        <article class="farmers-title-card">
+          <h1 class="farmers-heading" data-i18n="farm_title">
+            Farmers Assistance
+          </h1>
+          <p class="farmers-intro" data-i18n="farm_intro">
+            Use your water pH and crop choice to turn raw readings into clear,
+            local‑style tips on what to grow, how to correct pH towards 7.0,
+            and how to protect soil health over time.
+          </p>
+          <div class="farmers-badges">
+            <span class="farmers-badge" data-i18n="farm_badge_household">Households</span>
+            <span class="farmers-badge" data-i18n="farm_badge_farmers">Farmers</span>
+            <span class="farmers-badge" data-i18n="farm_badge_students">Student projects</span>
+          </div>
+          <div class="farmers-ai-strip">
+            <p class="farmers-ai-note" data-i18n="farm_ai_note">
+              Coming soon: a voice‑based helper in Indian languages. For now,
+              use the pH helper and crop list on this page.
+            </p>
+            <button class="farmers-ai-btn" id="openFarmAiBtn" data-i18n="farm_ai_btn">
+              Open Farmers AI Assistant
+            </button>
+          </div>
+        </article>
+
+        <article class="farmers-status-card">
+          <h2 class="farmers-status-title" data-i18n="status_title">
+            Latest water status
+          </h2>
+          <p class="farmers-status-text" id="statusSummaryText" data-i18n="status_text_empty">
+            No saved reading found yet. Measure water on the “Measure” page and save it to see a quick summary here.
+          </p>
+          <div class="farmers-status-pill" id="statusPill" style="display:none;">
+            <span id="statusPillLabel">pH —</span>
+            <span id="statusPillChip" class="status-chip chip-warn">–</span>
+          </div>
+          <span class="farmers-status-small" id="statusExtra"></span>
+        </article>
+      </section>
+
+      <!-- Main grid -->
+      <section class="farmers-main-grid">
+        <!-- LEFT: pH helper -->
+        <article class="farmers-panel">
+          <h2 data-i18n="ph_helper_title">Smart pH helper</h2>
+          <p class="farmers-panel-sub" data-i18n="ph_helper_sub">
+            Start with a pH value from your kit or the latest saved reading, then
+            see which crops are comfortable and how to move pH closer to neutral.
+          </p>
+
+          <div class="farmers-section">
+            <div class="farmers-section-title" data-i18n="ph_choose_title">
+              1. Choose or enter pH
+            </div>
+            <div class="controls-row">
+              <label for="phInput" data-i18n="ph_label">pH</label>
+              <input id="phInput" type="number" step="0.01" min="0" max="14" placeholder="7.00">
+              <button class="btn-ghost" id="btnUseLatest" data-i18n="ph_use_latest">Use latest reading</button>
+              <button class="btn-main" id="btnCheckPh" data-i18n="ph_check_btn">Check pH for crops</button>
+            </div>
+            <p class="note" data-i18n="ph_note">
+              You can type the pH directly or pull the most recent reading saved on the Measure page.
+            </p>
+            <div id="phStatusBox" class="note"></div>
+            <div id="bestCropsBox" style="display:none; margin-top:.6rem;">
+              <div class="advice-card">
+                <div class="advice-title" data-i18n="best_crops_title">Best crops at this pH</div>
+                <div id="bestCropsPills" class="pill-list"></div>
+                <p class="note" id="bestCropsNote"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="farmers-section">
+            <div class="farmers-section-title" data-i18n="ph_improve_title">
+              2. Improve pH towards 7.0
+            </div>
+            <div class="controls-row">
+              <label for="phImprove" data-i18n="ph_improve_label">Current pH</label>
+              <input id="phImprove" type="number" step="0.01" min="0" max="14" placeholder="6.20">
+              <button class="btn-main" id="btnImprove" data-i18n="ph_improve_btn">Show improvement tips</button>
+            </div>
+            <div id="improveCards" style="display:none; margin-top:.4rem;">
+              <div class="advice-card">
+                <div class="advice-title" data-i18n="short_term_title">Short‑term steps</div>
+                <ul id="shortTermList"></ul>
+              </div>
+              <div class="advice-card">
+                <div class="advice-title" data-i18n="long_term_title">Long‑term soil health</div>
+                <ul id="longTermList"></ul>
+              </div>
+              <p class="note" data-i18n="improve_note">
+                Always match pH correction with soil tests and advice from local extension workers.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- RIGHT: crop selector -->
+        <article class="farmers-panel">
+          <h2 data-i18n="crop_helper_title">Crop‑based advice</h2>
+          <p class="farmers-panel-sub" data-i18n="crop_helper_sub">
+            Pick a crop, reuse the same pH value, and see how well the water matches,
+            along with irrigation and fertiliser ideas.
+          </p>
+
+          <div class="farmers-section">
+            <div class="farmers-section-title" data-i18n="crop_choose_title">
+              3. Select a crop
+            </div>
+            <div class="controls-row">
+              <label for="cropSelect" data-i18n="crop_label">Crop</label>
+              <select id="cropSelect">
+                <option value="" data-i18n="crop_placeholder">Choose crop…</option>
+              </select>
+            </div>
+            <p class="note" data-i18n="crop_note">
+              Use the same pH from the left side to check how comfortable this crop is.
+            </p>
+          </div>
+
+          <div class="farmers-section" id="cropAdviceArea" style="display:none;">
+            <div class="advice-card">
+              <div class="advice-title" data-i18n="crop_range_title">Ideal pH range</div>
+              <div id="cropRangeText"></div>
+            </div>
+            <div class="advice-card">
+              <div class="advice-title" data-i18n="crop_ph_improve_title">
+                pH improvement for this crop
+              </div>
+              <ul id="cropImproveList"></ul>
+            </div>
+            <div class="advice-card">
+              <div class="advice-title" data-i18n="irrigation_title">Irrigation tips</div>
+              <ul id="irrigationList"></ul>
+            </div>
+            <div class="advice-card">
+              <div class="advice-title" data-i18n="management_title">
+                Fertiliser & management
+              </div>
+              <ul id="managementList"></ul>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- Simple placeholder AI panel (not wired to any backend yet) -->
+  <section class="ai-placeholder" id="aiPlaceholder">
+    <header class="ai-placeholder-header">
+      <div class="ai-placeholder-title" data-i18n="ai_placeholder_title">
+        Farmers AI Assistant (preview)
+      </div>
+      <button class="ai-placeholder-close" id="aiPlaceholderClose" data-i18n="ai_placeholder_close">
+        Close
+      </button>
+    </header>
+    <div class="ai-placeholder-body">
+      <p data-i18n="ai_placeholder_text">
+        In the next version, this box will talk in local languages, explain pH results,
+        and guide farmers step by step. For now, use the pH helper and crop advice panels on the page.
+      </p>
+    </div>
+  </section>
+
+  <!-- Translations + future AI logic -->
+  <script src="farmers.translations.js"></script>
+  <script src="farmers.ai.js"></script>
+
+  <script>
+    // -------- Language handling --------
+    const langBtn = document.getElementById('langCurrentBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const langOptions = document.querySelectorAll('.lang-opt');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+
+    function applyFarmersLanguage(langCode) {
+      if (typeof getFarmersStrings !== "function") return;
+      const t = getFarmersStrings(langCode);
+      i18nNodes.forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) el.textContent = t[key];
+      });
+    }
+
+    (function initLanguage() {
+      const saved = localStorage.getItem('whi_lang') || 'en';
+      const current = saved || 'en';
+      applyFarmersLanguage(current);
+      langOptions.forEach(btn => {
+        const code = btn.dataset.lang;
+        if (code === current) btn.classList.add('selected');
+      });
+      const currentLabel = Array.from(langOptions).find(b => b.dataset.lang === current);
+      if (currentLabel) {
+        langBtn.innerHTML = currentLabel.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+      }
+    })();
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    langOptions.forEach(btn => {
+      btn.addEventListener('click', function () {
+        langOptions.forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        const code = this.dataset.lang || 'en';
+        localStorage.setItem('whi_lang', code);
+        langBtn.innerHTML = this.textContent + ' <span style="font-size:1rem;">&#x25BC;</span>';
+        langDropdown.classList.remove('open');
+        applyFarmersLanguage(code);
+      });
+    });
+
+    // -------- Sidebar drag (desktop) --------
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+      const mainWrap = document.getElementById('mainWrap');
+      const handle = document.getElementById('sidebarHandle');
+      if (!sidebar || !handle || !mainWrap) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const minWidth = parseInt(rootStyles.getPropertyValue('--sidebar-min')) || 210;
+      const maxWidth = parseInt(rootStyles.getPropertyValue('--sidebar-max')) || 380;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 900) return;
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        document.body.style.userSelect = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        sidebar.style.width = newWidth + 'px';
+        mainWrap.style.marginLeft = newWidth + 'px';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+          sidebar.style.width = '';
+          mainWrap.style.marginLeft = '';
+        }
+      });
+    })();
+
+    // -------- Mobile menu toggle --------
+    (function () {
+      const btn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      if (!btn || !sidebar) return;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.classList.contains('open')) return;
+        if (!sidebar.contains(e.target) && e.target !== btn) {
+          sidebar.classList.remove('open');
+        }
+      });
+    })();
+
+    // -------- Data + helper logic --------
+    const STORAGE_KEY_READINGS = 'whReadings'; // same key as your older page
+    const statusSummaryText = document.getElementById('statusSummaryText');
+    const statusPill = document.getElementById('statusPill');
+    const statusPillLabel = document.getElementById('statusPillLabel');
+    const statusPillChip = document.getElementById('statusPillChip');
+    const statusExtra = document.getElementById('statusExtra');
+
+    function loadLatestReading() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_READINGS);
+        if (!raw) return null;
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr) || !arr.length) return null;
+        const last = arr[arr.length - 1];
+        return last || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function classifyPH(p) {
+      if (isNaN(p)) return { band: 'unknown', label: '—', chipClass: 'chip-warn' };
+      if (p < 5) return { band: 'veryLow', label: 'strongly acidic', chipClass: 'chip-bad' };
+      if (p < 6) return { band: 'low', label: 'acidic', chipClass: 'chip-bad' };
+      if (p < 6.5) return { band: 'slightLow', label: 'slightly acidic', chipClass: 'chip-warn' };
+      if (p <= 7.5) return { band: 'neutral', label: 'near neutral', chipClass: 'chip-ok' };
+      if (p <= 8.2) return { band: 'slightHigh', label: 'slightly alkaline', chipClass: 'chip-warn' };
+      if (p <= 9) return { band: 'high', label: 'alkaline', chipClass: 'chip-bad' };
+      return { band: 'veryHigh', label: 'very alkaline', chipClass: 'chip-bad' };
+    }
+
+    function updateLatestStatusBox() {
+      const r = loadLatestReading();
+      if (!r || typeof r.ph !== 'number') {
+        statusPill.style.display = 'none';
+        statusExtra.textContent = '';
+        return;
+      }
+      const p = r.ph;
+      const c = classifyPH(p);
+      statusPill.style.display = 'inline-flex';
+      statusPillLabel.textContent = 'pH ' + p.toFixed(2);
+      statusPillChip.textContent = c.label;
+      statusPillChip.className = 'status-chip ' +
+        (c.chipClass || 'chip-warn');
+
+      statusSummaryText.textContent =
+        'Latest saved water has pH ' + p.toFixed(2) +
+        ', which is considered ' + c.label + ' for most crops.';
+      statusExtra.textContent =
+        'Tip: run the pH helper below to see which crops match this pH and how to correct it.';
+    }
+
+    // Crop database with more crops
+    const FARM_CROPS = [
+      { id:'rice', name:'Rice (paddy)', group:'staple', phMin:5.5, phMax:7.0,
+        tags:['kharif','flood‑tolerant'],
+        improveLow:[
+          'Apply agricultural lime or dolomite a few months before transplanting in very acidic soils.',
+          'Increase well‑decomposed farmyard manure or compost to buffer acidity in nurseries.'
+        ],
+        improveHigh:[
+          'Avoid long‑term standing water if pH is above 7.5; use short wet‑dry cycles.',
+          'Use more organic residues and green manuring crops to slowly move pH nearer neutral.'
+        ],
+        irrigation:[
+          'Keep shallow water during tillering but drain fields before harvest to avoid lodging.',
+          'Level plots carefully so water depth stays even and nutrient loss is lower.'
+        ],
+        management:[
+          'Split nitrogen into 2–3 doses rather than one heavy application.',
+          'Rotate rice with a pulse or oilseed crop to rebuild soil structure.'
+        ]
+      },
+      { id:'wheat', name:'Wheat', group:'staple', phMin:6.0, phMax:7.5,
+        tags:['rabi'],
+        improveLow:[
+          'In soils below pH 6, apply lime as per soil test report before sowing.',
+          'Use compost and FYM to reduce acidity instead of only chemical fertiliser.'
+        ],
+        improveHigh:[
+          'Where pH is high, monitor for zinc and iron deficiency and correct with foliar sprays.',
+          'Avoid over‑irrigation that can bring salts up and push pH higher.'
+        ],
+        irrigation:[
+          'Give assured irrigation at crown root initiation, tillering and grain filling stages.',
+          'Prevent waterlogging; wheat prefers moist but well‑drained soil.'
+        ],
+        management:[
+          'Balance nitrogen with enough phosphorus and potassium to avoid weak, tall plants.',
+          'Use residue mulch to conserve moisture and protect soil life.'
+        ]
+      },
+      { id:'maize', name:'Maize (corn)', group:'cereal', phMin:6.0, phMax:7.5,
+        tags:['kharif','fodder'],
+        improveLow:[
+          'Below pH 5.8, lime the field to avoid aluminium toxicity to roots.',
+          'Combine lime with organic manures to stabilise pH for longer time.'
+        ],
+        improveHigh:[
+          'At higher pH, watch for zinc and manganese deficiency; use chelated forms if needed.',
+          'Add crop residues and green manures to moderate alkalinity slowly.'
+        ],
+        irrigation:[
+          'Do not allow stress at tasselling and grain filling stages.',
+          'Avoid ponding; maize is sensitive to standing water.'
+        ],
+        management:[
+          'Place fertiliser bands near the root zone instead of broadcasting.',
+          'Intercrop with legumes where possible to improve nitrogen supply.'
+        ]
+      },
+      { id:'sugarcane', name:'Sugarcane', group:'cash', phMin:5.5, phMax:8.0,
+        tags:['long duration'],
+        improveLow:[
+          'Very acidic water and soil reduce ratoon life; apply lime and organic matter.',
+          'Use press‑mud or filter cake from sugar mills where available.'
+        ],
+        improveHigh:[
+          'Leach excess salts with good‑quality water if pH and salinity are high.',
+          'Grow green manure crops in rotation to bring pH towards neutral.'
+        ],
+        irrigation:[
+          'Give light but frequent irrigations in sandy soils; avoid deep cracks in clay soils.',
+          'Stop irrigation 15–20 days before harvest to improve sugar recovery.'
+        ],
+        management:[
+          'Use trash mulching between rows to conserve moisture and control weeds.',
+          'Maintain proper planting density and earthing‑up for strong stools.'
+        ]
+      },
+      { id:'cotton', name:'Cotton', group:'cash', phMin:5.8, phMax:7.5,
+        tags:['kharif'],
+        improveLow:[
+          'Use lime and FYM on strongly acidic soils to avoid nutrient toxicity.',
+          'Select tolerant varieties where soils are naturally acidic.'
+        ],
+        improveHigh:[
+          'On sodic, high‑pH fields, apply gypsum as per soil test.',
+          'Avoid heavy irrigation that can raise salt levels further.'
+        ],
+        irrigation:[
+          'Irrigate deeply but at longer intervals to encourage deep roots.',
+          'Avoid waterlogging around flowering and boll setting.'
+        ],
+        management:[
+          'Provide balanced NPK and micronutrients to support boll development.',
+          'Monitor for sucking pests and use IPM practices.'
+        ]
+      },
+      { id:'soybean', name:'Soybean', group:'pulse', phMin:6.0, phMax:7.5,
+        tags:['kharif'],
+        improveLow:[
+          'Below pH 6, lime the field so that nodulation is not affected.',
+          'Use Rhizobium culture and lots of organic matter.'
+        ],
+        improveHigh:[
+          'At high pH, check for iron chlorosis and apply foliar sprays if leaves yellow.',
+          'Increase organic residues and avoid excess irrigation.'
+        ],
+        irrigation:[
+          'Provide drainage in heavy rains; crop dislikes standing water.',
+          'Moisture must be good at flowering and pod formation.'
+        ],
+        management:[
+          'Use seed treatment and inoculation to ensure active root nodules.',
+          'Rotate soybean with cereals to break pest and disease cycles.'
+        ]
+      },
+      { id:'groundnut', name:'Groundnut (peanut)', group:'oilseed', phMin:6.0, phMax:7.5,
+        tags:['kharif','rabi'],
+        improveLow:[
+          'Very acidic soils need liming to support healthy pod formation.',
+          'Apply gypsum at pegging to improve shell and kernel quality.'
+        ],
+        improveHigh:[
+          'In alkaline soils, monitor for micronutrient deficiency and correct with sprays.',
+          'Add lots of crop residues and compost to soften the soil.'
+        ],
+        irrigation:[
+          'Keep soil moist but not waterlogged from flowering to pegging stage.',
+          'Stop irrigation 10–15 days before harvest for easy lifting.'
+        ],
+        management:[
+          'Use seed treatment against seed and soil‑borne diseases.',
+          'Maintain loose, friable soil for easy pegs and pods.'
+        ]
+      },
+      { id:'mustard', name:'Mustard', group:'oilseed', phMin:6.0, phMax:7.5,
+        tags:['rabi'],
+        improveLow:[
+          'Very acidic patches require lime to avoid poor plant stand.',
+          'Use FYM and compost to stabilise pH and moisture.'
+        ],
+        improveHigh:[
+          'Excess alkalinity can limit sulphur and micronutrient uptake; use sulphur‑rich fertilisers.',
+          'Avoid saline water for irrigation if possible.'
+        ],
+        irrigation:[
+          'Give life‑saving irrigation at flowering and pod filling.',
+          'Avoid waterlogging; mustard is sensitive to standing water.'
+        ],
+        management:[
+          'Maintain recommended spacing to reduce lodging.',
+          'Use integrated pest management for aphids and pod borers.'
+        ]
+      },
+      { id:'chickpea', name:'Chickpea (gram)', group:'pulse', phMin:6.0, phMax:8.0,
+        tags:['rabi'],
+        improveLow:[
+          'In acidic soils, light liming before sowing can improve nodulation.',
+          'Use raised beds in high rainfall areas to avoid crusting.'
+        ],
+        improveHigh:[
+          'At high pH, ensure good organic matter so nutrients stay available.',
+          'Avoid heavy irrigation that leaves the field sticky and poorly aerated.'
+        ],
+        irrigation:[
+          'Usually grown on conserved moisture; avoid excess irrigation.',
+          'One irrigation at pod filling can strongly support yield where water is available.'
+        ],
+        management:[
+          'Use seed inoculation with Rhizobium for nitrogen fixation.',
+          'Rotate chickpea with cereals and oilseeds for better soil health.'
+        ]
+      },
+      { id:'pigeonpea', name:'Pigeonpea (arhar)', group:'pulse', phMin:6.0, phMax:7.5,
+        tags:['kharif'],
+        improveLow:[
+          'Use lime in very acidic fields to avoid root damage.',
+          'Apply FYM and keep soil well drained.'
+        ],
+        improveHigh:[
+          'High pH with salinity requires proper drainage and organic matter.',
+          'Use tolerant varieties if sodicity is a problem.'
+        ],
+        irrigation:[
+          'Crop is fairly drought tolerant but needs moisture at flowering and pod setting.',
+          'Provide drainage in heavy rains to protect roots.'
+        ],
+        management:[
+          'Use wider spacing and intercrop with cereals if desired.',
+          'Keep field weed free in early growth for strong plants.'
+        ]
+      },
+      { id:'potato', name:'Potato', group:'vegetable', phMin:5.0, phMax:6.5,
+        tags:['cool season'],
+        improveLow:[
+          'Extremely low pH may increase scab risk; moderate with lime if very acidic.',
+          'Use compost and FYM to improve soil tilth.'
+        ],
+        improveHigh:[
+          'Above pH 7, common scab becomes more serious; use organic matter and avoid fresh manure.',
+          'Use sulphur‑based fertilisers where needed.'
+        ],
+        irrigation:[
+          'Maintain uniform moisture from tuber initiation to bulking.',
+          'Avoid waterlogging to prevent rots.'
+        ],
+        management:[
+          'Use healthy, certified seed tubers.',
+          'Hill soil around plants to protect shallow tubers from light.'
+        ]
+      },
+      { id:'tomato', name:'Tomato', group:'vegetable', phMin:6.0, phMax:7.5,
+        tags:['vegetable'],
+        improveLow:[
+          'Apply lime where pH is very low to reduce blossom‑end rot risk.',
+          'Improve organic matter to buffer acidity.'
+        ],
+        improveHigh:[
+          'At high pH, apply micronutrient sprays if leaves pale between veins.',
+          'Use organic mulches to improve root zone conditions.'
+        ],
+        irrigation:[
+          'Keep moisture even, especially at flowering and fruit set.',
+          'Avoid overhead irrigation late in the day to reduce disease.'
+        ],
+        management:[
+          'Use staking or trellising to keep fruits off the ground.',
+          'Apply balanced fertiliser; too much nitrogen delays fruiting.'
+        ]
+      },
+      { id:'onion', name:'Onion', group:'vegetable', phMin:6.0, phMax:7.0,
+        tags:['bulb'],
+        improveLow:[
+          'On very acidic soils, apply lime to reach a near‑neutral pH.',
+          'Use raised beds to improve drainage.'
+        ],
+        improveHigh:[
+          'High pH can lock up micronutrients; correct with foliar sprays if tips yellow.',
+          'Maintain good organic matter to keep bulbs healthy.'
+        ],
+        irrigation:[
+          'Give light, frequent irrigation; onions have shallow roots.',
+          'Stop irrigation before harvest so bulbs cure properly.'
+        ],
+        management:[
+          'Avoid thick sowing; maintain spacing for uniform bulb size.',
+          'Store cured bulbs in a cool, dry and airy place.'
+        ]
+      },
+      { id:'okra', name:'Okra (bhindi)', group:'vegetable', phMin:6.0, phMax:7.5,
+        tags:['vegetable'],
+        improveLow:[
+          'In strongly acidic soils, liming improves root growth and fruit set.',
+          'Use FYM and compost for better structure.'
+        ],
+        improveHigh:[
+          'In alkaline patches, apply organic matter and avoid salty irrigation water.',
+          'Use drip or furrow irrigation to keep root zone comfortable.'
+        ],
+        irrigation:[
+          'Provide regular moisture during flowering and fruiting.',
+          'Avoid waterlogging which encourages wilt diseases.'
+        ],
+        management:[
+          'Harvest fruits when tender for good market quality.',
+          'Monitor for fruit borer and whitefly and manage early.'
+        ]
+      },
+      { id:'brinjal', name:'Brinjal (eggplant)', group:'vegetable', phMin:5.5, phMax:7.0,
+        tags:['vegetable'],
+        improveLow:[
+          'Use compost and light liming on very acidic soil.',
+          'Apply organic manures to support long harvest period.'
+        ],
+        improveHigh:[
+          'High pH may reduce iron and manganese uptake; correct with foliar sprays.',
+          'Maintain thick mulch to moderate root zone conditions.'
+        ],
+        irrigation:[
+          'Keep soil moist but not soggy; long dry spells cause flower drop.',
+          'Irrigate more frequently in light soils.'
+        ],
+        management:[
+          'Use staking in windy areas to protect plants.',
+          'Adopt IPM for shoot and fruit borer.'
+        ]
+      },
+      { id:'banana', name:'Banana', group:'fruit', phMin:5.5, phMax:7.5,
+        tags:['fruit'],
+        improveLow:[
+          'In very acidic soils, apply lime and heavy organic manures.',
+          'Maintain good drainage to avoid root damage.'
+        ],
+        improveHigh:[
+          'High pH with salts harms roots; leach salts with good‑quality water.',
+          'Add thick organic mulch to keep soil cool and active.'
+        ],
+        irrigation:[
+          'Provide regular irrigation; crop is highly sensitive to drought.',
+          'Avoid waterlogging around the base to prevent rots.'
+        ],
+        management:[
+          'Use healthy suckers or tissue‑culture plants.',
+          'Apply fertiliser in splits around the plant, not on the stem.'
+        ]
+      },
+      { id:'mango', name:'Mango', group:'fruit', phMin:5.5, phMax:7.5,
+        tags:['fruit tree'],
+        improveLow:[
+          'Very acidic soils require liming before establishing orchards.',
+          'Grow green manure in basins to improve soil.'
+        ],
+        improveHigh:[
+          'On alkaline soils, supply micronutrients by foliar sprays.',
+          'Keep basins mulched to reduce cracking and salt build‑up.'
+        ],
+        irrigation:[
+          'Young plants need regular watering; bearing trees need moisture at fruit development.',
+          'Avoid irrigation just before expected flowering flush in some regions.'
+        ],
+        management:[
+          'Prune crowded branches to allow light and air.',
+          'Use recommended sprays against major pests and diseases.'
+        ]
+      },
+      { id:'citrus', name:'Citrus (orange/limon)', group:'fruit', phMin:5.5, phMax:7.5,
+        tags:['fruit'],
+        improveLow:[
+          'Correct very acidic soils with lime before planting.',
+          'Use FYM and compost to support feeder roots near the surface.'
+        ],
+        improveHigh:[
+          'High pH often causes micronutrient deficiency; apply chelated sprays as needed.',
+          'Avoid applying fertiliser too close to the trunk.'
+        ],
+        irrigation:[
+          'Irrigate regularly in dry periods; trees are sensitive to drought at fruit set.',
+          'Provide drainage in heavy soils to avoid root rots.'
+        ],
+        management:[
+          'Maintain clean basins and mulch with crop residues.',
+          'Follow recommended pruning to keep canopy open.'
+        ]
+      },
+      { id:'tea', name:'Tea', group:'plantation', phMin:4.5, phMax:6.0,
+        tags:['plantation'],
+        improveLow:[
+          'Tea prefers acidic soil; do not over‑lime unless pH is extremely low.',
+          'Use organic mulches to protect surface roots.'
+        ],
+        improveHigh:[
+          'If pH rises too high, apply acid‑forming fertilisers and organic matter.',
+          'Avoid heavy liming near mature tea bushes.'
+        ],
+        irrigation:[
+          'Where rainfall is low, provide supplemental irrigation during dry spells.',
+          'Mulch thickly to conserve soil moisture.'
+        ],
+        management:[
+          'Maintain shade where appropriate and prune correctly.',
+          'Use balanced fertiliser schedule recommended for the region.'
+        ]
+      },
+      { id:'sunflower', name:'Sunflower', group:'oilseed', phMin:6.0, phMax:7.5,
+        tags:['oilseed'],
+        improveLow:[
+          'Use lime and organic manures to raise very low pH.',
+          'Ensure good drainage to protect tap root.'
+        ],
+        improveHigh:[
+          'On high pH soils, check for boron deficiency and correct as advised.',
+          'Add crop residues to keep soil structure open.'
+        ],
+        irrigation:[
+          'Moisture must be good at flowering and grain filling.',
+          'Avoid prolonged waterlogging in heavy soils.'
+        ],
+        management:[
+          'Maintain proper spacing to avoid competition for light.',
+          'Rotate sunflower with legumes or cereals.'
+        ]
+      }
+    ];
+
+    // -------- pH helper logic --------
+    const phInput = document.getElementById('phInput');
+    const btnUseLatest = document.getElementById('btnUseLatest');
+    const btnCheckPh = document.getElementById('btnCheckPh');
+    const phStatusBox = document.getElementById('phStatusBox');
+    const bestCropsBox = document.getElementById('bestCropsBox');
+    const bestCropsPills = document.getElementById('bestCropsPills');
+    const bestCropsNote = document.getElementById('bestCropsNote');
+
+    function describePH(p) {
+      const c = classifyPH(p);
+      if (c.band === 'unknown') return 'Enter a valid pH value between 0 and 14.';
+      if (c.band === 'neutral') {
+        return 'At pH ' + p.toFixed(2) +
+          ', water is near neutral and suitable for a wide range of crops.';
+      }
+      return 'At pH ' + p.toFixed(2) +
+        ', water is considered ' + c.label +
+        ' and some crops may need pH correction before planting.';
+    }
+
+    function updatePHStatus(p) {
+      if (isNaN(p)) {
+        phStatusBox.textContent = '';
+        bestCropsBox.style.display = 'none';
+        return;
+      }
+      phStatusBox.textContent = describePH(p);
+
+      // Show 6 crops whose ideal range contains this pH
+      const good = FARM_CROPS.filter(c => p >= c.phMin && p <= c.phMax);
+      const near = FARM_CROPS.filter(c => p >= c.phMin - 0.3 && p <= c.phMax + 0.3 && !good.includes(c));
+      const finalList = (good.length ? good : near).slice(0, 8);
+
+      bestCropsPills.innerHTML = '';
+      finalList.forEach(crop => {
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = crop.name;
+        bestCropsPills.appendChild(pill);
+      });
+
+      if (!finalList.length) {
+        bestCropsNote.textContent =
+          'This pH is difficult for most common crops. Focus on correcting pH first, then recheck.';
+      } else if (good.length >= 6) {
+        bestCropsNote.textContent =
+          'This pH supports many crops. Choose based on rainfall, soil type and market demand.';
+      } else {
+        bestCropsNote.textContent =
+          'Only some crops are comfortable at this pH. For others, adjust pH first, then plant.';
+      }
+      bestCropsBox.style.display = 'block';
+    }
+
+    btnUseLatest.addEventListener('click', () => {
+      const r = loadLatestReading();
+      if (!r || typeof r.ph !== 'number') return;
+      phInput.value = r.ph.toFixed(2);
+      updatePHStatus(r.ph);
+    });
+
+    btnCheckPh.addEventListener('click', () => {
+      const v = parseFloat(phInput.value);
+      if (isNaN(v)) {
+        phStatusBox.textContent = 'Type a pH value or use the latest saved reading.';
+        bestCropsBox.style.display = 'none';
+        return;
+      }
+      updatePHStatus(v);
+      // also refresh crop advice if a crop is already selected
+      const currentCropId = document.getElementById('cropSelect').value;
+      if (currentCropId) {
+        showCropAdvice(currentCropId, v);
+      }
+    });
+
+    // -------- Improvement tips --------
+    const phImprove = document.getElementById('phImprove');
+    const btnImprove = document.getElementById('btnImprove');
+    const improveCards = document.getElementById('improveCards');
+    const shortTermList = document.getElementById('shortTermList');
+    const longTermList = document.getElementById('longTermList');
+
+    function buildImproveTips(p) {
+      const tipsShort = [];
+      const tipsLong = [];
+
+      if (p < 5.5) {
+        tipsShort.push(
+          'Use clean canal or rain water for seedlings where possible instead of very acidic sources.',
+          'Apply lime or dolomite only as per soil test and mix well before planting.'
+        );
+        tipsLong.push(
+          'Increase FYM, compost and crop residues every season to slowly raise pH.',
+          'Grow deep‑rooted legumes and leave their residues to rebuild soil structure.'
+        );
+      } else if (p < 6.5) {
+        tipsShort.push(
+          'For sensitive crops, apply small doses of lime in bands rather than broadcasting.',
+          'Check pH of nursery beds separately; they may differ from the main field.'
+        );
+        tipsLong.push(
+          'Adopt crop rotations that include legumes to keep pH stable.',
+          'Avoid overusing only nitrogen fertilisers; keep nutrition balanced.'
+        );
+      } else if (p <= 7.8) {
+        tipsShort.push(
+          'This pH is close to ideal for most crops; focus on good drainage and balanced fertiliser.',
+          'Keep testing pH at least once each season at a few points in the field.'
+        );
+        tipsLong.push(
+          'Maintain permanent organic cover such as mulches or cover crops.',
+          'Encourage earthworms and soil biology through reduced tillage where suitable.'
+        );
+      } else if (p <= 8.5) {
+        tipsShort.push(
+          'Do not flood‑irrigate for long periods with highly alkaline water.',
+          'Use gypsum on sodic soils only after confirming with a soil test.'
+        );
+        tipsLong.push(
+          'Plant green manures and add large amounts of organic matter to buffer alkalinity.',
+          'Use salt‑tolerant varieties or crops where very high pH cannot be fully corrected.'
+        );
+      } else {
+        tipsShort.push(
+          'Mix high‑pH water with better‑quality sources if available before irrigating.',
+          'Avoid using such water for nurseries or young seedlings.'
+        );
+        tipsLong.push(
+          'Plan long‑term reclamation with local experts; this may include leveling, drainage and amendments.',
+          'Shift to more tolerant crops until pH and salinity are brought under control.'
+        );
+      }
+
+      return { short: tipsShort, long: tipsLong };
+    }
+
+    btnImprove.addEventListener('click', () => {
+      const v = parseFloat(phImprove.value);
+      if (isNaN(v)) {
+        improveCards.style.display = 'none';
+        return;
+      }
+      const { short, long } = buildImproveTips(v);
+      shortTermList.innerHTML = '';
+      longTermList.innerHTML = '';
+      short.forEach(t => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        shortTermList.appendChild(li);
+      });
+      long.forEach(t => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        longTermList.appendChild(li);
+      });
+      improveCards.style.display = 'block';
+    });
+
+    // -------- Crop selector logic --------
+    const cropSelect = document.getElementById('cropSelect');
+    const cropAdviceArea = document.getElementById('cropAdviceArea');
+    const cropRangeText = document.getElementById('cropRangeText');
+    const cropImproveList = document.getElementById('cropImproveList');
+    const irrigationList = document.getElementById('irrigationList');
+    const managementList = document.getElementById('managementList');
+
+    function populateCropSelect() {
+      // group crops by broad group roughly
+      const sorted = [...FARM_CROPS].sort((a, b) => a.name.localeCompare(b.name));
+      sorted.forEach(crop => {
+        const opt = document.createElement('option');
+        opt.value = crop.id;
+        opt.textContent = crop.name;
+        cropSelect.appendChild(opt);
+      });
+    }
+
+    function showCropAdvice(cropId, phValue) {
+      const crop = FARM_CROPS.find(c => c.id === cropId);
+      if (!crop) {
+        cropAdviceArea.style.display = 'none';
+        return;
+      }
+      const p = phValue;
+      let statusText = '';
+      if (!isNaN(p)) {
+        if (p >= crop.phMin && p <= crop.phMax) {
+          statusText = 'Your pH ' + p.toFixed(2) + ' lies inside the ideal range for this crop.';
+        } else if (p < crop.phMin) {
+          statusText = 'Your pH ' + p.toFixed(2) +
+            ' is lower than ideal; water and soil are more acidic than this crop prefers.';
+        } else if (p > crop.phMax) {
+          statusText = 'Your pH ' + p.toFixed(2) +
+            ' is higher than ideal; water and soil are more alkaline than this crop prefers.';
+        }
+      } else {
+        statusText = 'Enter pH on the left side to see how close water is to this crop’s ideal range.';
+      }
+
+      cropRangeText.textContent =
+        crop.name + ' usually grows best between pH ' +
+        crop.phMin.toFixed(1) + ' and ' + crop.phMax.toFixed(1) + '. ' + statusText;
+
+      cropImproveList.innerHTML = '';
+      irrigationList.innerHTML = '';
+      managementList.innerHTML = '';
+
+      const lowSide = crop.improveLow || [];
+      const highSide = crop.improveHigh || [];
+
+      if (!isNaN(p)) {
+        const list = (p < crop.phMin) ? lowSide :
+                     (p > crop.phMax) ? highSide :
+                     lowSide.concat(highSide);
+        list.forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          cropImproveList.appendChild(li);
+        });
+      } else {
+        lowSide.concat(highSide).forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          cropImproveList.appendChild(li);
+        });
+      }
+
+      (crop.irrigation || []).forEach(txt => {
+        const li = document.createElement('li');
+        li.textContent = txt;
+        irrigationList.appendChild(li);
+      });
+      (crop.management || []).forEach(txt => {
+        const li = document.createElement('li');
+        li.textContent = txt;
+        managementList.appendChild(li);
+      });
+
+      cropAdviceArea.style.display = 'block';
+    }
+
+    cropSelect.addEventListener('change', () => {
+      const id = cropSelect.value;
+      if (!id) {
+        cropAdviceArea.style.display = 'none';
+        return;
+      }
+      const v = parseFloat(phInput.value);
+      showCropAdvice(id, v);
+    });
+
+    // -------- AI placeholder toggle (no backend yet) --------
+    (function () {
+      const openBtn = document.getElementById('openFarmAiBtn');
+      const panel = document.getElementById('aiPlaceholder');
+      const closeBtn = document.getElementById('aiPlaceholderClose');
+      if (!openBtn || !panel || !closeBtn) return;
+
+      openBtn.addEventListener('click', () => {
+        panel.style.display = 'block';
+      });
+      closeBtn.addEventListener('click', () => {
+        panel.style.display = 'none';
+      });
+    })();
+
+    // -------- Init on load --------
+    populateCropSelect();
+    updateLatestStatusBox();
+  </script>
+</body>
+</html>
