@@ -28,10 +28,10 @@ window.indexTranslations = {
 
     // Credits box
     credits_title: "Credits",
-    credits_item_1: "Pranshu (Dev & UI)",
+    credits_item_1: "Pranshu (Dev & UI), Team members",
     credits_item_2: "Mentor: Ashish sir",
-    credits_item_3: "Ollama & Llama-3",
-    credits_item_4: "FastAPI, GitHub",
+    credits_item_3: "Ollama, llama 3, ngrok",
+    credits_item_4: "FastAPI, GitHub, Preplexity",
     credits_year: "2025"
   },
 
