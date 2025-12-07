@@ -237,13 +237,14 @@
     .kit-previews {
   margin-top: 1.4rem;
   display: flex;
+  flex-direction: column;   /* stack one below another */
   gap: 1rem;
 }
 
 .kit-preview-slot {
-  flex: 1;
-  height: 150px;        /* was 90px – increase height */
-  border-radius: 16px;
+  width: 100%;
+  height: 180px;            /* make them taller; adjust if you want more */
+  border-radius: 18px;
   background: radial-gradient(circle at 20% 15%, #4ff1d255, #173b54);
   overflow: hidden;
   display: flex;
@@ -254,7 +255,7 @@
 .kit-preview-slot img {
   width: 100%;
   height: 100%;
-  object-fit: cover;    /* keeps them nicely cropped */
+  object-fit: cover;
 }
     .kit-buy-btn {
       font-weight: bold;
