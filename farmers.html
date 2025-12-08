@@ -485,20 +485,23 @@
 
     /* AI placeholder */
         .ai-placeholder{
-      position:fixed;
-      bottom:32px;
-      right:20px;
-      width:340px;
-      max-width:100%;
-      background:#102530;
-      border-radius:16px;
-      border:1px solid #3fd1c9;
-      box-shadow:0 0 18px #000;
-      color:#e3fbfa;
-      font-family:"Times New Roman",Times,serif;
-      z-index:2400;
-      display:none;
-      overflow:hidden;
+  position:fixed;
+  bottom:32px;
+  right:20px;
+  width:520px;      /* was 340px */
+  height:420px;     /* new: fix a taller height */
+  max-width:80vw;   /* keep good on smaller screens */
+  max-height:80vh;
+  background:#102530;
+  border-radius:16px;
+  border:1px solid #3fd1c9;
+  box-shadow:0 0 18px #000;
+  color:#e3fbfa;
+  font-family:"Times New Roman",Times,serif;
+  z-index:2400;
+  display:none;
+  overflow:hidden;
+}
 
       /* allow moving */
       cursor:default;
